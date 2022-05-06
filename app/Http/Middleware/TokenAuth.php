@@ -18,8 +18,6 @@ class TokenAuth
     public function handle(Request $request, Closure $next)
     {
         $access_token = $request->cookie('access_token');
-        dd($access_token);
-        exit();
         $auth_token = AccessToken::where('access_token', $access_token)->first();
 
         if(isset($auth_token) && $auth_token instanceof AccessToken){

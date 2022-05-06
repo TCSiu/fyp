@@ -11,6 +11,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,9 +20,10 @@ class UsersController extends BaseController
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     private static function setCookie(String $name, String $value){
-        $response = new Response('Hello World');
+        // $response = new Response('panel');
         // $token_cookie = Cookie::make($name, $value, 60);
-        return response('fyp')->cookie($name, $value, 60);
+        // return response('fyp')->cookie($name, $value, 60);
+        Cookie::queue($name, $value, 60);
     }
 
     private static function allowedLogin(Request $request, User $user = null){
