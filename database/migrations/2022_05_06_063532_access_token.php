@@ -18,6 +18,8 @@ return new class extends Migration
             $table->biginteger('user_id');
             $table->string('access_token', 80)->unique();
             $table->dateTime('expiry_date');
+            $table->string('purpose');
+            $table->boolean('is_active')->default(0);
             $table->timestamps();
         });
     }

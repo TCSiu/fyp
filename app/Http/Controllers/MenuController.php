@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class MenuController extends Controller
 {
     public function index(){
-        return view('menu')
-            ->with('title', 'Menu Page');
+        return view('panel')
+            ->with('title', 'Panel Page');
     }
 }

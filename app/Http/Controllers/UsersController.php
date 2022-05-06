@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -17,10 +18,17 @@ class UsersController extends BaseController
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private static function allowedLogin(User $user = null){
+    private static function setCookie(String $name, String $value){
+        $response = new Response('Hello World');
+        // $token_cookie = Cookie::make($name, $value, 60);
+        return response('fyp')->cookie($name, $value, 60);
+    }
+
+    private static function allowedLogin(Request $request, User $user = null){
         if(isset($user)){
-            session('access_token', $user->access_token);
-			return redirect(route('menu'));
+            $access_token = $user->checkTokenExpiry('website');            
+            static::setCookie('access_token', $access_token->access_token);
+			return redirect(route('panel'))->with('title', 'Panel');
         }
         return false;
     }
@@ -44,30 +52,27 @@ class UsersController extends BaseController
             }
 			return redirect(route('register'))->with('errors', $messages)->withinput();
 		}
-
 		$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 		$data['is_admin'] = true;
 		$user = User::create($data);
-        $user_id = $user->id;
-		$token = Hash::make(date('YmdHisu'));
-        $expiry_date = date('Y-m-d H:i:s', strtotime('+1 hours'));
-        $access_token = AccessToken::create(['user_id' => $user_id, 'access_token' => $token, 'expiry_date' => $expiry_date]);
-        // $access_token = AccessToken::create(['user_id' => $user_id, 'access_token' => $token]);
-		return view('/menu')->with('title', 'Menu')->with('access_token', $access_token->access_token);
+        $access_token = AccessToken::createToken($user->id, 'website');
+        // $request->session()->put('access_token', $access_token->access_token);
+        static::setCookie('access_token', $access_token->access_token);
+		return redirect(route('panel'))->with('title', 'Panel');
 	}
 
 	public function login(LoginRequest $request){
         if($request->isMethod('post')){
             $username = $request->auth_username;
             $password = $request->auth_password;
+            $user = User::where('name', $username)->first();
             $error = 'Unknown username. Please enter again.';
             if(isset($user) && $user instanceof User){
-                if(!password_verify($password, $user->password)){
-                    $error = 'Wrong password. Please enter again.';
+                if(password_verify($password, $user->password)){
+                    return static::allowedLogin($request, $user);
                 }
-                static::allowedLogin($user);
+                $error = 'Wrong password. Please enter again.';
             }
-            $user = User::where('name', $username)->first();
             return view('login')->with('errors', [$error]);
         }
         return view('login');

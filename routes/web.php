@@ -17,12 +17,14 @@ use App\Http\Controllers\MenuController;
 
 Route::redirect('/', '/login');
 Route::get('login', [UsersController::class, 'login'])->name('login');
-Route::post('login', [UsersController::class, 'login']);
-
 Route::view('register', 'register')->name('register');
+
+Route::post('login', [UsersController::class, 'login']);
 Route::post('register', [UsersController::class, 'register']);
 
-Route::get('/menu', [MenuController::class, 'index']);
+Route::group(['middleware' => ['token.auth']], function(){
+    Route::get('panel', [MenuController::class, 'index'])->name('panel');
+});
 
 // Route::group(['prefix' => 'menu', 'middleware' => 'auth:panel'], function(){
 //     Route::get('/', [MenuController::class, 'index']);

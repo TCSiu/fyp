@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AccessToken;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -41,4 +42,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function checkTokenExpiry(string $purpose = ''){
+        $access_token = AccessToken::getByUserID($this->id, $purpose);
+        if (isset($access_token) && $access_token instanceof AccessToken) {
+            if ($access_token->isExpired()) {
+                return $this->renewToken();
+            }
+            return $access_token;
+        }
+        return false;
+    }
+
+    public function renewToken(){
+        return AccessToken::renewToken($this->id);
+    }
 }
