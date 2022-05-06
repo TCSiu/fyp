@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Commons\Constants;
+use App\Models\AccessToken;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -47,9 +47,13 @@ class UsersController extends BaseController
 
 		$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 		$data['is_admin'] = true;
-		$data['access_token'] = Hash::make(date('YmdHisu'));
 		$user = User::create($data);
-		return view('/menu')->with('title', 'Menu')->with('access_token', $user->access_token);
+        $user_id = $user->id;
+		$token = Hash::make(date('YmdHisu'));
+        $expiry_date = date('Y-m-d H:i:s', strtotime('+1 hours'));
+        $access_token = AccessToken::create(['user_id' => $user_id, 'access_token' => $token, 'expiry_date' => $expiry_date]);
+        // $access_token = AccessToken::create(['user_id' => $user_id, 'access_token' => $token]);
+		return view('/menu')->with('title', 'Menu')->with('access_token', $access_token->access_token);
 	}
 
 	public function login(LoginRequest $request){
