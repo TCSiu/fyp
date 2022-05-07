@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\AccessToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class TokenAuth
 {
@@ -24,7 +25,7 @@ class TokenAuth
             if($auth_token->isExpired()){
                 $auth_token = $auth_token->renewSimilar();
             }
-            session(['auth_token' => $auth_token]);
+            Cookie::queue('access_token', $auth_token->access_token, 60);
             return $next($request);
         }
         return redirect('login');

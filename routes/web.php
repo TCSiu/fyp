@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PanelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,15 +17,14 @@ use App\Http\Controllers\MenuController;
 
 Route::redirect('/', '/login');
 Route::get('login', [UsersController::class, 'login'])->name('login');
-Route::view('register', 'register')->name('register');
+Route::get('register', [UsersController::class, 'register'])->name('register');
+// Route::view('register', 'register')->name('register');
 
 Route::post('login', [UsersController::class, 'login']);
 Route::post('register', [UsersController::class, 'register']);
 
 Route::group(['middleware' => ['token.auth']], function(){
-    Route::get('panel', [MenuController::class, 'index'])->name('panel');
+    Route::get('panel', [PanelController::class, 'index'])->name('panel');
+    Route::get('logout', [UsersController::class, 'logout'])->name('logout');
 });
 
-// Route::group(['prefix' => 'menu', 'middleware' => 'auth:panel'], function(){
-//     Route::get('/', [MenuController::class, 'index']);
-// });

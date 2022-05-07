@@ -28,16 +28,14 @@ class AccessToken extends Model
 		return AccessToken::create([
 			'user_id'	   	=> $user_id, 
 			'access_token'  => Hash::make(date('YmdHisu')), 
-			'expiry_date'   => date('Y-m-d H:i:s', strtotime('+1 hours')),
+			'expiry_date'   => date('Y-m-d H:i:s', strtotime('+1 minutes')),
 			'purpose'		=> $purpose,
 			'is_active'		=> 1
 		]);
 	}
 
 	public static function revokeToken(int $user_id = 0, string $purpose = ''){
-		return AccessToken::where('user_id', $user_id)
-		->where('purpose', $purpose)
-		->update(['is_active' => 0]);
+		return AccessToken::where('user_id', $user_id)->where('purpose', $purpose)->update(['is_active' => 0]);
 	}
 
 	public function revokeSimilar(){
@@ -52,7 +50,6 @@ class AccessToken extends Model
 	public function renewSimilar(){
 		return static::renewToken($this->user_id, $this->purpose);
 	}
-
 
 	public static function getByUserID(int $user_id = 0, string $purpose = ''){
 		if(isset($user_id) && is_numeric($user_id) && isset($purpose) && is_string($purpose)){

@@ -47,14 +47,14 @@ class User extends Authenticatable
         $access_token = AccessToken::getByUserID($this->id, $purpose);
         if (isset($access_token) && $access_token instanceof AccessToken) {
             if ($access_token->isExpired()) {
-                return $this->renewToken();
+                return $this->renewToken($purpose);
             }
             return $access_token;
         }
         return false;
     }
 
-    public function renewToken(){
-        return AccessToken::renewToken($this->id);
+    public function renewToken(string $purpose = ''){
+        return AccessToken::renewToken($this->id, $purpose);
     }
 }
