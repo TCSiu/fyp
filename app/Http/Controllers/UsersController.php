@@ -59,7 +59,7 @@ class UsersController extends BaseController
                         $messages[] = $rrow;
                     }
                 }
-                return view('login')->with('errors', $messages)->withinput();
+                return view('register')->with('errors', $messages);
             }
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
             $data['is_admin'] = true;

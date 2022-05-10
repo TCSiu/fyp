@@ -10,20 +10,20 @@ $title = 'Login Page';
     @endif
 	<div class="card d-block w-25 position-absolute top-50 start-50 translate-middle">
 		<div class="card-header text-center">
-			<h4>Login</h1>	
+			<h4>{{ __('Login') }}</h1>	
 		</div>
 		<div class="card-body">
 			<form action="{{ route('login')}}" method="post">
 				@csrf
 				<div class="row mb-3">
 					<div class="col-12">
-						<label for="loginUserName" class="form-label">Username</label>
+						<label for="loginUserName" class="form-label">{{ __('Username') }}</label>
 						<input type="text" class="form-control" name="auth_username" value="{{ old('username') ?? '' }}" id="loginUserName" placeholder="Enter a Username"/>
 					</div>
 				</div>
 				<div class="row mb-3">
 					<div class="col-12">
-						<label for="loginPassword" class="form-label">Password</label>
+						<label for="loginPassword" class="form-label">{{ __('Password') }}</label>
 						<input type="password" class="form-control" name="auth_password" id="loginPassword" placeholder="Enter a Password"/>
 					</div>
 				</div>
@@ -35,7 +35,7 @@ $title = 'Login Page';
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<a href="{{ route('register') }}">Register an Account</a>
+						<a href="{{ route('register') }}">{{ __('Register an Account') }}</a>
 					</div>
 				</div>
 			</form>

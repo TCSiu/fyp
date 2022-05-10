@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>$title</title>
+    @include('layouts/head')
 </head>
 <body>
-    @section('sidebar')
-        這是側選單
-    @show
-
-    <div class="container">
-        @yield('content')
+    <div class="wrapper">
+        @includeIf('layouts/sidebar')
+        <div class="main">
+            @includeIf('layouts/navbar')
+            @hasSection('content')
+                @yield('content')
+            @endif
+            @includeIf('layouts/footer')
+        </div>
     </div>
-    @include('layouts/scripts')
-    @include('layouts/footer')
+    @includeIf('layouts/scripts')
 </body>
 </html>

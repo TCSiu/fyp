@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Base\Model;
 
 class AccessToken extends Model
 {
@@ -28,7 +28,7 @@ class AccessToken extends Model
 		return AccessToken::create([
 			'user_id'	   	=> $user_id, 
 			'access_token'  => Hash::make(date('YmdHisu')), 
-			'expiry_date'   => date('Y-m-d H:i:s', strtotime('+1 minutes')),
+			'expiry_date'   => date('Y-m-d H:i:s', strtotime('+1 hours')),
 			'purpose'		=> $purpose,
 			'is_active'		=> 1
 		]);

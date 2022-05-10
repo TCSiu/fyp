@@ -10,30 +10,30 @@ $title = 'Register Page';
     @endif
     <div class="card d-block w-50 position-absolute top-50 start-50 translate-middle">
         <div class="card-header text-center">
-            <h4>Register</h1>    
+            <h4>{{ __('Register') }}</h1>    
         </div>
         <div class="card-body">
             <form action="{{ route('register') }}" method="post">
                 @csrf
                 <div class="row mb-3">
                     <div class="col-6">
-                        <label for="registerUserName" class="form-label">Username</label>
-                        <input type="text" class="form-control" name="name" id="registerUserName" value="{{ old('name')??'' }}" placeholder="Enter a Username"/>
+                        <label for="registerUserName" class="form-label">{{ __('Username') }}</label>
+                        <input type="text" class="form-control" name="name" id="registerUserName" placeholder="Enter a Username"/>
                     </div>
                     <div class="col-6">
-                        <label for="registerEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" id="registerEmail" value="{{ old('email')??'' }}" placeholder="Enter a Email"/>
+                        <label for="registerEmail" class="form-label">{{ __('Email') }}</label>
+                        <input type="email" class="form-control" name="email" id="registerEmail" placeholder="Enter a Email"/>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
-                        <label for="registerPassword" class="form-label">Password</label>
+                        <label for="registerPassword" class="form-label">{{ __('Password') }}</label>
                         <input type="password" class="form-control" name="password" id="registerPassword" placeholder="Enter a Password"/>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12">
-                        <label for="registerPasswordConfirmation" class="form-label">Password Confirm</label>
+                        <label for="registerPasswordConfirmation" class="form-label">{{ __('Password Confirm') }}</label>
                         <input type="password" class="form-control" name="password_confirmation" id="registerPasswordConfirmation" placeholder="Re-enter a Password"/>
                     </div>
                 </div>
@@ -45,7 +45,7 @@ $title = 'Register Page';
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <a href="{{ route('login') }}">Login an Account</a>
+                        <a href="{{ route('login') }}">{{ __('Login an Account') }}</a>
                     </div>
                 </div>
             </form>
