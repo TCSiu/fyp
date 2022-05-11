@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('sex');
             $table->string('first_name');
             $table->string('last_name');
-            $table->integer('phone_name');
+            $table->string('phone_number');
             $table->string('address');
             $table->dateTime('delivery_date');
             $table->string('product_name_and_number');

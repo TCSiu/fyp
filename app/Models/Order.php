@@ -39,6 +39,6 @@ class Order extends Model
     ];
 
     public static function getData(){
-        $data = static::all();
+        return static::where('is_delete', 0);
     }
 }

@@ -29,7 +29,7 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href=""><i class="align-middle" data-feather="log-in"></i> <span class="align-middle">{{ __('Create Order') }}</span></a>
+                <a class="sidebar-link" href="{{ route('cms.create', ['model' => 'order']) }}"><i class="align-middle" data-feather="log-in"></i> <span class="align-middle">{{ __('Create Order') }}</span></a>
             </li>
 
             <li class="sidebar-header">

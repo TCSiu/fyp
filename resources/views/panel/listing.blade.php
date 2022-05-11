@@ -3,8 +3,8 @@ if(Cookie::has('access_token')){
     $token = Cookie::get('access_token');
 }
 if(Cookie::has('auth_user')){
-    $data = Cookie::get('auth_user');
-    $auth_user = json_decode($data, true);
+    $cookie_user = Cookie::get('auth_user');
+    $auth_user = json_decode($cookie_user, true);
 }
 @endphp
 @extends('layouts/default')
@@ -23,16 +23,19 @@ if(Cookie::has('auth_user')){
                                 @if($total_count == 0)
                                     {{ __('There is no records yet.') }}
                                 @else
-                                    {{ __('Showing :count of :total records.', ['count' => $count, 'total' => intval($total_count)]) }}
+                                    {{ __('Showing :count of :total records.', ['count' => sizeof($data), 'total' => intval($total_count)]) }}
                                 @endif
                             </h6>
+                            <div class="mt-3">
+								<a class="btn btn-success white-space-nowrap" href="{{ route('cms.create', ['model' => $model]) }}" id="btn-create">
+									<i class="align-middle me-2" data-feather="plus"></i>{{ __('Create New') }}
+								</a>
+							</div>
                         @else
                             <h6 class="card-subtitle text-muted">{{ __('An error has occured!') }}</h6>
                         @endif
                     </div>
-                    <div class="card-body">
-                        
-                    </div>
+                    @includeIf('layout/listing_table')
                 </div>
             </div>
         </div>

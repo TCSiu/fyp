@@ -45,4 +45,8 @@ class Model extends EloquentModel
     public static function getTargetField(){
         return static::TARGET_FIELD;
     }
+
+    public static function getData(){
+        $data = static::all();
+    }
 }
