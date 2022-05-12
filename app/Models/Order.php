@@ -14,6 +14,7 @@ class Order extends Model
     public const PAGE_TITLE = 'Order';
     public const INPAGE_TITLE = 'View Order';
     public const TARGET_FIELD = ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
+    public const ALLOW_ACTIONS = ['view', 'edit', 'delete'];
 
     protected $fillable = [
         'sex',

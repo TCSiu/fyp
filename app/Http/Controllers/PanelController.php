@@ -24,7 +24,8 @@ class PanelController extends Controller
         $className = Model::checkModel($model);
         $page_title = $className::getPageTitle();
         $inpage_title = $className::getInpageTitle();
-        $target_field = $className::getTargetField();
+        $target_fields = $className::getTargetField();
+        $allow_actions = $className::getAllowActions();
         $data = $className::getData();
         $total_count = $data->count();
         $data = $data->paginate(20);
@@ -33,6 +34,8 @@ class PanelController extends Controller
             ->with('model', $model)
             ->with('title', $page_title)
             ->with('inpage_title', $inpage_title)
+            ->with('target_fields', $target_fields)
+            ->with('allow_actions', $allow_actions)
             ->with('data', $data)
             ->with('total_count', $total_count);
     }

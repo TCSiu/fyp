@@ -13,6 +13,7 @@ class Model extends EloquentModel
     public const PAGE_TITLE = 'View Page';
     public const INPAGE_TITLE = 'Default View Page';
     public const TARGET_FIELD = ['id'];
+    public const ALLOW_ACTIONS = ['view'];
 
     public static function checkModel(string $model = ''){
         if(isset($model) && is_string($model)){
@@ -41,12 +42,16 @@ class Model extends EloquentModel
     public static function getInpageTitle(){
         return static::INPAGE_TITLE;
     }
-
+    
     public static function getTargetField(){
         return static::TARGET_FIELD;
     }
 
+    public static function getAllowActions(){
+        return static::ALLOW_ACTIONS;
+    }
+
     public static function getData(){
-        $data = static::all();
+        return static::all();
     }
 }

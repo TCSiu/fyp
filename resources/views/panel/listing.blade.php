@@ -35,7 +35,7 @@ if(Cookie::has('auth_user')){
                             <h6 class="card-subtitle text-muted">{{ __('An error has occured!') }}</h6>
                         @endif
                     </div>
-                    @includeIf('layout/listing_table')
+                    @includeIf('layouts/default_list_page')
                 </div>
             </div>
         </div>
