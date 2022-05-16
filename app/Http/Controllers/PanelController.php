@@ -6,53 +6,128 @@ use App\Models\Base\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PanelController extends Controller
 {
-    public function index(Request $request){
-        if($request->hasCookie('auth_user')){
-            $auth_user = $request->cookie('auth_user');
-            $data = json_decode($auth_user, true);
-            if($data['is_admin']){
-                return view('panel/panel')->with('title', 'Panel Page');
-            }
+	public function index(Request $request){
+		if($request->hasCookie('auth_user')){
+			$auth_user = $request->cookie('auth_user');
+			$data = json_decode($auth_user, true);
+			if($data['is_admin']){
+				return view('panel/panel')->with('title', 'Panel Page');
+			}
+		}
+		return view('login')->with('errors', 'Unauthorized user');
+	}
+
+	public function list(Request $request, string $model = ''){
+		if($className = Model::checkModel($model)){
+			$page_title = $className::PAGE_TITLE;
+			$inpage_title = 'View ' . $page_title;
+			$target_fields = $className::TARGET_FIELD;
+			$allow_actions = $className::ALLOW_ACTIONS;
+			$can_create = $className::CAN_CREATE;
+			$data = $className::getData(20);
+			$total_count = $className::getCount();
+	
+			return view('panel/list')
+				->with('model', $model)
+				->with('title', $page_title)
+				->with('inpage_title', $inpage_title)
+				->with('target_fields', $target_fields)
+				->with('allow_actions', $allow_actions)
+				->with('can_create', $can_create)
+				->with('data', $data)
+				->with('total_count', $total_count);
+		}
+		throw new \Exception();
+	}
+
+	public function create(Request $request, string $model = ''){
+		if ($className = Model::checkModel($model)) {
+			$message = [];
+			$page_title = $className::PAGE_TITLE;
+			$inpage_title = 'Create ' . $page_title;
+			return view('panel/create')
+				->with('model', $model)
+				->with('title', $page_title)
+				->with('inpage_title', $inpage_title)
+				->with('msg', $message)
+				->with('method', 'create');
+		}
+		throw new \Exception();
+	}
+
+	public function view(Request $request, string $model = '', int $id = 1){
+		if($className = Model::checkModel($model)){
+			$page_title = $className::PAGE_TITLE;
+			$inpage_title = 'View ' . $page_title . ' ' . $id;
+			$fields = $className::FIELDS;
+			$data = $className::findRecord($id);
+			return view('panel/view')
+				->with('model', $model)
+				->with('title', $page_title)
+				->with('inpage_title', $inpage_title)
+				->with('fields', $fields)
+				->with('data', $data)
+				->with('id', $data->id);
+		}
+		throw new \Evception();
+	}
+
+	public function edit(Request $request, string $model = '', int $id = 1){
+		if($className = Model::checkModel($model)){
+			$record = $className::findRecord($id);
+			if(isset($record) && $record instanceOf Model){
+				$msg = [];
+				$page_title = $className::PAGE_TITLE;
+				$inpage_title = 'Edit ' . $page_title . ' ' . $id;
+				return view('panel/create')
+					->with('model', $model)
+					->with('title', $page_title)
+					->with('inpage_title', $inpage_title)
+					->with('msg', $msg)
+					->with('record', $record)
+					->with('method', 'store')
+					->with('id', $id);
+			}
+		}
+		throw new \Evception();
+	}
+
+	public function store(Request $request, string $model = '', int $id = -1){
+        if ($className = Model::checkModel($model)) {
+            $temp = $request->all();
+			$validator = Validator::make($temp, $className::VALIDATE_RULES, $className::VALIDATE_MESSAGE);
+			if ($validator->fails()) {
+				$errors = $validator->errors()->toArray();
+				$message['type'] = 'errors';
+				foreach ($errors as $k => $row) {
+					foreach ($row as $kk => $rrow) {
+						$message['message'][] = $rrow;
+					}
+				}
+				return redirect()
+				->back()
+				->with('msg', $message)
+				->withInput();
+			}
+			$data = $className::matchField($temp);
+			$order = $className::updateOrCreate(['id' => $id], $data);
+			return redirect(route('cms.view', ['model' => $model, 'id' => $order->id]));
         }
-        return view('login')->with('errors', 'Unauthorized user');
-    }
+		throw new \Evception();
+	}
 
-    public function list(Request $request, string $model = '', int $page = 1){
-        $className = Model::checkModel($model);
-        $page_title = $className::getPageTitle();
-        $inpage_title = $className::getInpageTitle();
-        $target_fields = $className::getTargetField();
-        $allow_actions = $className::getAllowActions();
-        $data = $className::getData();
-        $total_count = $data->count();
-        $data = $data->paginate(20);
-
-        return view('panel/listing')
-            ->with('model', $model)
-            ->with('title', $page_title)
-            ->with('inpage_title', $inpage_title)
-            ->with('target_fields', $target_fields)
-            ->with('allow_actions', $allow_actions)
-            ->with('data', $data)
-            ->with('total_count', $total_count);
-    }
-
-    public function create(Request $request, string $model = ''){
-        $data = [];
-        $className = Model::checkModel($model);
-        $data['sex'] = 'Male';
-        $data['first_name'] = 'test';
-        $data['last_name'] = 'admin';
-        $data['phone_number'] = '12345678';
-        $data['address'] = 'Tin Shui Wai';
-        $data['delivery_date'] = '2022-11-05';
-        $data['product_name_and_number'] = json_encode(['test' => 1, 'test2' => 2]);
-        $data['is_in_group'] = 0;
-        $data['is_complete'] = 0;
-        $data['is_delete'] = 0;
-        $order = $className::create($data);
-    }
+	public function delete(Request $request, string $model = '', int $id = -1){
+		if($className = Model::checkModel($model)){
+			$record = $className::findRecord($id);
+			if(isset($record) && $record instanceOf Model){
+				$record->deleteRecord();
+				return redirect(route('cms.list', ['model' => $model]));
+			}
+		}
+		throw new \Evception();
+	}
 }

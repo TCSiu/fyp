@@ -7,51 +7,54 @@ use Illuminate\Support\Facades\Hash;
 
 class Model extends EloquentModel
 {
-    use HasFactory;
+	use HasFactory;
 
-    public const MODEL_NAMESPACE = '\\App\\Models\\';
-    public const PAGE_TITLE = 'View Page';
-    public const INPAGE_TITLE = 'Default View Page';
-    public const TARGET_FIELD = ['id'];
-    public const ALLOW_ACTIONS = ['view'];
+	public const MODEL_NAMESPACE 	= '\\App\\Models\\';
+	public const PAGE_TITLE 		= 'View Page';
+	public const CAN_CREATE = true;
+	public const TARGET_FIELD 		= ['id'];
+	public const ALLOW_ACTIONS 		= ['view'];
+	public const VALIDATE_RULES 	= [];
+	public const VALIDATE_MESSAGE 	= [];
+	public const FIELDS				= []; 
 
-    public static function checkModel(string $model = ''){
-        if(isset($model) && is_string($model)){
-            $model = trim($model);
-            if(strlen($model) > 0){
-                $className = static::getModelClassName($model);
-                if(class_exists($className)){
-                    return $className;
-                }
-            }
-        }
-    }
+	public static function checkModel(string $model = ''){
+		if(isset($model) && is_string($model)){
+			$model = trim($model);
+			if(strlen($model) > 0){
+				$className = static::getModelClassName($model);
+				if(class_exists($className)){
+					return $className;
+				}
+			}
+		}
+		return false;
+	}
 
-    public static function getModelClassName(string $model = ''){
-        return trim(static::MODEL_NAMESPACE).trim(str_replace(' ', '', static::getModelName($model)));
-    }
+	public static function getModelClassName(string $model = ''){
+		return trim(static::MODEL_NAMESPACE).trim(str_replace(' ', '', static::getModelName($model)));
+	}
 
-    public static function getModelName(string $model = ''){
-        return ucwords(trim($model));
-    }
+	public static function getModelName(string $model = ''){
+		return ucwords(trim($model));
+	}
 
-    public static function getPageTitle(){
-        return static::PAGE_TITLE;
-    }
+	public static function getCount(){
+		return static::count();
+	}
 
-    public static function getInpageTitle(){
-        return static::INPAGE_TITLE;
-    }
-    
-    public static function getTargetField(){
-        return static::TARGET_FIELD;
-    }
+	public static function getData(int $paginate_size = -1){
+		if($paginate_size > 0){
+			return static::paginate($paginate_size);
+		}
+		return static::all();
+	}
 
-    public static function getAllowActions(){
-        return static::ALLOW_ACTIONS;
-    }
+	public static function matchField($data){
+		return $data;
+	}
 
-    public static function getData(){
-        return static::all();
-    }
+	public static function findRecord(int $id = 1){
+		return static::where('id', $id)->first();
+	}
 }

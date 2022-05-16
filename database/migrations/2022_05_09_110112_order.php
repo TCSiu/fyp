@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone_number');
             $table->string('address');
-            $table->dateTime('delivery_date');
+            $table->date('delivery_date');
             $table->string('product_name_and_number');
             $table->boolean('is_in_group');
             $table->boolean('is_complete');

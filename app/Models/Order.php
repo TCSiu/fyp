@@ -7,39 +7,113 @@ use App\Models\Base\Model;
 
 class Order extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $table = 'order';
+	protected $table = 'order';
 
-    public const PAGE_TITLE = 'Order';
-    public const INPAGE_TITLE = 'View Order';
-    public const TARGET_FIELD = ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
-    public const ALLOW_ACTIONS = ['view', 'edit', 'delete'];
+	public const PAGE_TITLE 		= 'Order';
+	public const CAN_CREATE = true;
+	public const TARGET_FIELD 		= ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
+	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
+	public const VALIDATE_RULES 	= [
+		'sex' 				=> 'required',
+		'first_name' 		=> 'required|string|max:255',
+		'last_name' 		=> 'required|string|max:255',
+		'phone_number' 		=> 'required|integer|digits:8',
+		'address' 			=> 'required|string',
+		'delivery_date' 	=> 'required|date_format:Y-m-d|after_or_equal:today',
+		'items_name' 		=> 'required|array',
+		'items_name.*' 		=> 'required|string',
+		'items_number.*' 	=> 'required|integer',
+	];
 
-    protected $fillable = [
-        'sex',
-        'first_name',
-        'last_name',
-        'phone_number',
-        'address',
-        'delivery_date',
-        'product_name_and_number',
-        'is_in_group',
-        'is_complete',
-        'is_delete',
-    ];
+	public const VALIDATE_MESSAGE 	= [
+		'items_name.required'		=>	'Product table cannot be empty.',
+		'items_name.*.required'		=>	'Product name :index cannot be empty.',
+		'items_number.*.required'	=>	'Product number :index field cannot be empty.',
+	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'address',
-        'phone_number',
-    ];
+	public const FIELDS = [
+		'sex' => 'normal',
+		'first_name' => 'normal',
+		'last_name' => 'normal',
+		'phone_number' => 'normal',
+		'address' => 'normal',
+		'delivery_date' => 'normal',
+		'product_name_and_number' => 'table',
+		'is_in_group' => 'none',
+		'is_complete' => 'boolean',
+		'is_delete' => 'none',
+	];
 
-    public static function getData(){
-        return static::where('is_delete', 0);
+	protected $fillable = [
+		'sex',
+		'first_name',
+		'last_name',
+		'phone_number',
+		'address',
+		'delivery_date',
+		'product_name_and_number',
+		'is_in_group',
+		'is_complete',
+		'is_delete',
+	];
+
+	/**
+	 * The attributes that should be hidden for serialization.
+	 *
+	 * @var array<int, string>
+	 */
+	protected $hidden = [
+		'address',
+		'phone_number',
+	];
+
+	public static function getCount(){
+		return static::where('is_delete', 0)->count();
+	}
+
+	public static function getData(int $paginate_size = -1){
+		if($paginate_size > 0){
+			return static::where('is_delete', 0)->paginate($paginate_size);
+		}
+		return static::where('is_delete', 0)->get();
+	}
+
+	public static function matchField($data){
+		$temp = [];
+		if(empty(static::FIELD)){
+			return $data;
+		}
+		foreach($data as $key => $value){
+			if(array_key_exists($key, static::FIELD)){
+				$temp[$key] = $value;
+			}
+		}
+		$product_name_and_number = [];
+		if(isset($data['items_name'], $data['items_number'])){
+			if((is_array($data['items_name']) && is_array($data['items_number'])) && (sizeOf($data['items_name']) > 0 && sizeOf($data['items_number']) > 0)){
+				$length = max(sizeOf($data['items_name']), sizeOf($data['items_number']));
+				$count = 1;
+				for($i = 1; $i <= $length; $i++){
+					if(!isset($data['items_is_remove'][$i])){
+						$product_name_and_number[$count++] = [
+							'product_name' 		=> $data['items_name'][$i],
+							'product_number' 	=> $data['items_number'][$i],
+						];
+					}
+				}
+			}
+		}
+		$temp['product_name_and_number'] 	= json_encode($product_name_and_number, JSON_FORCE_OBJECT);
+		$temp['is_in_group'] 				= 0;
+		$temp['is_complete'] 				= 0;
+		$temp['is_delete'] 					= 0;
+		return $temp;
+	}
+
+	public function deleteRecord(){
+        $this->is_delete = true;
+        $this->save();
     }
 }

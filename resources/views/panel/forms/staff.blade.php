@@ -12,22 +12,18 @@ if(Cookie::has('auth_user')){
 @section('content')
 <main class="content">
 	<div class="container-fluid p-0">
-
-		<h1 class="h3 mb-3">{{ __('Dashboard') }}</h1>
-
+		<h1 class="h3 mb-3">{{ __('Create Staff Account') }}</h1>
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
 					<div class="card-header">
-						<h5 class="card-title mb-0">{{ __('Dashboard') }}</h5>
+						<h5 class="card-title mb-0">{{ __('Empty card') }}</h5>
 					</div>
 					<div class="card-body">
-						{{ __($token) }}
 					</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 </main>
 @stop

@@ -1,0 +1,9 @@
+.datepicker{}
+.datepicker-dropdown{padding: 8px;border-radius: 4px;box-sizing: border-box;}
+.datepicker-dropdown .datepicker-days table thead tr:nth-child(2){height:30px;}
+.datepicker-dropdown .datepicker-days table thead tr:nth-child(3) th,
+.datepicker-dropdown .datepicker-days table tbody td{width:36px;height:36px;}
+.datepicker-dropdown .datepicker-days table thead .dow:first-of-type,
+.datepicker-dropdown .datepicker-days table thead .dow:last-of-type{color: red;}
+/* .datepicker-dropdown .datepicker-days table tbody tr td:first-of-type,
+.datepicker-dropdown .datepicker-days table tbody tr td:last-of-type{color: red;} */
