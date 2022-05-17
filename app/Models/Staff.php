@@ -19,10 +19,6 @@ class Staff extends Model
 	public const VALIDATE_RULES 	= [
 		'ac_name' 			    =>  'required|string|min:5|max:20|unique:staff',
 		'password' 		        =>  'required|confirmed|Password::min(8)->mixedCase()->numbers()',
-        'login_failed_count'    =>  'required|numeric',
-        'is_locked'             =>  'required|boolean',
-        'is_active'             =>  'required|boolean',
-
 	];
 
 	protected $fillable = [
