@@ -99,6 +99,12 @@ class PanelController extends Controller
 	public function store(Request $request, string $model = '', int $id = -1){
         if ($className = Model::checkModel($model)) {
             $temp = $request->all();
+			if(isset($temp['items_is_remove'])){
+				foreach($temp['items_is_remove'] as $key => $value){
+					unset($temp['items_name'][$key]);
+					unset($temp['items_number'][$key]);
+				}
+			}
 			$validator = Validator::make($temp, $className::VALIDATE_RULES, $className::VALIDATE_MESSAGE);
 			if ($validator->fails()) {
 				$errors = $validator->errors()->toArray();

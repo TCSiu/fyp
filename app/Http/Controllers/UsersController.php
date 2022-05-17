@@ -45,9 +45,9 @@ class UsersController extends BaseController
 		if($request->isMethod('post')){
 			$data = $request->all();
 			$rules = [
-				'name' => ['required', 'string', 'min:5', 'max:255', 'unique:users'],
+				'name' => ['required', 'string', 'min:5', 'max:20', 'unique:users'],
 				'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], 
-				'password' => ['required', 'string', 'min:6', 'max:255', 'confirmed'], 
+				'password' => ['required', Password::min(8)->mixedCase()->numbers(), 'confirmed'], 
 			];
 			$validator = Validator::make($data, $rules);
 	

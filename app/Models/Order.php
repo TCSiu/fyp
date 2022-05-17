@@ -13,7 +13,7 @@ class Order extends Model
 
 	public const PAGE_TITLE 		= 'Order';
 	public const CAN_CREATE = true;
-	public const TARGET_FIELD 		= ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
+	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 	public const VALIDATE_RULES 	= [
 		'sex' 				=> 'required',
@@ -82,26 +82,23 @@ class Order extends Model
 
 	public static function matchField($data){
 		$temp = [];
-		if(empty(static::FIELD)){
+		if(empty(static::FIELDS)){
 			return $data;
 		}
 		foreach($data as $key => $value){
-			if(array_key_exists($key, static::FIELD)){
+			if(array_key_exists($key, static::FIELDS)){
 				$temp[$key] = $value;
 			}
 		}
 		$product_name_and_number = [];
 		if(isset($data['items_name'], $data['items_number'])){
 			if((is_array($data['items_name']) && is_array($data['items_number'])) && (sizeOf($data['items_name']) > 0 && sizeOf($data['items_number']) > 0)){
-				$length = max(sizeOf($data['items_name']), sizeOf($data['items_number']));
 				$count = 1;
-				for($i = 1; $i <= $length; $i++){
-					if(!isset($data['items_is_remove'][$i])){
-						$product_name_and_number[$count++] = [
-							'product_name' 		=> $data['items_name'][$i],
-							'product_number' 	=> $data['items_number'][$i],
-						];
-					}
+				foreach(array_combine($data['items_name'], $data['items_number']) as $name => $number){
+					$product_name_and_number[$count++] = [
+						'product_name' 		=> $name,
+						'product_number' 	=> $number,
+					];
 				}
 			}
 		}
