@@ -14,6 +14,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class UsersController extends BaseController
 {

@@ -15,10 +15,6 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone_number');
-            $table->string('email');
             $table->string('ac_name');
             $table->string('password');
             $table->integer('login_failed_count');
