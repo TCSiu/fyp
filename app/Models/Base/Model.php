@@ -12,7 +12,7 @@ class Model extends EloquentModel
 	public const MODEL_NAMESPACE 	= '\\App\\Models\\';
 	public const PAGE_TITLE 		= 'View Page';
 	public const CAN_CREATE = true;
-	public const TARGET_FIELD 		= ['id'];
+	public const TABLE_FIELDS		= ['id'];
 	public const ALLOW_ACTIONS 		= ['view'];
 	public const VALIDATE_RULES 	= [];
 	public const VALIDATE_MESSAGE 	= [];

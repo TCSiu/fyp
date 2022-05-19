@@ -3,7 +3,7 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				@foreach($target_fields as $field)
-					<th>{{ $field }}</th>
+					<th>{{ __(ucwords(str_replace('_', ' ', $field))) }}</th>
 				@endforeach
 				<th>{{ __('actions') }}</th>
 			</thead>

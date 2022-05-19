@@ -25,7 +25,7 @@ class PanelController extends Controller
 		if($className = Model::checkModel($model)){
 			$page_title = $className::PAGE_TITLE;
 			$inpage_title = 'View ' . $page_title;
-			$target_fields = $className::TARGET_FIELD;
+			$target_fields = $className::TABLE_FIELDS;
 			$allow_actions = $className::ALLOW_ACTIONS;
 			$can_create = $className::CAN_CREATE;
 			$data = $className::getData(20);
