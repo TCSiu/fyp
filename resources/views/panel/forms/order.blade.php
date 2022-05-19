@@ -41,7 +41,7 @@ if(isset($record)){
 		<div class="row mb-3">
 			<div class="col-12 col-md-4">
 				<label for="orderPhoneNumber" class="form-label">Phone Number:</label>
-				<input type="tel" pattern="[0-9]{8}" class="form-control" aria-describedby="orderPhoneNumber" name="phone_number" id="orderPhoneNumber" value="{{ $record['phone_number'] ?? old('phone_number') ?? '' }}" />
+				<input type="tel" class="form-control" aria-describedby="orderPhoneNumber" name="phone_number" id="orderPhoneNumber" value="{{ $record['phone_number'] ?? old('phone_number') ?? '' }}" />
 			</div>
 			<div class="col-12 col-md-8">
 				<label for="orderDeliveryDate" class="form-label">Delivery Date:</label>

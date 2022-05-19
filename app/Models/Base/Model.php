@@ -11,7 +11,7 @@ class Model extends EloquentModel
 
 	public const MODEL_NAMESPACE 	= '\\App\\Models\\';
 	public const PAGE_TITLE 		= 'View Page';
-	public const CAN_CREATE = true;
+	public const CAN_CREATE 		= true;
 	public const TABLE_FIELDS		= ['id'];
 	public const ALLOW_ACTIONS 		= ['view'];
 	public const VALIDATE_RULES 	= [];
@@ -43,6 +43,10 @@ class Model extends EloquentModel
 		return static::count();
 	}
 
+	public static function getValidateRules(int $id = -1){
+		return static::VALIDATE_RULES;
+	}
+
 	public static function getData(int $paginate_size = -1){
 		if($paginate_size > 0){
 			return static::paginate($paginate_size);
@@ -57,4 +61,9 @@ class Model extends EloquentModel
 	public static function findRecord(int $id = 1){
 		return static::where('id', $id)->first();
 	}
+
+	public static function modifyData(array $data = []){
+		return $data;
+	}
+
 }

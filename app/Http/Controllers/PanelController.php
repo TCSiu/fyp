@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class PanelController extends Controller
 {
@@ -63,7 +64,7 @@ class PanelController extends Controller
 		if($className = Model::checkModel($model)){
 			$page_title = $className::PAGE_TITLE;
 			$inpage_title = 'View ' . $page_title . ' ' . $id;
-			$fields = $className::FIELDS;
+			$fields = $className::VIWES_FIELDS;
 			$data = $className::findRecord($id);
 			return view('panel/view')
 				->with('model', $model)
@@ -73,7 +74,7 @@ class PanelController extends Controller
 				->with('data', $data)
 				->with('id', $data->id);
 		}
-		throw new \Evception();
+		throw new \Exception();
 	}
 
 	public function edit(Request $request, string $model = '', int $id = 1){
@@ -93,19 +94,14 @@ class PanelController extends Controller
 					->with('id', $id);
 			}
 		}
-		throw new \Evception();
+		throw new \Exception();
 	}
 
 	public function store(Request $request, string $model = '', int $id = -1){
         if ($className = Model::checkModel($model)) {
             $temp = $request->all();
-			if(isset($temp['items_is_remove'])){
-				foreach($temp['items_is_remove'] as $key => $value){
-					unset($temp['items_name'][$key]);
-					unset($temp['items_number'][$key]);
-				}
-			}
-			$validator = Validator::make($temp, $className::VALIDATE_RULES, $className::VALIDATE_MESSAGE);
+			$temp = $className::modifyData($temp);
+			$validator = Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
 			if ($validator->fails()) {
 				$errors = $validator->errors()->toArray();
 				$message['type'] = 'errors';
@@ -119,11 +115,11 @@ class PanelController extends Controller
 				->with('msg', $message)
 				->withInput();
 			}
-			$data = $className::matchField($temp);
-			$order = $className::updateOrCreate(['id' => $id], $data);
+			$data 	= $className::matchField($temp);
+			$order 	= $className::updateOrCreate(['id' => $id], $data);
 			return redirect(route('cms.view', ['model' => $model, 'id' => $order->id]));
         }
-		throw new \Evception();
+		throw new \Exception();
 	}
 
 	public function delete(Request $request, string $model = '', int $id = -1){
@@ -134,6 +130,6 @@ class PanelController extends Controller
 				return redirect(route('cms.list', ['model' => $model]));
 			}
 		}
-		throw new \Evception();
+		throw new \Exception();
 	}
 }

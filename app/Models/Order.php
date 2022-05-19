@@ -15,17 +15,6 @@ class Order extends Model
 	public const CAN_CREATE = true;
 	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
-	public const VALIDATE_RULES 	= [
-		'sex' 				=> 'required',
-		'first_name' 		=> 'required|string|max:255',
-		'last_name' 		=> 'required|string|max:255',
-		'phone_number' 		=> 'required|integer|digits:8',
-		'address' 			=> 'required|string',
-		'delivery_date' 	=> 'required|date_format:Y-m-d|after_or_equal:today',
-		'items_name' 		=> 'required|array',
-		'items_name.*' 		=> 'required|string',
-		'items_number.*' 	=> 'required|integer',
-	];
 
 	public const VALIDATE_MESSAGE 	= [
 		'items_name.required'		=>	'Product table cannot be empty.',
@@ -33,7 +22,7 @@ class Order extends Model
 		'items_number.*.required'	=>	'Product number :index field cannot be empty.',
 	];
 
-	public const FIELDS = [
+	public const VIWES_FIELDS = [
 		'sex' => 'normal',
 		'first_name' => 'normal',
 		'last_name' => 'normal',
@@ -73,6 +62,20 @@ class Order extends Model
 		return static::where('is_delete', 0)->count();
 	}
 
+	public static function getValidateRules(int $id = -1){
+		return [
+			'sex' 				=> 'required',
+			'first_name' 		=> 'required|string|max:255',
+			'last_name' 		=> 'required|string|max:255',
+			'phone_number' 		=> 'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
+			'address' 			=> 'required|string',
+			'delivery_date' 	=> 'required|date_format:Y-m-d|after_or_equal:today',
+			'items_name' 		=> 'required|array',
+			'items_name.*' 		=> 'required|string',
+			'items_number.*' 	=> 'required|integer',
+		];
+	}
+
 	public static function getData(int $paginate_size = -1){
 		if($paginate_size > 0){
 			return static::where('is_delete', 0)->paginate($paginate_size);
@@ -82,11 +85,11 @@ class Order extends Model
 
 	public static function matchField($data){
 		$temp = [];
-		if(empty(static::FIELDS)){
+		if(empty(static::VIWES_FIELDS)){
 			return $data;
 		}
 		foreach($data as $key => $value){
-			if(array_key_exists($key, static::FIELDS)){
+			if(array_key_exists($key, static::VIWES_FIELDS)){
 				$temp[$key] = $value;
 			}
 		}
@@ -113,4 +116,23 @@ class Order extends Model
         $this->is_delete = true;
         $this->save();
     }
+
+	public static function checkExistingTable(array $data = []){
+		if(isset($data['items_is_remove'])){
+			foreach($data['items_is_remove'] as $key => $value){
+				unset($data['items_name'][$key]);
+				unset($data['items_number'][$key]);
+			}
+		}
+		return $data;
+	}
+
+	public static function modifyData(array $data = []){
+		if(isset($data)){
+			if(method_exists(static::MODEL_NAMESPACE . 'Order', 'checkExistingTable')){
+				$data = static::checkExistingTable($data);
+			}
+		}
+		return $data;
+	}
 }
