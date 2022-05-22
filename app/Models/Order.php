@@ -13,7 +13,7 @@ class Order extends Model
 
 	public const PAGE_TITLE 		= 'Order';
 	public const CAN_CREATE = true;
-	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'address', 'is_in_group', 'is_complete'];
+	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'deliver1', 'is_in_group', 'is_complete'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 
 	public const VALIDATE_MESSAGE 	= [
@@ -27,7 +27,8 @@ class Order extends Model
 		'first_name' => 'normal',
 		'last_name' => 'normal',
 		'phone_number' => 'normal',
-		'address' => 'normal',
+		'deliver1' => 'normal',
+		'deliver2' => 'normal',
 		'delivery_date' => 'normal',
 		'product_name_and_number' => 'table',
 		'is_in_group' => 'none',
@@ -40,7 +41,10 @@ class Order extends Model
 		'first_name',
 		'last_name',
 		'phone_number',
-		'address',
+		'deliver1',
+		'deliver2',
+		'lat',
+		'lng',
 		'delivery_date',
 		'product_name_and_number',
 		'is_in_group',
@@ -54,7 +58,8 @@ class Order extends Model
 	 * @var array<int, string>
 	 */
 	protected $hidden = [
-		'address',
+		'deliver1',
+		'deliver2',
 		'phone_number',
 	];
 
@@ -68,7 +73,8 @@ class Order extends Model
 			'first_name' 		=> 'required|string|max:255',
 			'last_name' 		=> 'required|string|max:255',
 			'phone_number' 		=> 'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
-			'address' 			=> 'required|string',
+			'deliver1' 			=> 'required|string',
+			'deliver2' 			=> 'string',
 			'delivery_date' 	=> 'required|date_format:Y-m-d|after_or_equal:today',
 			'items_name' 		=> 'required|array',
 			'items_name.*' 		=> 'required|string',

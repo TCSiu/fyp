@@ -7,3 +7,4 @@
 .datepicker-dropdown .datepicker-days table thead .dow:last-of-type{color: red;}
 /* .datepicker-dropdown .datepicker-days table tbody tr td:first-of-type,
 .datepicker-dropdown .datepicker-days table tbody tr td:last-of-type{color: red;} */
+#map {height: 400px;/* The height is 400 pixels */width: 100%;/* The width is the width of the web page */}

@@ -100,6 +100,7 @@ class PanelController extends Controller
 	public function store(Request $request, string $model = '', int $id = -1){
         if ($className = Model::checkModel($model)) {
             $temp = $request->all();
+			dd($request);
 			$temp = $className::modifyData($temp);
 			$validator = Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
 			if ($validator->fails()) {

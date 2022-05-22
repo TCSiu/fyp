@@ -1,3 +1,7 @@
+@php
+
+@endphp
+
 <nav id="sidebar" class="sidebar js-sidebar">
 	<div class="sidebar-content js-simplebar">
 		<a class="sidebar-brand" href="index.html"><span class="align-middle">FYP</span></a>
@@ -16,7 +20,7 @@
 				</div>
 			</div>
 
-			<li class="sidebar-item active">
+			<li class="sidebar-item {{ (request()->routeIs('panel'))?'active':'' }}">
 				<a class="sidebar-link" href="{{ route('panel') }}"><i class="align-middle" data-feather="sliders"></i> <span class="align-middle">{{ __('Dashboard') }}</span></a>
 			</li>
 			
@@ -24,11 +28,11 @@
 				<span class="align-middle">{{ __('Delivery Order') }}</span>
 			</li>
 
-			<li class="sidebar-item">
+			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'order')?'active':'' }}">
 				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'order']) }}"><i class="align-middle" data-feather="user"></i> <span class="align-middle">{{ __('View All Orders') }}</span></a>
 			</li>
 
-			<li class="sidebar-item">
+			<li class="sidebar-item {{ (request()->routeIs('cms.create') && request()->route('model') == 'order')?'active':'' }}">
 				<a class="sidebar-link" href="{{ route('cms.create', ['model' => 'order']) }}"><i class="align-middle" data-feather="log-in"></i> <span class="align-middle">{{ __('Create Order') }}</span></a>
 			</li>
 
@@ -36,7 +40,7 @@
 				{{ __('Order Groups') }}
 			</li>
 
-			<li class="sidebar-item">
+			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'group')?'active':'' }}">
 				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'group']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('View All Order Groups') }}</span></a>
 			</li>
 
@@ -44,11 +48,11 @@
 				{{ __('Staff Account Management') }}
 			</li>
 
-			<li class="sidebar-item">
+			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'staff')?'active':'' }}">
 				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'staff']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('View All Staff Accounts') }}</span></a>
 			</li>
 
-			<li class="sidebar-item">
+			<li class="sidebar-item {{ (request()->routeIs('cms.create') && request()->route('model') == 'staff')?'active':'' }}">
 				<a class="sidebar-link" href="{{ route('cms.create', ['model' => 'staff']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('Create Staff Account') }}</span></a>
 			</li>
 
