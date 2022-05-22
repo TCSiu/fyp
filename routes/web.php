@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Commons\Constants;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\PanelController;
 

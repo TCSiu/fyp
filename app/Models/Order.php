@@ -74,7 +74,7 @@ class Order extends Model
 			'last_name' 		=> 'required|string|max:255',
 			'phone_number' 		=> 'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
 			'deliver1' 			=> 'required|string',
-			'deliver2' 			=> 'string',
+			'deliver2' 			=> 'nullable|string',
 			'delivery_date' 	=> 'required|date_format:Y-m-d|after_or_equal:today',
 			'items_name' 		=> 'required|array',
 			'items_name.*' 		=> 'required|string',

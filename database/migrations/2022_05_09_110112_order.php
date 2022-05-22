@@ -15,19 +15,19 @@ return new class extends Migration
 	{
 		Schema::create('order', function (Blueprint $table) {
 			$table->bigIncrements('id');
-			$table->string('sex');
-			$table->string('first_name');
-			$table->string('last_name');
-			$table->string('phone_number');
-			$table->string('deliver1');
+			$table->string('sex')->nullable();
+			$table->string('first_name')->nullable();
+			$table->string('last_name')->nullable();
+			$table->string('phone_number')->nullable();
+			$table->string('deliver1')->nullable();
 			$table->string('deliver2')->nullable();
-			$table->double('lat');
-			$table->double('lng');
-			$table->date('delivery_date');
-			$table->string('product_name_and_number');
-			$table->boolean('is_in_group');
-			$table->boolean('is_complete');
-			$table->boolean('is_delete');
+			$table->double('lat')->default(0);
+			$table->double('lng')->default(0);
+			$table->date('delivery_date')->nullable();
+			$table->string('product_name_and_number')->nullable();
+			$table->boolean('is_in_group')->nullable();
+			$table->boolean('is_complete')->nullable();
+			$table->boolean('is_delete')->nullable();
 			$table->timestamps();
 		});
 	}

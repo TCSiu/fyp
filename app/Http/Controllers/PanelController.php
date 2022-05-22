@@ -98,9 +98,8 @@ class PanelController extends Controller
 	}
 
 	public function store(Request $request, string $model = '', int $id = -1){
-        if ($className = Model::checkModel($model)) {
-            $temp = $request->all();
-			dd($request);
+		if ($className = Model::checkModel($model)) {
+			$temp = $request->all();
 			$temp = $className::modifyData($temp);
 			$validator = Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
 			if ($validator->fails()) {
@@ -119,7 +118,7 @@ class PanelController extends Controller
 			$data 	= $className::matchField($temp);
 			$order 	= $className::updateOrCreate(['id' => $id], $data);
 			return redirect(route('cms.view', ['model' => $model, 'id' => $order->id]));
-        }
+		}
 		throw new \Exception();
 	}
 

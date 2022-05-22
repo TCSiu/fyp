@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('sex');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone_number');
-            $table->string('email');
-            $table->string('ac_name');
-            $table->string('password');
+            $table->string('sex')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('email')->nullable();
+            $table->string('ac_name')->nullable();
+            $table->string('password')->nullable();
             $table->integer('login_failed_count')->default(0);
             $table->boolean('is_locked')->default(0);
             $table->boolean('is_active')->default(0);
