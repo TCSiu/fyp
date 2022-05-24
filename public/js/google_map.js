@@ -16,15 +16,6 @@ const options = {
 	strictBounds: false,
 };
 
-// elem_form.onsubmit = function(event){
-// 	event.preventDefault();
-// 	formData = new FormData(elem_form);
-// 	formData.append('lat', lat);
-// 	formData.append('lng', lng);
-// 	console.log([...formData.entries()]);
-// 	return false;
-// }
-
 function initAutocomplete(){
 	autocomplete = new google.maps.places.Autocomplete(elem_input, options);
 	autocomplete.addListener('place_changed', function(){
