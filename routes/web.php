@@ -34,4 +34,5 @@ Route::group(['prefix' => '/', 'middleware' => ['token.auth']], function(){
     Route::put('/{model}/post/{id?}',           [PanelController::class,    'store'])           ->name('cms.store')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');
     Route::get('/{model}/view/{id}',            [PanelController::class,    'view'])            ->name('cms.view')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');
     Route::get('/{model}/delete/{id}',		    [PanelController::class,    'delete'])	        ->name('cms.delete')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');
+    Route::get('/{model}/get_csv',              [PanelController::class,    'get_csv'])         ->name('cms.get_csv')->where('model', Constants::MODEL_REGEXP);
 });

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Storage;
 
 class PanelController extends Controller
 {
@@ -22,13 +23,13 @@ class PanelController extends Controller
 		return view('login')->with('errors', 'Unauthorized user');
 	}
 
-	public function list(Request $request, string $model = ''){
+	public function list(string $model = ''){
 		if($className = Model::checkModel($model)){
 			$page_title = $className::PAGE_TITLE;
 			$inpage_title = 'View ' . $page_title;
 			$target_fields = $className::TABLE_FIELDS;
 			$allow_actions = $className::ALLOW_ACTIONS;
-			$can_create = $className::CAN_CREATE;
+			$operations = $className::OPERATION;
 			$data = $className::getData(20);
 			$total_count = $className::getCount();
 	
@@ -38,14 +39,14 @@ class PanelController extends Controller
 				->with('inpage_title', $inpage_title)
 				->with('target_fields', $target_fields)
 				->with('allow_actions', $allow_actions)
-				->with('can_create', $can_create)
+				->with('operations', $operations)
 				->with('data', $data)
 				->with('total_count', $total_count);
 		}
 		throw new \Exception();
 	}
 
-	public function create(Request $request, string $model = ''){
+	public function create(string $model = ''){
 		if ($className = Model::checkModel($model)) {
 			$message = [];
 			$page_title = $className::PAGE_TITLE;
@@ -60,7 +61,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function view(Request $request, string $model = '', int $id = 1){
+	public function view(string $model = '', int $id = 1){
 		if($className = Model::checkModel($model)){
 			$page_title = $className::PAGE_TITLE;
 			$inpage_title = 'View ' . $page_title . ' ' . $id;
@@ -77,7 +78,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function edit(Request $request, string $model = '', int $id = 1){
+	public function edit(string $model = '', int $id = 1){
 		if($className = Model::checkModel($model)){
 			$record = $className::findRecord($id);
 			if(isset($record) && $record instanceOf Model){
@@ -122,13 +123,37 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function delete(Request $request, string $model = '', int $id = -1){
+	public function delete(string $model = '', int $id = -1){
 		if($className = Model::checkModel($model)){
 			$record = $className::findRecord($id);
 			if(isset($record) && $record instanceOf Model){
 				$record->deleteRecord();
 				return redirect(route('cms.list', ['model' => $model]));
 			}
+		}
+		throw new \Exception();
+	}
+
+	public function get_csv(string $model = ''){
+		if($className = Model::checkModel($model)){
+			$orders	=	$className::getCsvData();
+			$path = storage_path('app\\public\\order\\');
+			$filename = 'order_to_group.csv';
+			$columns = ['#', 'lat', 'lng', 'Location'];
+
+			if(!Storage::exists($path)){
+				Storage::makeDirectory($path, 0777, true, true);
+			}
+			$file = fopen($path.$filename, 'w');
+			fputcsv($file, $columns);
+			$data = [
+				'#'			=>	$orders->id,
+				'lat'		=>	$orders->lat,
+				'lng'		=>	$orders->lng,
+				'location'	=>	$orders->location,
+			];
+			fputcsv($file, $data);
+			fclose($file);
 		}
 		throw new \Exception();
 	}

@@ -12,7 +12,7 @@ class Order extends Model
 	protected $table = 'order';
 
 	public const PAGE_TITLE 		= 'Order';
-	public const CAN_CREATE = true;
+	public const OPERATION	 		= ['create'];
 	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'deliver1', 'is_in_group', 'is_complete'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 

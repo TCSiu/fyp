@@ -26,13 +26,7 @@ if(Cookie::has('auth_user')){
 									{{ __('Showing :count of :total records.', ['count' => sizeof($data), 'total' => intval($total_count)]) }}
 								@endif
 							</h6>
-							@if($can_create)
-							<div class="mt-3">
-								<a class="btn btn-success white-space-nowrap" href="{{ route('cms.create', ['model' => $model]) }}" id="btn-create">
-									<i class="align-middle me-2" data-feather="plus"></i>{{ __('Create New') }}
-								</a>
-							</div>
-							@endif
+							{{ View::make('layouts/operation', ['model'	=>	$model, 'operations'	=>	$operations]) }}
 						@else
 							<h6 class="card-subtitle text-muted">{{ __('An error has occured!') }}</h6>
 						@endif

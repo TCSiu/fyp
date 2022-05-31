@@ -11,8 +11,8 @@ class Group extends Model
 
 	protected $table = 'order_group';
 
-	public const PAGE_TITLE = 'Order Group';
-	public const CAN_CREATE = false;
+	public const PAGE_TITLE 	= 'Order Group';
+	public const OPERATION		= ['gen_csv'];	
 
 	// protected $fillable = [
 	//	 'product_name',
@@ -31,6 +31,10 @@ class Group extends Model
 
 	public static function getTitle(){
 		return static::PAGE_TITLE;
+	}
+
+	public static function getCsvData(){
+		return Order::select('id', 'lat', 'lng', 'deliver1')->where('is_delete', 0)->where('is_in_group', 0)->where('is_complete', 0)->get();
 	}
 	
 }
