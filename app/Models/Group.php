@@ -34,7 +34,7 @@ class Group extends Model
 	}
 
 	public static function getCsvData(){
-		return Order::select('id', 'lat', 'lng', 'deliver1')->where('is_delete', 0)->where('is_in_group', 0)->where('is_complete', 0)->get();
+		return Order::select('id', 'lat', 'lng', 'deliver1', 'deliver2')->where('is_delete', 0)->where('is_in_group', 0)->where('is_complete', 0)->get();
 	}
 	
 }

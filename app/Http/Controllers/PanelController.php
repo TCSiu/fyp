@@ -137,23 +137,29 @@ class PanelController extends Controller
 	public function get_csv(string $model = ''){
 		if($className = Model::checkModel($model)){
 			$orders	=	$className::getCsvData();
-			$path = storage_path('app\\public\\order\\');
+			$path = 'order\\';
+			$storage_path = storage_path('app\\'.$path);
 			$filename = 'order_to_group.csv';
 			$columns = ['#', 'lat', 'lng', 'Location'];
 
 			if(!Storage::exists($path)){
 				Storage::makeDirectory($path, 0777, true, true);
 			}
-			$file = fopen($path.$filename, 'w');
+			
+			$file = fopen($storage_path.$filename, 'w');
 			fputcsv($file, $columns);
-			$data = [
-				'#'			=>	$orders->id,
-				'lat'		=>	$orders->lat,
-				'lng'		=>	$orders->lng,
-				'location'	=>	$orders->location,
-			];
-			fputcsv($file, $data);
+			
+			foreach($orders as $order){
+				$data = [
+					'#'			=>	$order->id,
+					'lat'		=>	$order->lat,
+					'lng'		=>	$order->lng,
+					'location'	=>	trim($order->deliver1 . ' ' . $order->deliver2),
+				];
+				fputcsv($file, $data);
+			}
 			fclose($file);
+			return redirect()->back();
 		}
 		throw new \Exception();
 	}

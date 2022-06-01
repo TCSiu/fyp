@@ -23,17 +23,19 @@ class Order extends Model
 	];
 
 	public const VIWES_FIELDS = [
-		'sex' => 'normal',
-		'first_name' => 'normal',
-		'last_name' => 'normal',
-		'phone_number' => 'normal',
-		'deliver1' => 'normal',
-		'deliver2' => 'normal',
-		'delivery_date' => 'normal',
-		'product_name_and_number' => 'table',
-		'is_in_group' => 'none',
-		'is_complete' => 'boolean',
-		'is_delete' => 'none',
+		'sex' 						=> 	'normal',
+		'first_name' 				=> 	'normal',
+		'last_name' 				=> 	'normal',
+		'phone_number' 				=> 	'normal',
+		'deliver1' 					=> 	'normal',
+		'deliver2' 					=> 	'normal',
+		'lat'						=>	'none',
+		'lng'						=>	'none',
+		'delivery_date' 			=> 	'normal',
+		'product_name_and_number' 	=> 	'table',
+		'is_in_group' 				=> 	'none',
+		'is_complete' 				=> 	'boolean',
+		'is_delete' 				=>	'none',
 	];
 
 	protected $fillable = [
@@ -69,16 +71,18 @@ class Order extends Model
 
 	public static function getValidateRules(int $id = -1){
 		return [
-			'sex' 				=> 'required',
-			'first_name' 		=> 'required|string|max:255',
-			'last_name' 		=> 'required|string|max:255',
-			'phone_number' 		=> 'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
-			'deliver1' 			=> 'required|string',
-			'deliver2' 			=> 'nullable|string',
-			'delivery_date' 	=> 'required|date_format:Y-m-d|after_or_equal:today',
-			'items_name' 		=> 'required|array',
-			'items_name.*' 		=> 'required|string',
-			'items_number.*' 	=> 'required|integer',
+			'sex' 				=> 	'required',
+			'first_name' 		=> 	'required|string|max:255',
+			'last_name' 		=> 	'required|string|max:255',
+			'phone_number' 		=> 	'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
+			'deliver1' 			=> 	'required|string',
+			'deliver2' 			=> 	'nullable|string',
+			'lat'				=>	'required',
+			'lng'				=>	'required',
+			'delivery_date' 	=> 	'required|date_format:Y-m-d|after_or_equal:today',
+			'items_name' 		=> 	'required|array',
+			'items_name.*' 		=> 	'required|string',
+			'items_number.*' 	=> 	'required|integer',
 		];
 	}
 
