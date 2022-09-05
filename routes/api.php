@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', [ApiController::class, 'login']);
+
+ROute::group(['prefix' => '/', 'middleware' => ['token.api.auth']], function(){
+    Route::get('list',          [ApiController::class, 'list']);
 });

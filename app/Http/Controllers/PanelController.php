@@ -100,6 +100,7 @@ class PanelController extends Controller
 
 	public function store(Request $request, string $model = '', int $id = -1){
 		if ($className = Model::checkModel($model)) {
+			$auth_user = json_decode($request->cookie('auth_user'), true);
 			$temp = $request->all();
 			$temp = $className::modifyData($temp);
 			$validator = Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
@@ -116,9 +117,9 @@ class PanelController extends Controller
 				->with('msg', $message)
 				->withInput();
 			}
-			$data 	= $className::matchField($temp);
-			$order 	= $className::updateOrCreate(['id' => $id], $data);
-			return redirect(route('cms.view', ['model' => $model, 'id' => $order->id]));
+			$data 	= $className::matchField($auth_user, $temp);
+			$item 	= $className::updateOrCreate(['id' => $id], $data);
+			return redirect(route('cms.view', ['model' => $model, 'id' => $item->id]));
 		}
 		throw new \Exception();
 	}
@@ -143,7 +144,7 @@ class PanelController extends Controller
 			$columns = ['#', 'lat', 'lng', 'Location'];
 
 			if(!Storage::exists($path)){
-				Storage::makeDirectory($path, 0777, true, true);
+				Storage::makeDirectory($path, 0664, true, true);
 			}
 			
 			$file = fopen($storage_path.$filename, 'w');

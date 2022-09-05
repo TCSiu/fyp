@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('order_group', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('company_id');
             $table->timestamps();
         });
     }

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('company_id')->default(0);
             $table->string('sex')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->boolean('is_locked')->default(0);
             $table->boolean('is_active')->default(0);
             $table->boolean('is_delete')->default(0);
+            $table->string('api_token', 64)->unique();
             $table->timestamps();
         });
     }
