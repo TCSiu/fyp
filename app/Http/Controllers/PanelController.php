@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Base\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -13,26 +14,20 @@ use Illuminate\Support\Facades\Storage;
 class PanelController extends Controller
 {
 	public function index(Request $request){
-		if($request->hasCookie('auth_user')){
-			$auth_user = $request->cookie('auth_user');
-			$data = json_decode($auth_user, true);
-			if($data['is_admin']){
-				return view('panel/panel')->with('title', 'Panel Page');
-			}
-		}
-		return view('login')->with('errors', 'Unauthorized user');
+		return view('panel/panel')->with('title', 'Panel Page');
 	}
 
 	public function list(string $model = ''){
 		if($className = Model::checkModel($model)){
-			$page_title = $className::PAGE_TITLE;
-			$inpage_title = 'View ' . $page_title;
-			$target_fields = $className::TABLE_FIELDS;
-			$allow_actions = $className::ALLOW_ACTIONS;
-			$operations = $className::OPERATION;
-			$data = $className::getData(20);
-			$total_count = $className::getCount();
-	
+			$page_title 		= 	$className::PAGE_TITLE;
+			$inpage_title 		= 	'View ' . $page_title;
+			$target_fields 		= 	$className::TABLE_FIELDS;
+			$allow_actions 		= 	$className::ALLOW_ACTIONS;
+			$company_id			=	Auth::user()->company_id;	
+			$operations 		= 	$className::OPERATION;
+			$data 				= 	$className::getData(20, $company_id);
+			$total_count 		= 	$className::getCount();
+
 			return view('panel/list')
 				->with('model', $model)
 				->with('title', $page_title)
@@ -64,7 +59,7 @@ class PanelController extends Controller
 	public function view(string $model = '', int $id = 1){
 		if($className = Model::checkModel($model)){
 			$page_title = $className::PAGE_TITLE;
-			$inpage_title = 'View ' . $page_title . ' ' . $id;
+			$inpage_title = 'View ' . $className::getInpageTitle($id);
 			$fields = $className::VIWES_FIELDS;
 			$data = $className::findRecord($id);
 			return view('panel/view')
@@ -162,5 +157,9 @@ class PanelController extends Controller
 			return redirect()->back();
 		}
 		throw new \Exception();
+	}
+
+	public function image(){
+		return view('panel/image')->with('title', 'Panel Page');
 	}
 }

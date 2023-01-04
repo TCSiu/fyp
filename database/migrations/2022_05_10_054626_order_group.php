@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('order_group', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('company_id');
+            $table->string('order_id');
+            $table->integer('account_id');
+            $table->enum('status',['preparing', 'delivering', 'finished'])->default('preparing');
             $table->timestamps();
         });
     }

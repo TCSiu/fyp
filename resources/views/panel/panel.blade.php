@@ -2,10 +2,6 @@
 if(Cookie::has('access_token')){
 	$token = Cookie::get('access_token');
 }
-if(Cookie::has('auth_user')){
-	$data = Cookie::get('auth_user');
-	$auth_user = json_decode($data, true);
-}
 @endphp
 @extends('layouts/default')
 

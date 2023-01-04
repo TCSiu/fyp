@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('access_token', function (Blueprint $table) {
+        Schema::create('order_group_location', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->biginteger('user_id');
-            $table->string('access_token', 80)->unique();
-            $table->dateTime('expiry_date');
-            $table->string('purpose');
-            $table->boolean('is_active')->default(0);
+            $table->integer('order_group_id');
+            $table->string('current_location_lat');
+            $table->string('current_location_lng');
+            $table->boolean('is_expiry');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('access_token');
+        Schema::dropIfExists('order_group_location');
     }
 };

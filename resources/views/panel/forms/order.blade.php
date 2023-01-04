@@ -111,7 +111,7 @@ if(isset($record)){
 		</div>
 		<div class="row mb-3">
 			<div class="col">
-				<button type="submit" class="btn btn-primary me-2" id="orderFormSubmit">
+				<button type="submit" class="btn btn-success me-2" id="orderFormSubmit">
 					<i class="align-middle" data-feather="save"></i> {{ __('Save') }}
 				</button>
 				<button type="reset" class="btn btn-secondary me-2">

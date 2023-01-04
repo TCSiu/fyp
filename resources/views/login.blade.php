@@ -17,23 +17,24 @@ $title = 'Login Page';
 				@csrf
 				<div class="row mb-3">
 					<div class="col-12">
-						<label for="loginUserName" class="form-label">{{ __('Username') }}</label>
-						<input type="text" class="form-control" name="auth_username" value="{{ old('username') ?? '' }}" id="loginUserName" placeholder="Enter a Username"/>
+						<label for="l_username" class="form-label">{{ __('Username') }}</label>
+						<input type="text" class="form-control" name="username" id="l_username" value="{{ old('username') ?? '' }}" placeholder="Enter a Username"/>
 					</div>
 				</div>
 				<div class="row mb-3">
 					<div class="col-12">
-						<label for="loginPassword" class="form-label">{{ __('Password') }}</label>
-						<input type="password" class="form-control" name="auth_password" id="loginPassword" placeholder="Enter a Password"/>
-					</div>
-				</div>
-				<div class="row mb-3">
-					<div class="col-12">
-						<input class="btn btn-primary w-25 me-1" type="submit" value="Login">
-						<input class="btn btn-light w-25 me-1" type="reset" value="Reset">
+						<label for="l_password" class="form-label">{{ __('Password') }}</label>
+						<input type="password" class="form-control" name="password" id="l_password" placeholder="Enter a Password"/>
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-12">
+						<input class="btn btn-primary w-25 float-end rounded-pill" type="submit" value="Login">
+						<input class="btn btn-light w-25 float-end rounded-pill" type="reset" value="Reset">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12"><hr></hr></div>
 					<div class="col-12">
 						<a href="{{ route('register') }}">{{ __('Register an Account') }}</a>
 					</div>

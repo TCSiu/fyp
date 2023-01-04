@@ -10,7 +10,7 @@ class Model extends EloquentModel
 	use HasFactory;
 
 	public const MODEL_NAMESPACE 	= '\\App\\Models\\';
-	public const PAGE_TITLE 		= 'View Page';
+	public const PAGE_TITLE 		= '';
 	public const OPERATION	 		= [];
 	public const TABLE_FIELDS		= ['id'];
 	public const ALLOW_ACTIONS 		= ['view'];
@@ -39,6 +39,10 @@ class Model extends EloquentModel
 		return ucwords(trim($model));
 	}
 
+	public static function getInpageTitle(int $id = -1){
+		return static::PAGE_TITLE . ' ' . $id;
+	}
+
 	public static function getCount(){
 		return static::count();
 	}
@@ -47,7 +51,7 @@ class Model extends EloquentModel
 		return static::VALIDATE_RULES;
 	}
 
-	public static function getData(int $paginate_size = -1){
+	public static function getData(int $paginate_size = -1, int $company_id = 0){
 		if($paginate_size > 0){
 			return static::paginate($paginate_size);
 		}

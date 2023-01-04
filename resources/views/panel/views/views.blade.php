@@ -1,8 +1,10 @@
 <div class="card-body">
     @foreach($fields as $field => $format)
-        @if($format == 'normal')
+        @if(Str::is('normal', $format))
         <div class="fs-4 card-text"> {{ __(ucwords(str_replace('_', ' ', $field)) . ': ' . $data[$field]) }}</div>
-        @elseif($format == 'table')
+        @elseif(Str::is('special.*', $format))
+        <div class="fs-4 card-text"> {{ __(ucwords(str_replace('_', ' ', substr($format, strpos($format, ".") + 1))) . ': ' . $data[$field]) }}</div>
+        @elseif(Str::is('table', $format))
         <table class="table table-striped table-hover" id="order_table">
             <thead>
                 <th>#</th>
@@ -32,7 +34,7 @@
                 @endforeach
             </tbody>	
         </table>
-        @elseif($format == 'boolean')
+        @elseif(Str::is('boolean', $format))
         <div class="fs-4 card-text"> {{ __(ucwords(str_replace('_', ' ', $field)) . ': ' . ($data[$field]?'true':'false')) }}</div>
         @endif
     @endforeach

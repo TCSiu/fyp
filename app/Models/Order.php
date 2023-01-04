@@ -77,8 +77,8 @@ class Order extends Model
 			'phone_number' 		=> 	'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
 			'deliver1' 			=> 	'required|string',
 			'deliver2' 			=> 	'nullable|string',
-			'lat'				=>	'required',
-			'lng'				=>	'required',
+			'lat'				=>	'required|numeric',
+			'lng'				=>	'required|numeric',
 			'delivery_date' 	=> 	'required|date_format:Y-m-d|after_or_equal:today',
 			'items_name' 		=> 	'required|array',
 			'items_name.*' 		=> 	'required|string',
@@ -86,7 +86,7 @@ class Order extends Model
 		];
 	}
 
-	public static function getData(int $paginate_size = -1){
+	public static function getData(int $paginate_size = -1, int $company_id = 0){
 		if($paginate_size > 0){
 			return static::where('is_delete', 0)->paginate($paginate_size);
 		}

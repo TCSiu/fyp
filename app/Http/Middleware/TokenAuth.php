@@ -5,7 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\AccessToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Laravel\Passport\Token;
 
 class TokenAuth
 {
@@ -18,18 +20,21 @@ class TokenAuth
 	 */
 	public function handle(Request $request, Closure $next)
 	{   
-		$auth_user = $request->cookie('auth_user');
-		$access_token = $request->cookie('access_token');
-		$auth_token = AccessToken::where('access_token', $access_token)->first();
+		// $auth_user = $request->cookie('auth_user');
+		// $access_token = session('token.access_token');
+		
+		// $token_parts = explode('.', $access_token);
+		// $token_header = $token_parts[1];
+		// $token_header_json = base64_decode($token_header);
+		// $token_header_array = json_decode($token_header_json, true);
+		// $token_id = $token_header_array['jti'];
 
-		if(isset($auth_token) && $auth_token instanceof AccessToken){
-			if($auth_token->isExpired()){
-				$auth_token = $auth_token->renewSimilar();
-				Cookie::queue('access_token', $auth_token->access_token, 60 * 24);
-				Cookie::queue('auth_user', $auth_user, 60 * 24);
-			}
+		// $token = Token::find($token_id)->user;
+
+		if (Auth::guard('api')->check()) {
 			return $next($request);
+		} else {
+			return redirect('login');
 		}
-		return redirect('login');
 	}
 }

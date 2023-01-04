@@ -1,4 +1,4 @@
-let autocomplete, map, place, lat, lng;
+var autocomplete, map, place, lat, lng;
 const elem_input = document.getElementById('autocomplete');
 const elem_form = document.getElementById('orderForm');
 const elem_submit = document.getElementById('orderFormSubmit');

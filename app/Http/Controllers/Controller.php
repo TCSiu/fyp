@@ -15,4 +15,9 @@ class Controller extends BaseController
 		phpinfo();
 		exit();
 	}
+
+	// public function __construct(){
+	// 	// $this->middleware('auth:api', ['except' => ['login', 'register']]);
+	// 	$this->middleware('auth:api');
+	// }
 }

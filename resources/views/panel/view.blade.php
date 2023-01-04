@@ -1,11 +1,5 @@
 @php
-if(Cookie::has('access_token')){
-	$token = Cookie::get('access_token');
-}
-if(Cookie::has('auth_user')){
-	$cookie_user = Cookie::get('auth_user');
-	$auth_user = json_decode($cookie_user, true);
-}
+
 @endphp
 @extends('layouts/default')
 
@@ -14,12 +8,12 @@ if(Cookie::has('auth_user')){
 	<div class="container-fluid p-0">
 		<h1 class="h3 mb-3">{{ __('Content Management System') }}</h1>
 		<div class="row justify-content-center">
-			<div class="col-12 col-xl-10">
+			<div class="col-12 col-xl-8">
 				<div class="card">
 					<div class="card-header">
-						<h5 class="card-title">{{ __($inpage_title) }}</h5>
+						<h3 class="text-center">{{ __($inpage_title) }}</h3>
 					</div>
-					@includeIf('panel/views/' . $model)
+					@includeFirst(['panel/views/' . $model, 'panel/views/views'])
 				</div>
 			</div>
 		</div>

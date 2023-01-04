@@ -1,10 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Commons\Constants;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PanelController;
+use App\Http\Controllers\AJAX\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,16 +20,21 @@ use App\Http\Controllers\PanelController;
 */
 
 Route::redirect('/', '/login');
-Route::get('login', [UsersController::class, 'login'])->name('login');
-Route::get('register', [UsersController::class, 'register'])->name('register');
+Route::get('login', [RegisterController::class, 'login'])->name('login');
+Route::get('register', [RegisterController::class, 'register'])->name('register');
 // Route::view('register', 'register')->name('register');
 
-Route::post('login', [UsersController::class, 'login']);
-Route::post('register', [UsersController::class, 'register']);
+Route::post('login', [RegisterController::class, 'login']);
+Route::post('register', [RegisterController::class, 'register']);
 
-Route::group(['prefix' => '/', 'middleware' => ['token.auth']], function(){
+
+Route::group(['prefix' => '/', 'middleware' => ['auth']], function(){
     Route::get('panel',                         [PanelController::class,    'index'])           ->name('panel');
-    Route::get('logout',                        [UsersController::class,    'logout'])          ->name('logout');
+    Route::get('logout',                        [RegisterController::class, 'logout'])          ->name('logout');
+    Route::get('/profile',                      [PanelController::class,    'profile'])         ->name('profile');
+    Route::get('/company',                      [PanelController::class,    'company'])         ->name('company');
+    Route::get('/image',                        [PanelController::class,    'image'])           ->name('image');
+    Route::post('/image/upload',                [ImageController::class,    'fileStore'])       ->name('upload');
     Route::get('/{model}',                      [PanelController::class,    'list'])            ->name('cms.list')->where('model', Constants::MODEL_REGEXP);
     Route::get('/{model}/create',               [PanelController::class,    'create'])          ->name('cms.create')->where('model', Constants::MODEL_REGEXP);
     Route::get('/{model}/edit/{id}',            [PanelController::class,    'edit'])            ->name('cms.edit')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');

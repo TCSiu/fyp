@@ -15,9 +15,9 @@ class Group extends Model
 	public const OPERATION		= ['gen_csv'];	
 
 	// protected $fillable = [
-	//	 'product_name',
-	//	 'no_of_items',
-	//	 'address',
+	// 	 'product_name',
+	// 	 'no_of_items',
+	// 	 'address',
 	// ];
 
 	/**
