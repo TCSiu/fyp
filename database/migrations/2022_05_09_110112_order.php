@@ -15,6 +15,7 @@ return new class extends Migration
 	{
 		Schema::create('order', function (Blueprint $table) {
 			$table->bigIncrements('id');
+			$table->integer('company_id')->default(0);
 			$table->string('sex')->nullable();
 			$table->string('first_name')->nullable();
 			$table->string('last_name')->nullable();

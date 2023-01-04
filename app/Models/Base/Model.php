@@ -58,7 +58,7 @@ class Model extends EloquentModel
 		return static::all();
 	}
 
-	public static function matchField($data){
+	public static function matchField($auth_user, $data){
 		return $data;
 	}
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Base\Model;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
 class Staff extends Model
 {
@@ -38,6 +39,7 @@ class Staff extends Model
 
 	protected $fillable = [
 		'sex',
+		'company_id',
 		'first_name',
 		'last_name',
 		'phone_number',
@@ -48,6 +50,7 @@ class Staff extends Model
         'is_locked',
         'is_active',
         'is_delete',
+		'api_token',
 	];
 
 	/**
@@ -86,7 +89,7 @@ class Staff extends Model
 		return static::where('is_delete', 0)->get();
 	}
 
-	public static function matchField($data){
+	public static function matchField($auth_user, $data){
 		$temp = [];
 		if(empty(static::VIWES_FIELDS)){
 			return $data;
@@ -99,10 +102,12 @@ class Staff extends Model
 		if(isset($data['password'])){
 			$temp['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 		}
+		$temp['company_id'] 		= intval($auth_user['id']);
+		$temp['api_token']			= Hash::make(date('YmdHisu'));
 		$temp['login_failed_count'] = 0;
-		$temp['is_locked'] = 0;
-		$temp['is_active'] = 1;
-		$temp['is_delete'] = 0;
+		$temp['is_locked'] 			= 0;
+		$temp['is_active'] 			= 1;
+		$temp['is_delete'] 			= 0;
 		return $temp;
 	}
 
@@ -110,5 +115,4 @@ class Staff extends Model
         $this->is_delete = true;
         $this->save();
     }
-	
 }
