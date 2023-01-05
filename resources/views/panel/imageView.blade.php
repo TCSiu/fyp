@@ -13,8 +13,8 @@
 					<div class="card-header">
 						<h3 class="text-center">{{ __('Test') }}</h3>
 					</div>
-					<div class="col-12">
-                        <img src="{{ secure_asset('/storage/uploads/'.$image) }}" alt="" title="" />
+					<div class="col-12 col-lg-10">
+                        <img class="img-thumbnail" style="width:200px;height:200px;" src="{{ secure_asset('/storage/uploads/'.$image) }}" alt="" title="" />
                     </div>
 				</div>
 			</div>

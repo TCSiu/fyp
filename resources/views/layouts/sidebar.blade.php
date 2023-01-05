@@ -12,7 +12,7 @@ if(Cookie::has('company')){
 		<div class="sidebar-user">
 			<div class="d-flex justify-content-center">
 				<div class="flex-shrink-0">
-					<img src="{{ asset('img/default icon.jpg') }}" class="avatar img-fluid rounded me-1" alt="User icon" />
+					<img src="{{ secure_asset('img/default icon.jpg') }}" class="avatar img-fluid rounded me-1" alt="User icon" />
 				</div>
 				<div class="flex-grow-1 ps-2">
 					<a class="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">
