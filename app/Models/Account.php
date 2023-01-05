@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-// use App\Models\AccessToken;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-use App\Models\Base\Model;
 
 class Account extends Authenticatable
 {
@@ -82,7 +80,7 @@ class Account extends Authenticatable
 		return static::findRecord($id)->username;
 	}
 	
-	public static function matchField($data){
+	public static function matchField($user, $data){
 		$temp = [];
 		if(empty(static::VIWES_FIELDS)){
 			return $data;
@@ -108,4 +106,5 @@ class Account extends Authenticatable
 	public static function getCount(){
 		return static::where('is_delete', 0)->count();
 	}
+	
 }

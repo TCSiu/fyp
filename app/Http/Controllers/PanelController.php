@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Base\Model;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Storage;
 
 class PanelController extends Controller
@@ -95,7 +92,7 @@ class PanelController extends Controller
 
 	public function store(Request $request, string $model = '', int $id = -1){
 		if ($className = Model::checkModel($model)) {
-			$auth_user = json_decode($request->cookie('auth_user'), true);
+			$user = Auth::user();
 			$temp = $request->all();
 			$temp = $className::modifyData($temp);
 			$validator = Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
@@ -112,7 +109,7 @@ class PanelController extends Controller
 				->with('msg', $message)
 				->withInput();
 			}
-			$data 	= $className::matchField($auth_user, $temp);
+			$data 	= $className::matchField($user, $temp);
 			$item 	= $className::updateOrCreate(['id' => $id], $data);
 			return redirect(route('cms.view', ['model' => $model, 'id' => $item->id]));
 		}

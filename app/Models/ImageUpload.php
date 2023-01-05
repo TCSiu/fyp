@@ -18,7 +18,7 @@ class ImageUpload extends Model
 
     public static function getValidateRules(int $id = -1){
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            'file' => 'required|image|mimes:jpg,png,jpeg,gif,svg'
         ];
     }
 }

@@ -93,7 +93,7 @@ class Order extends Model
 		return static::where('is_delete', 0)->get();
 	}
 
-	public static function matchField($auth_user, $data){
+	public static function matchField($user, $data){
 		$temp = [];
 		if(empty(static::VIWES_FIELDS)){
 			return $data;
@@ -115,7 +115,7 @@ class Order extends Model
 				}
 			}
 		}
-		$temp['company_id']					= intval($auth_user['id']);
+		$temp['company_id']					= intval($user->company_id);
 		$temp['product_name_and_number'] 	= json_encode($product_name_and_number, JSON_FORCE_OBJECT);
 		$temp['is_in_group'] 				= 0;
 		$temp['is_complete'] 				= 0;

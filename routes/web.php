@@ -35,6 +35,7 @@ Route::group(['prefix' => '/', 'middleware' => ['auth']], function(){
     Route::get('/company',                      [PanelController::class,    'company'])         ->name('company');
     Route::get('/image',                        [PanelController::class,    'image'])           ->name('image');
     Route::post('/image/upload',                [ImageController::class,    'fileStore'])       ->name('upload');
+    Route::get('/image/{id}',                   [ImageController::class,    'viewImage'])       ->name('viewImage');
     Route::get('/{model}',                      [PanelController::class,    'list'])            ->name('cms.list')->where('model', Constants::MODEL_REGEXP);
     Route::get('/{model}/create',               [PanelController::class,    'create'])          ->name('cms.create')->where('model', Constants::MODEL_REGEXP);
     Route::get('/{model}/edit/{id}',            [PanelController::class,    'edit'])            ->name('cms.edit')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');
