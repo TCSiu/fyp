@@ -35,4 +35,9 @@ class ImageController extends BaseController {
         $image = $image->image;
         return view('panel/imageView')->with('title', 'Panel Page')->with('image', $image);
 	}
+
+    public function getImageInventory(){
+        $data = ImageUpload::getData();
+        return $this->sendResponse($data, 'All the images');
+    }
 }

@@ -27,13 +27,13 @@ Route::get('register', [RegisterController::class, 'register'])->name('register'
 Route::post('login', [RegisterController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
 
+Route::get('/imageViewAll', [ImageController::class, 'getImageInventory'])->name('getImageInventory');
 
 Route::group(['prefix' => '/', 'middleware' => ['auth']], function(){
     Route::get('panel',                         [PanelController::class,    'index'])           ->name('panel');
     Route::get('logout',                        [RegisterController::class, 'logout'])          ->name('logout');
     Route::get('/profile',                      [PanelController::class,    'profile'])         ->name('profile');
     Route::get('/company',                      [PanelController::class,    'company'])         ->name('company');
-    Route::get('/image',                        [PanelController::class,    'image'])           ->name('image');
     Route::post('/image/upload',                [ImageController::class,    'fileStore'])       ->name('upload');
     Route::get('/image/{id}',                   [ImageController::class,    'viewImage'])       ->name('viewImage');
     Route::get('/{model}',                      [PanelController::class,    'list'])            ->name('cms.list')->where('model', Constants::MODEL_REGEXP);

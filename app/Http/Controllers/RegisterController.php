@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Company;
-use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,10 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends BaseController
 {
@@ -98,7 +94,7 @@ class RegisterController extends BaseController
 			Cookie::queue('company', $company);
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
-		if(Auth::check()){
+		if(Auth::check() && Cookie::has('access_token')){
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
 		return view('register');
@@ -127,14 +123,14 @@ class RegisterController extends BaseController
 				$account = Auth::user();
 				$company = Company::where('id', $account->company_id)->first();
 				$token = $account->createToken('FYP')->accessToken;
-				Cookie::queue('access_token', $token);
-				Cookie::queue('company', $company);
+				Cookie::queue('access_token', $token, 1000);
+				Cookie::queue('company', $company, 1000);
 				return redirect(route('panel'))->with('title', 'Panel');
 			}else{
 				return redirect()->back()->with('errors', 'Unauthorised!')->withInput();;
 			}
 		}
-		if(Auth::check()){
+		if(Auth::check() && Cookie::has('access_token')){
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
 		return view('login');
