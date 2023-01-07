@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\AJAX;
+namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\AJAX\BaseController as BaseController;
+use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\ImageUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

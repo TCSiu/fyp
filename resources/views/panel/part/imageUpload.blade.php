@@ -14,8 +14,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="border">
-
+        <div class="border" id="imageDisplay">
+            
         </div>
         <hr>
         <div class="border-primary bg-light dropzone" id="upload-dropzone"></div>
@@ -41,6 +41,30 @@ let dropzone = new Dropzone("#upload-dropzone", {
 	maxFilesize: 1,
 	paramName: "file",
 });
+
+let xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function(){
+  if(this.readyState == 4 && this.status == 200){
+    let json = JSON.parse(xhr.responseText);
+    let data = json.data;
+    var imageDisplay = document.getElementById('imageDisplay');
+    console.log(data);
+    if(Array.isArray(data)){
+      data.forEach(function(item){
+        var img = document.createElement('img');
+        var path = 'storage/uploads/' + item.image;
+        img.src = "{{ secure_asset('') }}"+path;
+        img.style = "width:100px;height:100px;"
+        img.className += "col-2";
+        imageDisplay.appendChild(img);
+      })
+    }
+  }
+}
+xhr.open("GET", "{{ route('getImageInventory') }}", true);
+xhr.send();
+
+
 
 
 </script>

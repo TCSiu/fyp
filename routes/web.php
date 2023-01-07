@@ -6,7 +6,7 @@ use App\Commons\Constants;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PanelController;
-use App\Http\Controllers\AJAX\ImageController;
+use App\Http\Controllers\API\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,14 +27,13 @@ Route::get('register', [RegisterController::class, 'register'])->name('register'
 Route::post('login', [RegisterController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
 
-Route::get('/imageViewAll', [ImageController::class, 'getImageInventory'])->name('getImageInventory');
+
 
 Route::group(['prefix' => '/', 'middleware' => ['auth']], function(){
     Route::get('panel',                         [PanelController::class,    'index'])           ->name('panel');
     Route::get('logout',                        [RegisterController::class, 'logout'])          ->name('logout');
     Route::get('/profile',                      [PanelController::class,    'profile'])         ->name('profile');
     Route::get('/company',                      [PanelController::class,    'company'])         ->name('company');
-    Route::post('/image/upload',                [ImageController::class,    'fileStore'])       ->name('upload');
     Route::get('/image/{id}',                   [ImageController::class,    'viewImage'])       ->name('viewImage');
     Route::get('/{model}',                      [PanelController::class,    'list'])            ->name('cms.list')->where('model', Constants::MODEL_REGEXP);
     Route::get('/{model}/create',               [PanelController::class,    'create'])          ->name('cms.create')->where('model', Constants::MODEL_REGEXP);

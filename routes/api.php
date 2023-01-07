@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AccountController;
+use App\Http\Controllers\API\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,6 @@ use App\Http\Controllers\API\AccountController;
 Route::post('register', [AccountController::class, 'register']);
 Route::post('login',    [AccountController::class, 'login']);
 Route::post('register', [AccountController::class, 'register']);
+
+Route::get('/image/viewAll',                 [ImageController::class,    'getImageInventory'])   ->name('getImageInventory');
+Route::post('/image/upload',                [ImageController::class,    'fileStore'])           ->name('upload');
