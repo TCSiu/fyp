@@ -41,6 +41,8 @@ let dropzone = new Dropzone("#upload-dropzone", {
 	maxFilesize: 1,
 	paramName: "file",
 });
+
+
 </script>
 @endpush
 @hasSection('form-js')
