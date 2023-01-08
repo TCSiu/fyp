@@ -93,6 +93,7 @@ class PanelController extends Controller
 
 	public function store(WebRequest $request, string $model = '', int $id = -1){
 		if ($className = Model::checkModel($model)) {
+			return dd($request->all());
 			$user = Auth::user();
 			$temp = $request->all();
 			$temp = $className::modifyData($temp);

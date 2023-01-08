@@ -30,8 +30,8 @@
 </div>
 
 <template id="template_image_lib">
-  <input type="radio" name="image_selection" id="image_selection_%id%" data-target="image_%id%" />
-  <label for="image_selection_%id%"><img src="" name="image[%id%]" id="image_%id%" class="img-thumbnail" alt="" data-img="" /></label>
+  <input type="radio" name="image_selection" id="image_selection_%id%" data-target="image_%id%" value="" />
+  <label for="image_selection_%id%"><img src="" name="image[%id%]" id="image_%id%" class="img-thumbnail" alt="" /></label>
 </template>
 
 
@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function(){
   let profile_icon = document.getElementById('profile_icon');
   let template = document.getElementById('template_image_lib');
   let image_lib = document.getElementById('image_lib');
-  let img;
+  let img, selection;
 
   function getImage(){
     let xhr = new XMLHttpRequest();
@@ -61,9 +61,10 @@ window.addEventListener('DOMContentLoaded', function(){
             temp.classList.add('col-3');
             temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, index);
             img = temp.querySelectorAll('img[id^=image]')[0];
+            selection = temp.querySelectorAll('input[type=radio][id^=image_selection]')[0];
             img.src = item.path;
             img.alt = item.image;
-            img.dataset.img = item.id;
+            selection.value = item.id;
             image_lib.appendChild(temp);
           })
         }
@@ -93,7 +94,6 @@ window.addEventListener('DOMContentLoaded', function(){
     let target = selected_radio.getAttribute('data-target');
     let selected_img = document.getElementById(target);
     profile_icon.src = selected_img.src;
-    profile_icon.dataset.img = selected_img.dataset.img;
   });
 
 });
