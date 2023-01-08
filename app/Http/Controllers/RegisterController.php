@@ -95,9 +95,9 @@ class RegisterController extends BaseController
 			Cookie::queue('company', $company);
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
-		// if(Auth::check() && Cookie::has('access_token')){
-		// 	return redirect(route('panel'))->with('title', 'Panel');
-		// }
+		if(Auth::check()){
+			return redirect(route('panel'))->with('title', 'Panel');
+		}
 		return view('register');
 	}
 
@@ -131,9 +131,9 @@ class RegisterController extends BaseController
 				return redirect()->back()->with('errors', 'Unauthorised!')->withInput();;
 			}
 		}
-		// if(Auth::check() && Cookie::has('access_token')){
-		// 	return redirect(route('panel'))->with('title', 'Panel');
-		// }
+		if(Auth::check()){
+			return redirect(route('panel'))->with('title', 'Panel');
+		}
 		return view('login');
 	}
 

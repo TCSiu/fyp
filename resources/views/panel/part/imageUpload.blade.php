@@ -2,19 +2,20 @@
 
 @endphp
 
-<button type="button" class="btn btn-primary ms-2" id="selectImage" data-bs-toggle="modal" data-bs-target="#imageSelect">
+<button type="button" class="btn btn-primary ms-2" id="btn_select_image" data-bs-toggle="modal" data-bs-target="#modal_select_image">
 {{ __('Select Image') }}
 </button>
 
-<div class="modal fade" id="imageSelect" tabindex="-1" aria-labelledby="imageSelectLabel" aria-hidden="true">
+<div class="modal fade" id="modal_select_image" tabindex="-1" aria-labelledby="modal_select_image_label" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="imageSelectLabel">Select a Image</h5>
+        <h5 class="modal-title" id="modal_select_image_label">Select a Image</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="border" id="imageDisplay">
+        <div class="border p-2">
+          <div class="row" id="image_lib"></div>
 
         </div>
         <div class="hr-or"></div>
@@ -22,17 +23,15 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" id="btn_save_image" data-bs-dismiss="modal">Save changes</button>
       </div>
     </div>
   </div>
 </div>
 
 <template id="template_image_lib">
-  <div class="col-3">
-    <input type="radio" name="image[%id%]" id="image_%id%">
-    <label for="image_%id%"><img src="" class="img-thumbnail" alt=""></label>
-  </div>
+  <input type="radio" name="image_selection" id="image_selection_%id%" data-target="image_%id%" />
+  <label for="image_selection_%id%"><img src="" name="image[%id%]" id="image_%id%" class="img-thumbnail" alt="" data-img="" /></label>
 </template>
 
 
@@ -41,7 +40,13 @@
 <script>
 Dropzone.autoDiscover = false;
 window.addEventListener('DOMContentLoaded', function(){
-  const selectImage = document.getElementById('selectImage');
+  const btn_select_image = document.getElementById('btn_select_image');
+  const btn_save_image = document.getElementById('btn_save_image');
+
+  let profile_icon = document.getElementById('profile_icon');
+  let template = document.getElementById('template_image_lib');
+  let image_lib = document.getElementById('image_lib');
+  let img;
 
   function getImage(){
     let xhr = new XMLHttpRequest();
@@ -49,16 +54,17 @@ window.addEventListener('DOMContentLoaded', function(){
       if(this.readyState == 4 && this.status == 200){
         let json = JSON.parse(xhr.responseText);
         let data = json.data;
-        let imageDisplay = document.getElementById('imageDisplay');
-        console.log(data);
+        image_lib.innerHTML = "";
         if(Array.isArray(data)){
-          imageDisplay.innerHTML = "";
-          data.forEach(function(item){
-            let img = document.createElement('img');
+          data.forEach(function(item, index){
+            let temp = document.createElement('div');
+            temp.classList.add('col-3');
+            temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, index);
+            img = temp.querySelectorAll('img[id^=image]')[0];
             img.src = item.path;
             img.alt = item.image;
-            img.className += "col-2 img-thumbnail";
-            imageDisplay.appendChild(img);
+            img.dataset.img = item.id;
+            image_lib.appendChild(temp);
           })
         }
       }
@@ -80,7 +86,15 @@ window.addEventListener('DOMContentLoaded', function(){
     }
   });
 
-  selectImage.addEventListener('click', getImage);
+  btn_select_image.addEventListener('click', getImage);
+
+  btn_save_image.addEventListener('click', function(){
+    let selected_radio = document.querySelector('input[name="image_selection"]:checked');
+    let target = selected_radio.getAttribute('data-target');
+    let selected_img = document.getElementById(target);
+    profile_icon.src = selected_img.src;
+    profile_icon.dataset.img = selected_img.dataset.img;
+  });
 
 });
 </script>

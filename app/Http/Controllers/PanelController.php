@@ -15,7 +15,7 @@ class PanelController extends Controller
 		return view('panel/panel')->with('title', 'Panel Page');
 	}
 
-	public function list(string $model = ''){
+	public function list(WebRequest $request, string $model = ''){
 		if($className = Model::checkModel($model)){
 			$page_title 		= 	$className::PAGE_TITLE;
 			$inpage_title 		= 	'View ' . $page_title;
@@ -39,7 +39,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function create(string $model = ''){
+	public function create(WebRequest $request, string $model = ''){
 		if ($className = Model::checkModel($model)) {
 			$message = [];
 			$page_title = $className::PAGE_TITLE;
@@ -54,7 +54,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function view(string $model = '', int $id = 1){
+	public function view(WebRequest $request, string $model = '', int $id = 1){
 		if($className = Model::checkModel($model)){
 			$page_title = $className::PAGE_TITLE;
 			$inpage_title = 'View ' . $className::getInpageTitle($id);
@@ -71,7 +71,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function edit(string $model = '', int $id = 1){
+	public function edit(WebRequest $request, string $model = '', int $id = 1){
 		if($className = Model::checkModel($model)){
 			$record = $className::findRecord($id);
 			if(isset($record) && $record instanceOf Model){
@@ -117,7 +117,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function delete(string $model = '', int $id = -1){
+	public function delete(WebRequest $request, string $model = '', int $id = -1){
 		if($className = Model::checkModel($model)){
 			$record = $className::findRecord($id);
 			if(isset($record) && $record instanceOf Model){
@@ -128,7 +128,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function get_csv(string $model = ''){
+	public function get_csv(WebRequest $request, string $model = ''){
 		if($className = Model::checkModel($model)){
 			$orders	=	$className::getCsvData();
 			$path = 'order\\';
@@ -158,7 +158,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function image(){
+	public function image(WebRequest $request){
 		return view('panel/image')->with('title', 'Panel Page');
 	}
 }

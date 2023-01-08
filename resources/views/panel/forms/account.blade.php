@@ -9,7 +9,7 @@ $account = auth()->user();
 			<div class="row mb-3">
 				<div class="col-3">
 					<label for="profile_icon" class="form-label">{{ __('Profile Icon Preview') }}</label>
-					<img src="{{ secure_asset('img/default icon.jpg') }}" id="profile_icon" class="rounded" alt="Profile Icon" style="height:200px;width:200px" />
+					<img src="{{ secure_asset('img/default icon.jpg') }}" id="profile_icon" class="rounded img-thumbnail" alt="Profile Icon" data-img="" />
 				</div>
 				<div class="col">
 					@includeIf('panel/part/imageUpload')
@@ -17,25 +17,25 @@ $account = auth()->user();
 			</div>
 			<div class="row mb-3">
 				<div class="col-6">
-					<label for="r_a_first_name" class="form-label">{{ __('First Name') }}</label>
+					<label for="r_a_first_name" class="form-label">{{ __('First Name') }}{!! Utility::required() !!}</label>
 					<input type="text" class="form-control" name="first_name" id="first_name" value="{{ $record['first_name'] ?? old('first_name') ?? '' }}" placeholder="Enter Your First Name" />
 				</div>
 				<div class="col-6">
-					<label for="r_a_last_name" class="form-label">{{ __('Last Name') }}</label>
+					<label for="r_a_last_name" class="form-label">{{ __('Last Name') }}{!! Utility::required() !!}</label>
 					<input type="text" class="form-control" name="last_name" id="last_name" value="{{ $record['last_name'] ?? old('last_name') ?? '' }}" placeholder="Enter Your Last Name" />
 				</div>
 			</div>
 			<div class="row mb-3">
 				<div class="col-4">
-					<label for="r_a_username" class="form-label">{{ __('Username') }}</label>
+					<label for="r_a_username" class="form-label">{{ __('Username') }}{!! Utility::required() !!}</label>
 					<input type="text" class="form-control" name="username" id="username" value="{{ $record['username'] ?? old('username') ?? '' }}" placeholder="Enter a Username" />
 				</div>
 				<div class="col-4">
-					<label for="r_a_email" class="form-label">{{ __('Email') }}</label>
+					<label for="r_a_email" class="form-label">{{ __('Email') }}{!! Utility::required() !!}</label>
 					<input type="email" class="form-control" name="email" id="email" value="{{ $record['email'] ?? old('email') ?? '' }}" placeholder="Enter a Email" />
 				</div>
 				<div class="col-4">
-					<label for="r_a_phone" class="form-label">{{ __('Phone') }}</label>
+					<label for="r_a_phone" class="form-label">{{ __('Phone') }}{!! Utility::required() !!}</label>
 					<input type="text" class="form-control" name="phone" id="phone" value="{{ $record['phone'] ?? old('phone') ?? '' }}" placeholder="Enter a Phone" />
 				</div>
 			</div>

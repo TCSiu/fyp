@@ -146,11 +146,11 @@ if(isset($record)){
 <script>
 document.addEventListener('DOMContentLoaded', function(event){
 	document.getElementById('btn_order_create').addEventListener('click', function(e){
-		var elem = e.target;
-		var template = document.getElementById(elem.getAttribute('data-template'));
-		var tbody = document.getElementById(elem.getAttribute('data-target'));
-		var node = elem.getAttribute('data-node');
-		var temp = document.createElement(node);
+		let elem = e.target;
+		let template = document.getElementById(elem.getAttribute('data-template'));
+		let tbody = document.getElementById(elem.getAttribute('data-target'));
+		let node = elem.getAttribute('data-node');
+		let temp = document.createElement(node);
 		temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, tbody.children.length + 1);
 		tbody.appendChild(temp);
 		[...document.querySelectorAll('#order_tbody .order_id')].map(function(e, k){e.innerText = k + 1;});
