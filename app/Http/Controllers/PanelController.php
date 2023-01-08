@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Base\Model;
+use App\Http\Requests\WebRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PanelController extends Controller
 {
-	public function index(Request $request){
+	public function index(WebRequest $request){
 		return view('panel/panel')->with('title', 'Panel Page');
 	}
 
@@ -90,7 +91,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function store(Request $request, string $model = '', int $id = -1){
+	public function store(WebRequest $request, string $model = '', int $id = -1){
 		if ($className = Model::checkModel($model)) {
 			$user = Auth::user();
 			$temp = $request->all();

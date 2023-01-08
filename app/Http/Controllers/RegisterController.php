@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Company;
+use App\Http\Requests\WebRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -88,15 +89,15 @@ class RegisterController extends BaseController
 			$admin_account['type'] = 'admin';
 			$admin_account['company_id'] = $company->id;
 			$account = Account::create($admin_account);
-			$token = $account->createToken('FYP')->accessToken;
+			// $token = $account->createToken('FYP')->accessToken;
 			Auth::login($account);
-			Cookie::queue('access_token', $token);
+			// Cookie::queue('access_token', $token);
 			Cookie::queue('company', $company);
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
-		if(Auth::check() && Cookie::has('access_token')){
-			return redirect(route('panel'))->with('title', 'Panel');
-		}
+		// if(Auth::check() && Cookie::has('access_token')){
+		// 	return redirect(route('panel'))->with('title', 'Panel');
+		// }
 		return view('register');
 	}
 
@@ -120,25 +121,25 @@ class RegisterController extends BaseController
 			// 	return redirect()->back()->with('errors', $errors);
 			// }
 			if(Auth::attempt(['username'   =>  $request->username, 'password'   =>  $request->password])){
-				$account = Auth::user();
-				$company = Company::where('id', $account->company_id)->first();
-				$token = $account->createToken('FYP')->accessToken;
-				Cookie::queue('access_token', $token, 1000);
+				$account 	= Auth::user();
+				$company 	= Company::where('id', $account->company_id)->first();
+				// $token 		= $account->createToken('FYP')->accessToken;
+				// Cookie::queue('access_token', $token, 1000);
 				Cookie::queue('company', $company, 1000);
 				return redirect(route('panel'))->with('title', 'Panel');
 			}else{
 				return redirect()->back()->with('errors', 'Unauthorised!')->withInput();;
 			}
 		}
-		if(Auth::check() && Cookie::has('access_token')){
-			return redirect(route('panel'))->with('title', 'Panel');
-		}
+		// if(Auth::check() && Cookie::has('access_token')){
+		// 	return redirect(route('panel'))->with('title', 'Panel');
+		// }
 		return view('login');
 	}
 
-	public function logout(Request $request){
+	public function logout(WebRequest $request){
 		Auth::logout();
-		Cookie::forget('access_token');
+		// Cookie::forget('access_token');
 		Cookie::forget('company');
 		// session()->forget('token.access_token');
 		// session()->forget('username');

@@ -5,13 +5,14 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Account;
 use App\Models\Company;
+use App\Http\Requests\WebRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class AccountController extends BaseController
 {
-    public function register(Request $request){
+    public function register(WebRequest $request){
         $company_info = $request->only(['company_name', 'office_address', 'office_email', 'office_phone', 'warehouse_address1', 'warehouse_address2', 'warehouse_lat', 'warehouse_lng']);
         $admin_account = $request->only(['username', 'password', 'password_confirmation', 'first_name', 'last_name', 'email', 'phone', 'type', 'company_id']);
         $company_validator = Validator::make($company_info, [
@@ -48,7 +49,7 @@ class AccountController extends BaseController
         return $this->sendResponse($success, 'User Register Success!');
     }
 
-    public function login(Request $request){
+    public function login(WebRequest $request){
         if(Auth::attempt(['username'   =>  $request->username, 'password'   =>  $request->password])){
             $account = Auth::user();
             $success['token'] = $account->createToken('FYP')->accessToken;

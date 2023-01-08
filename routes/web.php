@@ -27,9 +27,7 @@ Route::get('register', [RegisterController::class, 'register'])->name('register'
 Route::post('login', [RegisterController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
 
-
-
-Route::group(['prefix' => '/', 'middleware' => ['auth']], function(){
+Route::group(['prefix' => '/'], function(){
     Route::get('panel',                         [PanelController::class,    'index'])           ->name('panel');
     Route::get('logout',                        [RegisterController::class, 'logout'])          ->name('logout');
     Route::get('/profile',                      [PanelController::class,    'profile'])         ->name('profile');

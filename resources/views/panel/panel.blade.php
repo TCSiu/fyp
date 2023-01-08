@@ -1,7 +1,5 @@
 @php
-if(Cookie::has('access_token')){
-	$token = Cookie::get('access_token');
-}
+
 @endphp
 @extends('layouts/default')
 
@@ -16,7 +14,7 @@ if(Cookie::has('access_token')){
 						<h5 class="card-title mb-0">{{ __('Dashboard') }}</h5>
 					</div>
 					<div class="card-body">
-						{{ __($token) }}
+						
 					</div>
 				</div>
 			</div>
