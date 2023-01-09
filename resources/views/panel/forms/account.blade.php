@@ -1,5 +1,8 @@
 @php
 $account = auth()->user();
+if(isset($images)){
+	$image = $images[0];
+}
 @endphp
 <div class="card-body">
 	<form action="{{ route('cms.store', ['model' => $model, 'id' => (isset($id)?intval($id):false)]) }}" method="POST">
@@ -9,7 +12,7 @@ $account = auth()->user();
 			<div class="row mb-3">
 				<div class="col-3">
 					<label for="profile_icon" class="form-label">{{ __('Profile Icon Preview') }}</label>
-					<img src="{{ secure_asset('img/default icon.jpg') }}" id="profile_icon" class="rounded img-thumbnail" alt="Profile Icon" data-img="" />
+					<img src="{{ secure_asset($image) ?? secure_asset('img/default icon.jpg') }}" id="profile_icon" class="rounded img-thumbnail" alt="Profile Icon" data-img="" />
 				</div>
 				<div class="col">
 					@includeIf('panel/part/imageUpload')

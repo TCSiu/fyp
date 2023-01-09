@@ -46,7 +46,18 @@ window.addEventListener('DOMContentLoaded', function(){
   let profile_icon = document.getElementById('profile_icon');
   let template = document.getElementById('template_image_lib');
   let image_lib = document.getElementById('image_lib');
-  let img, selection;
+  let img, selection, lib = [], btn_id = 0;
+
+  function getUniqueArray(arr1, arr2){
+    let temp = [];
+    arr1.forEach(value => temp.push(value.id));
+    let res = arr2.filter(function(value){
+      if(!temp.includes(value.id)){
+        return true;
+      }
+    });
+    return res;
+  }
 
   function getImage(){
     let xhr = new XMLHttpRequest();
@@ -54,19 +65,21 @@ window.addEventListener('DOMContentLoaded', function(){
       if(this.readyState == 4 && this.status == 200){
         let json = JSON.parse(xhr.responseText);
         let data = json.data;
-        image_lib.innerHTML = "";
         if(Array.isArray(data)){
-          data.forEach(function(item, index){
+          lib = getUniqueArray(lib, data);
+          lib.forEach(function(item, index){
             let temp = document.createElement('div');
             temp.classList.add('col-3');
-            temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, index);
+            temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, btn_id);
             img = temp.querySelectorAll('img[id^=image]')[0];
             selection = temp.querySelectorAll('input[type=radio][id^=image_selection]')[0];
             img.src = item.path;
             img.alt = item.image;
             selection.value = item.id;
             image_lib.appendChild(temp);
-          })
+            btn_id ++;
+          });
+          lib = data;
         }
       }
     }

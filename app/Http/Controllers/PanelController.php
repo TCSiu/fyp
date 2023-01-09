@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Base\Model;
+use App\Models\ImageUsage;
 use App\Http\Requests\WebRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,13 +61,16 @@ class PanelController extends Controller
 			$inpage_title = 'View ' . $className::getInpageTitle($id);
 			$fields = $className::VIWES_FIELDS;
 			$data = $className::findRecord($id);
+			$images = ImageUsage::getImages($className, $id);
+
 			return view('panel/view')
 				->with('model', $model)
 				->with('title', $page_title)
 				->with('inpage_title', $inpage_title)
 				->with('fields', $fields)
 				->with('data', $data)
-				->with('id', $data->id);
+				->with('id', $data->id)
+				->with('images', $images);
 		}
 		throw new \Exception();
 	}
@@ -78,6 +82,8 @@ class PanelController extends Controller
 				$msg = [];
 				$page_title = $className::PAGE_TITLE;
 				$inpage_title = 'Edit ' . $page_title . ' ' . $id;
+				$images = ImageUsage::getImages($className, $id);
+				
 				return view('panel/create')
 					->with('model', $model)
 					->with('title', $page_title)
@@ -85,7 +91,8 @@ class PanelController extends Controller
 					->with('msg', $msg)
 					->with('record', $record)
 					->with('method', 'store')
-					->with('id', $id);
+					->with('id', $id)
+					->with('images', $images);
 			}
 		}
 		throw new \Exception();
@@ -93,7 +100,6 @@ class PanelController extends Controller
 
 	public function store(WebRequest $request, string $model = '', int $id = -1){
 		if ($className = Model::checkModel($model)) {
-			return dd($request->all());
 			$user = Auth::user();
 			$temp = $request->all();
 			$temp = $className::modifyData($temp);
@@ -113,6 +119,7 @@ class PanelController extends Controller
 			}
 			$data 	= $className::matchField($user, $temp);
 			$item 	= $className::updateOrCreate(['id' => $id], $data);
+			$imageUsage = ImageUsage::fileUsageStore($className, $id, $temp);
 			return redirect(route('cms.view', ['model' => $model, 'id' => $item->id]));
 		}
 		throw new \Exception();

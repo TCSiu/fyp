@@ -24,8 +24,6 @@ class ImageController extends BaseController {
             $imageName = $file->getClientOriginalName();
             $path = $file->storeAs('/', $imageName, 'upload');
 
-            // return dd(Storage::disk('upload'));
-
             $imageUpload = new ImageUpload();
             $imageUpload->image = $imageName;
             $imageUpload->path = $path;
@@ -48,9 +46,5 @@ class ImageController extends BaseController {
             $e['path'] = secure_asset(Storage::disk('upload')->url($e['image']));
         });
         return $this->sendResponse($data, 'All the images');
-    }
-
-    public function fileUsageStore(Request $request, int $id = -1){
-        
     }
 }
