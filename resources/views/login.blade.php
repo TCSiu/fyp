@@ -13,7 +13,7 @@ $title = 'Login Page';
 			<h4>{{ __('Login') }}</h1>	
 		</div>
 		<div class="card-body">
-			<form action="{{ route('login')}}" method="post">
+			<form action="{{ route('login')}}" method="post" autocomplete="off" enctype="multipart/form-data">
 				@csrf
 				<div class="row mb-3">
 					<div class="col-12">

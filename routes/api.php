@@ -24,5 +24,5 @@ Route::post('register', [AccountController::class, 'register']);
 Route::post('login',    [AccountController::class, 'login']);
 Route::post('register', [AccountController::class, 'register']);
 
-Route::get('/image/viewAll',                 [ImageController::class,    'getImageInventory'])   ->name('getImageInventory');
-Route::post('/image/upload',                 [ImageController::class,    'fileStore'])           ->name('upload');
+Route::get('/image/viewAll/{company_id}',   [ImageController::class,    'getImageInventory'])   ->name('getImageInventory')->whereNumber('company_id');
+Route::post('/image/upload/{user_id}',      [ImageController::class,    'fileStore'])           ->name('upload')->whereNumber('user_id');

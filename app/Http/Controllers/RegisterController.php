@@ -55,9 +55,9 @@ class RegisterController extends BaseController
 			// 	// return dd($messages);
 			// 	return redirect()->back()->with('errors', $messages);
 			// }
-
+			
 			$company_info = $request->only(['company_name', 'office_address', 'office_email', 'office_phone', 'warehouse_address1', 'warehouse_address2', 'lat', 'lng']);
-			$admin_account = $request->only(['username', 'password', 'password_confirmation', 'first_name', 'last_name', 'email', 'phone', 'type', 'company_id']);
+			$admin_account = $request->only(['username', 'password', 'password_confirmation', 'first_name', 'last_name', 'sex', 'email', 'phone', 'type', 'company_id']);
 			$company_validator = Validator::make($company_info, [
 				'company_name'          =>  'required|string|max:255|unique:company',
 				'office_address'        =>  'required|string|max:255',
@@ -71,6 +71,7 @@ class RegisterController extends BaseController
 			$admin_validator = Validator::make($admin_account, [
 				'username'              =>  'required|string|min:5|max:20|unique:account',
 				'password'              =>  'required|confirmed|Regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)[A-Za-z\d!@#$%^\&*()_+-={}\[\]:\";\'<>,\.\\?~`]{8,}$/', 
+				'sex'					=>	'required|string',
 				'email'                 =>  'required|string|email|max:255|unique:account',
 				'phone'                 =>  'required|string|max:20',
 				'first_name'            =>  'string|max:255',
@@ -120,15 +121,32 @@ class RegisterController extends BaseController
 			// 	$errors 	=	$response['data'];
 			// 	return redirect()->back()->with('errors', $errors);
 			// }
+			$data = $request->all();
+			$validation = Validator::make($data, [
+				'username'              =>  'required|exists:account,username',
+				'password'              =>  'required', 
+			], $message = [
+				'required' 				=> 'The :attribute field is required.',
+				'exists'				=> 'The :attribute does not exist in the database.'
+			]);
+			if($validation->fails()){
+				$messages = $this->messageDecode($validation->errors());
+				return redirect()->back()->with('errors', $messages)->withInput();;
+			}
 			if(Auth::attempt(['username'   =>  $request->username, 'password'   =>  $request->password])){
 				$account 	= Auth::user();
+				if(!(in_array($account->type, ['admin']) > 0)){
+					Auth::logout();
+					Cookie::forget('company');
+					return redirect()->back()->with('errors', ['Unauthorised!'])->withInput();
+				}
 				$company 	= Company::where('id', $account->company_id)->first();
 				// $token 		= $account->createToken('FYP')->accessToken;
 				// Cookie::queue('access_token', $token, 1000);
 				Cookie::queue('company', $company, 1000);
 				return redirect(route('panel'))->with('title', 'Panel');
 			}else{
-				return redirect()->back()->with('errors', 'Unauthorised!')->withInput();;
+				return redirect()->back()->with('errors', ['Wrong Password!'])->withInput();
 			}
 		}
 		if(Auth::check()){

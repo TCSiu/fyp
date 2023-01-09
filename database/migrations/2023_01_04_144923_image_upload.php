@@ -17,6 +17,7 @@ return new class extends Migration
 			$table->bigIncrements('id');
 			$table->string('image')->nullable();
             $table->string('path')->nullable();
+            $table->integer('company_id')->nullable();
 			$table->timestamps();
 		});
     }

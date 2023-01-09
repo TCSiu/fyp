@@ -31,9 +31,16 @@ class ImageUsage extends Model
         $imageUsage = $imageUsage->toarray();
         $images = [];
 
-        forEach($imageUsage as $row){
-            $image = ImageUpload::find($row['image_id']);
-            array_push($images, Storage::disk('upload')->url($image->image));
+        if(isset($imageUsage) && !empty($imageUsage)){
+            if(count($imageUsage) > 1){
+                forEach($imageUsage as $row){
+                    $image = ImageUpload::find($row['image_id']);
+                    array_push($images, Storage::disk('upload')->url($image->image));
+                }
+            }else{
+                $image = ImageUpload::find($imageUsage[0]['image_id']);
+                return Storage::disk('upload')->url($image->image);
+            }
         }
         return $images;
     }

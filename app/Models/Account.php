@@ -16,7 +16,7 @@ class Account extends Authenticatable
 
 	public const PAGE_TITLE 		= 'Account';
 	public const CAN_CREATE 		= true;
-    public const TABLE_FIELDS 		= ['first_name', 'last_name', 'is_locked', 'is_active'];
+    public const TABLE_FIELDS 		= ['username', 'first_name', 'last_name', 'is_locked', 'is_active'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 	public const OPERATION	 		= ['create'];
 	/**
@@ -28,6 +28,7 @@ class Account extends Authenticatable
 		'username'					=> 	'normal',
 		'first_name' 				=> 	'normal',
 		'last_name' 				=> 	'normal',
+		'sex'						=>	'normal',
 		'email'		 				=> 	'normal',
 		'phone' 					=> 	'normal',
 		'type'	 					=> 	'normal',
@@ -41,6 +42,7 @@ class Account extends Authenticatable
 		'password',
 		'first_name',
 		'last_name',
+		'sex',
 		'email',
 		'phone',
 		'type',
@@ -57,11 +59,23 @@ class Account extends Authenticatable
 	];
 
 	public static function getValidateRules(int $id = -1){
+		if($id > 0){
+			return [
+				'username'              =>  'string|min:5|max:20|unique:account,username,' . $id,
+				'password'              =>  'nullable|confirmed|Regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)[A-Za-z\d!@#$%^\&*()_+-={}\[\]:\";\'<>,\.\\?~`]{8,}$/', 
+				'email'                 =>  'string|email|max:255|unique:account,email,' . $id,
+				'sex'					=>	'string',
+				'phone'                 =>  'string|max:20',
+				'first_name'            =>  'string|max:255',
+				'last_name'             =>  'string|max:255',
+			];
+		}
 		return [
-			'username'              =>  'string|min:5|max:20|unique:account,username,' . $id,
-			'password'              =>  'nullable|confirmed|Regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)[A-Za-z\d!@#$%^\&*()_+-={}\[\]:\";\'<>,\.\\?~`]{8,}$/', 
-			'email'                 =>  'string|email|max:255|unique:account,email,' . $id,
-			'phone'                 =>  'string|max:20',
+			'username'              =>  'required|string|min:5|max:20|unique:account',
+			'password'              =>  'required|confirmed|Regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)[A-Za-z\d!@#$%^\&*()_+-={}\[\]:\";\'<>,\.\\?~`]{8,}$/', 
+			'sex'					=>	'required|string',
+			'email'                 =>  'required|string|email|max:255|unique:account',
+			'phone'                 =>  'required|string|max:20',
 			'first_name'            =>  'string|max:255',
 			'last_name'             =>  'string|max:255',
 		];
@@ -80,7 +94,7 @@ class Account extends Authenticatable
 		return static::findRecord($id)->username;
 	}
 	
-	public static function matchField($user, $data){
+	public static function matchField($user,$data){
 		$temp = [];
 		if(empty(static::VIWES_FIELDS)){
 			return $data;
@@ -89,10 +103,11 @@ class Account extends Authenticatable
 			if(array_key_exists($key, static::VIWES_FIELDS)){
 				$temp[$key] = $value;
 			}
-			if(array_key_exists($key, ['password'])){
+			if(in_array($key, ['password'] > 0)){
 				$temp[$key] = password_hash($value, PASSWORD_DEFAULT);
 			}
 		}
+		$temp['company_id'] = $user->company_id;
 		return $temp;
 	}
 
@@ -101,10 +116,5 @@ class Account extends Authenticatable
 			return static::where(['company_id' => $company_id, 'is_delete'=> 0])->paginate($paginate_size);
 		}
 		return static::where('is_delete', 0)->get();
-	}
-
-	public static function getCount(){
-		return static::where('is_delete', 0)->count();
-	}
-	
+	}	
 }

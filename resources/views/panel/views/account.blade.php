@@ -1,10 +1,21 @@
 @php
 $is_admin = (Str::is('admin', $data['type'])?'true':'false');
+if(isset($images)){
+	if(is_array($images)){
+		if(!empty($images)){
+
+		}
+    }else{
+        $image = $images;
+    }
+}
 @endphp
 
 <div class="card-body">
     <div class="row">
         <div class="col-10">
+            <label for="profile_icon" class="card-text fs-4 form-label">{{ __('Profile Picture:') }}</label><br />
+            <img src="{{ isset($image) ? secure_asset($image) : secure_asset('img/default icon.jpg') }}" id="profile_icon" class="rounded img-thumbnail" alt="Profile Icon" style="width:150px;height:auto;" />
             @foreach($fields as $field => $format)
                 @if(Str::is('normal', $format))
                 <div class="fs-4 card-text"> {{ __(ucwords(str_replace('_', ' ', $field)) . ': ' . $data[$field]) }}</div>

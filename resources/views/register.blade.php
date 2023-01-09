@@ -23,28 +23,28 @@ $title = 'Register Page';
 					</div>
 				</div>
 			</div>
-			<form action="{{ route('register') }}" method="post">
+			<form action="{{ route('register') }}" method="post" autocomplete="off" enctype="multipart/form-data">
 				@csrf
 				<div class="row setup-content" id="step-company-info">
 					<div class="col-12">
 						<div class="row mb-3">
 							<div class="col-4">
 								<label for="r_c_company_name" class="form-label">{{ __('Company Name') }}</label>
-								<input type="text" class="form-control" name="company_name" id="r_c_company_name" value="{{ old('company_name') ?? '' }}" placeholder="Enter a Company Name" />
+								<input type="text" class="form-control" name="company_name" id="r_c_company_name" autocomplete="new-password" value="{{ old('company_name') ?? '' }}" placeholder="Enter a Company Name" />
 							</div>
 							<div class="col-4">
 								<label for="r_c_email" class="form-label">{{ __('Office Email') }}</label>
-								<input type="email" class="form-control" name="office_email" id="r_c_email" value="{{ old('office_email') ?? '' }}" placeholder="Enter a Office Email" />
+								<input type="email" class="form-control" name="office_email" id="r_c_email" autocomplete="new-password" value="{{ old('office_email') ?? '' }}" placeholder="Enter a Office Email" />
 							</div>
 							<div class="col-4">
 								<label for="r_c_office_phone" class="form-label">{{ __('Office Phone Number') }}</label>
-								<input type="text" class="form-control" name="office_phone" id="r_c_office_phone" value="{{ old('office_phone') ?? '' }}" placeholder="Enter a Office Phone Number" />
+								<input type="text" class="form-control" name="office_phone" id="r_c_office_phone" autocomplete="new-password" value="{{ old('office_phone') ?? '' }}" placeholder="Enter a Office Phone Number" />
 							</div>
 						</div>
 						<div class="row mb-3">
 							<div class="col-12">
 								<label for="r_c_office_address" class="form-label">{{ __('Office Address') }}</label>
-								<input type="text" class="form-control" name="office_address" id="r_c_office_address" value="{{ old('office_address') ?? '' }}" placeholder="Enter Your Office Address" />
+								<input type="text" class="form-control" name="office_address" id="r_c_office_address" autocomplete="new-password" value="{{ old('office_address') ?? '' }}" placeholder="Enter Your Office Address" />
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -58,7 +58,7 @@ $title = 'Register Page';
 						<div class="row mb-3">
 							<div class="col-12">
 								<label for="r_c_warehouse_address2" class="form-label">{{ __('Apartment, unit, suite, or floor #:') }}</label>
-								<input type="text" class="form-control" aria-describedby="r_c_warehouse_address2" role="presentation" name="warehouse_address2" id="r_c_warehouse_address2" value="{{ old('warehouse_address2') ?? '' }}" />
+								<input type="text" class="form-control" aria-describedby="r_c_warehouse_address2" role="presentation" name="warehouse_address2" id="r_c_warehouse_address2" autocomplete="new-password" value="{{ old('warehouse_address2') ?? '' }}" />
 							</div>
 						</div>
 						<div class="row">
@@ -70,27 +70,36 @@ $title = 'Register Page';
 				<div class="row setup-content" id="step-admin">
 					<div class="col-12">
 						<div class="row mb-3">
-							<div class="col-6">
+							<div class="col-12 col-md-4">
 								<label for="r_a_first_name" class="form-label">{{ __('First Name') }}</label>
-								<input type="text" class="form-control" name="first_name" id="r_a_first_name" value="{{ old('first_name') ?? '' }}" placeholder="Enter Your First Name" />
+								<input type="text" class="form-control" name="first_name" id="r_a_first_name" autocomplete="new-password" value="{{ old('first_name') ?? '' }}" placeholder="Enter Your First Name" />
 							</div>
-							<div class="col-6">
+							<div class="col-12 col-md-4">
 								<label for="r_a_last_name" class="form-label">{{ __('Last Name') }}</label>
-								<input type="text" class="form-control" name="last_name" id="r_a_last_name" value="{{ old('last_name') ?? '' }}" placeholder="Enter Your Last Name" />
+								<input type="text" class="form-control" name="last_name" id="r_a_last_name" autocomplete="new-password" value="{{ old('last_name') ?? '' }}" placeholder="Enter Your Last Name" />
+							</div>
+							<div class="col-12 col-md-4">
+								<label for="sex" class="form-label">Gender:</label>
+								<select class="form-select form-select-md mb-3" aria-label=".form-select-md" name="sex" id="r_a_sex">
+									<option selected disabled>Select Gender</option>
+									<option value="male"{{ ($record['sex'] ?? old('sex')) == 'male' ? 'selected' : '' }}>Male</option>
+									<option value="female" {{ ($record['sex'] ?? old('sex')) == 'female' ? 'selected' : '' }}>Female</option>
+									<option value="x" {{ ($record['sex'] ?? old('sex')) == 'x' ? 'selected' : '' }}>Gender X</option>
+								</select>
 							</div>
 						</div>
 						<div class="row mb-3">
-							<div class="col-4">
+							<div class="col-12 col-md-4">
 								<label for="r_a_username" class="form-label">{{ __('Username') }}</label>
-								<input type="text" class="form-control" name="username" id="r_a_username" value="{{ old('username') ?? '' }}" placeholder="Enter a Username" />
+								<input type="text" class="form-control" name="username" id="r_a_username" autocomplete="new-password" value="{{ old('username') ?? '' }}" placeholder="Enter a Username" />
 							</div>
-							<div class="col-4">
+							<div class="col-12 col-md-4">
 								<label for="r_a_email" class="form-label">{{ __('Email') }}</label>
-								<input type="email" class="form-control" name="email" id="r_a_email" value="{{ old('email') ?? '' }}" placeholder="Enter a Email" />
+								<input type="email" class="form-control" name="email" id="r_a_email" autocomplete="new-password" value="{{ old('email') ?? '' }}" placeholder="Enter a Email" />
 							</div>
-							<div class="col-4">
+							<div class="col-12 col-md-4">
 								<label for="r_a_phone" class="form-label">{{ __('Phone') }}</label>
-								<input type="text" class="form-control" name="phone" id="r_a_phone" value="{{ old('phone') ?? '' }}" placeholder="Enter a Phone" />
+								<input type="text" class="form-control" name="phone" id="r_a_phone" autocomplete="new-password" value="{{ old('phone') ?? '' }}" placeholder="Enter a Phone" />
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -173,5 +182,4 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 {{ View::make('layouts/google_map', ['type' => 'autocomplete']) }}
 @endpush
-<!-- @stack("scripts") -->
 @stop

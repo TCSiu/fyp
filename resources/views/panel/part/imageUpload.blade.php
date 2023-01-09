@@ -1,5 +1,5 @@
 @php
-
+$account = auth()->user();
 @endphp
 
 <button type="button" class="btn btn-primary ms-2" id="btn_select_image" data-bs-toggle="modal" data-bs-target="#modal_select_image">
@@ -31,7 +31,7 @@
 
 <template id="template_image_lib">
   <input type="radio" name="image_selection" id="image_selection_%id%" data-target="image_%id%" value="" />
-  <label for="image_selection_%id%"><img src="" name="image[%id%]" id="image_%id%" class="img-thumbnail" alt="" /></label>
+  <label for="image_selection_%id%"><img src="" name="image[%id%]" id="image_%id%" class="img-thumbnail" alt="" style="width:150px;height:auto;" /></label>
 </template>
 
 
@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', function(){
           lib = getUniqueArray(lib, data);
           lib.forEach(function(item, index){
             let temp = document.createElement('div');
-            temp.classList.add('col-3');
+            temp.classList.add('col-3', 'd-flex', 'justify-content-center', 'align-items-center');
             temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, btn_id);
             img = temp.querySelectorAll('img[id^=image]')[0];
             selection = temp.querySelectorAll('input[type=radio][id^=image_selection]')[0];
@@ -83,12 +83,12 @@ window.addEventListener('DOMContentLoaded', function(){
         }
       }
     }
-    xhr.open("GET", "{{ route('getImageInventory') }}", true);
+    xhr.open("GET", "{{ route('getImageInventory', ['company_id' => $account->company_id]) }}", true);
     xhr.send();
   }
 
   let dropzone = new Dropzone("#upload-dropzone", {
-    url: "{{ route('upload') }}",
+    url: "{{ route('upload', ['user_id' => $account->id]) }}",
     method: "POST",
     parallelUploads: 20,
     maxFilesize: 1,

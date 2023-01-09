@@ -13,7 +13,14 @@ use Illuminate\Support\Facades\Storage;
 class PanelController extends Controller
 {
 	public function index(WebRequest $request){
-		return view('panel/panel')->with('title', 'Panel Page');
+		$account			=	Auth::user();
+		$account_id			=	$account->id;
+		$sidebar_image		= 	ImageUsage::getImages('\App\Models\Account', $account_id);
+		// return dd($sidebar_image);
+
+		return view('panel/panel')
+			->with('title', 'Panel Page')
+			->with('sidebar_image', $sidebar_image);
 	}
 
 	public function list(WebRequest $request, string $model = ''){
@@ -22,10 +29,14 @@ class PanelController extends Controller
 			$inpage_title 		= 	'View ' . $page_title;
 			$target_fields 		= 	$className::TABLE_FIELDS;
 			$allow_actions 		= 	$className::ALLOW_ACTIONS;
-			$company_id			=	Auth::user()->company_id;	
+			$account			=	Auth::user();
+			$account_id			=	$account->id;
+			$company_id			=	$account->company_id;	
 			$operations 		= 	$className::OPERATION;
 			$data 				= 	$className::getData(20, $company_id);
 			$total_count 		= 	$className::getCount();
+			$sidebar_image		=	ImageUsage::getImages('\App\Models\Account', $account_id);
+			$images 			= 	ImageUsage::getImages($className, $account_id);
 
 			return view('panel/list')
 				->with('model', $model)
@@ -35,33 +46,44 @@ class PanelController extends Controller
 				->with('allow_actions', $allow_actions)
 				->with('operations', $operations)
 				->with('data', $data)
-				->with('total_count', $total_count);
+				->with('total_count', $total_count)
+				->with('sidebar_image', $sidebar_image)
+				->with('images', $images);
 		}
 		throw new \Exception();
 	}
 
 	public function create(WebRequest $request, string $model = ''){
 		if ($className = Model::checkModel($model)) {
-			$message = [];
-			$page_title = $className::PAGE_TITLE;
-			$inpage_title = 'Create ' . $page_title;
+			$message 			= 	[];
+			$page_title 		= 	$className::PAGE_TITLE;
+			$inpage_title 		= 	'Create ' . $page_title;
+			$isCreate 			= 	true;
+			$account			=	Auth::user();
+			$account_id			=	$account->id;
+			$sidebar_image		=	ImageUsage::getImages('\App\Models\Account', $account_id);
+
 			return view('panel/create')
 				->with('model', $model)
 				->with('title', $page_title)
 				->with('inpage_title', $inpage_title)
 				->with('msg', $message)
-				->with('method', 'create');
+				->with('isCreate', $isCreate)
+				->with('sidebar_image', $sidebar_image);
 		}
 		throw new \Exception();
 	}
 
-	public function view(WebRequest $request, string $model = '', int $id = 1){
+	public function view(WebRequest $request, string $model = '', int $id = -1){
 		if($className = Model::checkModel($model)){
-			$page_title = $className::PAGE_TITLE;
-			$inpage_title = 'View ' . $className::getInpageTitle($id);
-			$fields = $className::VIWES_FIELDS;
-			$data = $className::findRecord($id);
-			$images = ImageUsage::getImages($className, $id);
+			$page_title 		= 	$className::PAGE_TITLE;
+			$inpage_title 		= 	'View ' . $className::getInpageTitle($id);
+			$fields 			= 	$className::VIWES_FIELDS;
+			$data 				= 	$className::findRecord($id);
+			$account			=	Auth::user();
+			$account_id			=	$account->id;
+			$sidebar_image		=	ImageUsage::getImages('\App\Models\Account', $account_id);
+			$images 			= 	ImageUsage::getImages($className, $id);
 
 			return view('panel/view')
 				->with('model', $model)
@@ -70,6 +92,7 @@ class PanelController extends Controller
 				->with('fields', $fields)
 				->with('data', $data)
 				->with('id', $data->id)
+				->with('sidebar_image', $sidebar_image)
 				->with('images', $images);
 		}
 		throw new \Exception();
@@ -79,11 +102,15 @@ class PanelController extends Controller
 		if($className = Model::checkModel($model)){
 			$record = $className::findRecord($id);
 			if(isset($record) && $record instanceOf Model){
-				$msg = [];
-				$page_title = $className::PAGE_TITLE;
-				$inpage_title = 'Edit ' . $page_title . ' ' . $id;
-				$images = ImageUsage::getImages($className, $id);
-				
+				$msg 			= 	[];
+				$page_title 	= 	$className::PAGE_TITLE;
+				$inpage_title 	= 	'Edit ' . $page_title . ' ' . $id;
+				$account		=	Auth::user();
+				$account_id		=	$account->id;
+				$sidebar_image	=	ImageUsage::getImages('\App\Models\Account', $account_id);
+				$images 		= 	ImageUsage::getImages($className, $id);
+				// return dd($images);
+
 				return view('panel/create')
 					->with('model', $model)
 					->with('title', $page_title)
@@ -92,6 +119,7 @@ class PanelController extends Controller
 					->with('record', $record)
 					->with('method', 'store')
 					->with('id', $id)
+					->with('sidebar_image', $sidebar_image)
 					->with('images', $images);
 			}
 		}
@@ -100,10 +128,11 @@ class PanelController extends Controller
 
 	public function store(WebRequest $request, string $model = '', int $id = -1){
 		if ($className = Model::checkModel($model)) {
-			$user = Auth::user();
-			$temp = $request->all();
-			$temp = $className::modifyData($temp);
-			$validator = Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
+			$user 				= Auth::user();
+			$temp 				= $request->all();
+			$temp 				= $className::modifyData($temp);
+			$validator 			= Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
+
 			if ($validator->fails()) {
 				$errors = $validator->errors()->toArray();
 				$message['type'] = 'errors';
@@ -118,16 +147,18 @@ class PanelController extends Controller
 				->withInput();
 			}
 			$data 	= $className::matchField($user, $temp);
-			$item 	= $className::updateOrCreate(['id' => $id], $data);
-			$imageUsage = ImageUsage::fileUsageStore($className, $id, $temp);
-			return redirect(route('cms.view', ['model' => $model, 'id' => $item->id]));
+			// return dd($data);
+			$record 	= $className::updateOrCreate(['id' => $id], $data);
+			$imageUsage = ImageUsage::fileUsageStore($className, $record->id, $temp);
+			return redirect(route('cms.view', ['model' => $model, 'id' => $record->id]));
 		}
 		throw new \Exception();
 	}
 
 	public function delete(WebRequest $request, string $model = '', int $id = -1){
 		if($className = Model::checkModel($model)){
-			$record = $className::findRecord($id);
+			$record 			= $className::findRecord($id);
+
 			if(isset($record) && $record instanceOf Model){
 				$record->deleteRecord();
 				return redirect(route('cms.list', ['model' => $model]));
@@ -167,6 +198,12 @@ class PanelController extends Controller
 	}
 
 	public function image(WebRequest $request){
-		return view('panel/image')->with('title', 'Panel Page');
+		$account			=	Auth::user();
+		$account_id			=	$account->id;
+		$images 			=	ImageUsage::getImages($className, $account_id);
+
+		return view('panel/image')
+			->with('title', 'Panel Page')
+			->with('images', $images);
 	}
 }
