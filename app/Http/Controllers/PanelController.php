@@ -142,14 +142,14 @@ class PanelController extends Controller
 					}
 				}
 				return redirect()
-				->back()
-				->with('msg', $message)
-				->withInput();
+					->back()
+					->with('msg', $message)
+					->withInput();
 			}
-			$data 	= $className::matchField($user, $temp);
+			$data 				= $className::matchField($user, $temp);
 			// return dd($data);
-			$record 	= $className::updateOrCreate(['id' => $id], $data);
-			$imageUsage = ImageUsage::fileUsageStore($className, $record->id, $temp);
+			$record 			= $className::updateOrCreate(['id' => $id], $data);
+			$imageUsage 		= ImageUsage::fileUsageStore($className, $record->id, $temp);
 			return redirect(route('cms.view', ['model' => $model, 'id' => $record->id]));
 		}
 		throw new \Exception();
@@ -197,13 +197,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function image(WebRequest $request){
-		$account			=	Auth::user();
-		$account_id			=	$account->id;
-		$images 			=	ImageUsage::getImages($className, $account_id);
-
-		return view('panel/image')
-			->with('title', 'Panel Page')
-			->with('images', $images);
+	public function test(){
+        return view('panel/test')->with('title', 'Panel Page');
 	}
 }

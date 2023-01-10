@@ -12,7 +12,7 @@ class Order extends Model
 	protected $table = 'order';
 
 	public const PAGE_TITLE 		= 'Order';
-	public const OPERATION	 		= ['create'];
+	public const OPERATION	 		= ['create', 'import_csv'];
 	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'deliver1', 'is_in_group', 'is_complete'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 
@@ -81,6 +81,7 @@ class Order extends Model
 			'lng'				=>	'required|numeric',
 			'delivery_date' 	=> 	'required|date_format:Y-m-d|after_or_equal:today',
 			'items_name' 		=> 	'required|array',
+			'items_number' 		=> 	'required|array',
 			'items_name.*' 		=> 	'required|string',
 			'items_number.*' 	=> 	'required|integer',
 		];
@@ -93,7 +94,7 @@ class Order extends Model
 		return static::where('is_delete', 0)->get();
 	}
 
-	public static function matchField($user, $data){
+	public static function matchField($user = null, array $data = []){
 		$temp = [];
 		if(empty(static::VIWES_FIELDS)){
 			return $data;

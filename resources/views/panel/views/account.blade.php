@@ -2,7 +2,7 @@
 $is_admin = (Str::is('admin', $data['type'])?'true':'false');
 if(isset($images)){
 	if(is_array($images)){
-		if(!empty($images)){
+		if(sizeOf($images) > 0){
 
 		}
     }else{

@@ -94,7 +94,7 @@ class Account extends Authenticatable
 		return static::findRecord($id)->username;
 	}
 	
-	public static function matchField($user,$data){
+	public static function matchField($user = null, array $data = []){
 		$temp = [];
 		if(empty(static::VIWES_FIELDS)){
 			return $data;

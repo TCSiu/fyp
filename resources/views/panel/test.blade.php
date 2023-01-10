@@ -1,5 +1,5 @@
 @php
-
+$account = auth()->user();
 @endphp
 @extends('layouts/default')
 
@@ -13,8 +13,8 @@
 					<div class="card-header">
 						<h3 class="text-center">{{ __('Test') }}</h3>
 					</div>
-					<div class="col-12 col-lg-10">
-                        <img class="img-thumbnail" style="width:200px;height:200px;" src="{{ secure_asset('/storage/uploads/'.$image) }}" alt="" title="" />
+					<div class="col-12">
+						<div class="border-primary bg-light dropzone" id="upload-dropzone"></div>
                     </div>
 				</div>
 			</div>
@@ -22,3 +22,19 @@
 	</div>
 </main>
 @stop
+
+@push('scripts')
+<script>
+Dropzone.autoDiscover = false;
+let dropzone = new Dropzone("#upload-dropzone", {
+	url: "{{ route('import', ['model' => 'order', 'id' => $account->id]) }}",
+	method: "POST",
+	parallelUploads: 20,
+	maxFilesize: 1,
+	paramName: "file",
+	init: function(){
+
+	}
+});
+</script>
+@endpush

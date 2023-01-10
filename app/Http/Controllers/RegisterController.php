@@ -96,7 +96,7 @@ class RegisterController extends BaseController
 			Cookie::queue('company', $company);
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
-		if(Auth::check()){
+		if(Auth::check() && Cookie::has('Company')){
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
 		return view('register');
@@ -143,13 +143,13 @@ class RegisterController extends BaseController
 				$company 	= Company::where('id', $account->company_id)->first();
 				// $token 		= $account->createToken('FYP')->accessToken;
 				// Cookie::queue('access_token', $token, 1000);
-				Cookie::queue('company', $company, 1000);
+				Cookie::queue('company', $company, 1200);
 				return redirect(route('panel'))->with('title', 'Panel');
 			}else{
 				return redirect()->back()->with('errors', ['Wrong Password!'])->withInput();
 			}
 		}
-		if(Auth::check()){
+		if(Auth::check() && Cookie::has('Company')){
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
 		return view('login');

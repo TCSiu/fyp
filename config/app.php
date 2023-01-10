@@ -194,6 +194,7 @@ return [
 		// App\Providers\BroadcastServiceProvider::class,
 		App\Providers\EventServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
+		Maatwebsite\Excel\ExcelServiceProvider::class,
 
 	],
 
@@ -249,6 +250,7 @@ return [
 		'View'					=> Illuminate\Support\Facades\View::class,
 
 		'Constants'	 			=>  App\Commons\Constants::class,
-		'Utility'	   			=>  App\Commons\Utility::class,	   
+		'Utility'	   			=>  App\Commons\Utility::class,
+		'Excel' 				=> Maatwebsite\Excel\Facades\Excel::class,	   
 	],
 ];

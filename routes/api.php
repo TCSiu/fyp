@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AccountController;
 use App\Http\Controllers\API\ImageController;
+use App\Http\Controllers\API\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,5 @@ Route::post('register', [AccountController::class, 'register']);
 
 Route::get('/image/viewAll/{company_id}',   [ImageController::class,    'getImageInventory'])   ->name('getImageInventory')->whereNumber('company_id');
 Route::post('/image/upload/{user_id}',      [ImageController::class,    'fileStore'])           ->name('upload')->whereNumber('user_id');
+
+Route::post('test/{model}/{id}/upload',     [UploadController::class,   'fileImport'])          ->name('import')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');                 

@@ -38,12 +38,6 @@ class ImageController extends BaseController {
         throw new \Exception();
     }
 
-    public function viewImage(int $id = -1){
-        $image = ImageUpload::find($id);
-        $image = $image->image;
-        return view('panel/imageView')->with('title', 'Panel Page')->with('image', $image);
-	}
-
     public function getImageInventory(int $company_id = -1){
         $data = ImageUpload::getData(-1, $company_id);
         $data = $data->toArray();

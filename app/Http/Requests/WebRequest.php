@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class WebRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class WebRequest extends FormRequest
      */
     public function authorize()
     {
-        if(!Auth::check()){
+        if(!Auth::check() || !Cookie::has('company')){
             header('location:'.route('login'));
             abort(301);
         }
