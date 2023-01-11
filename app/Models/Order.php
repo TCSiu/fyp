@@ -17,6 +17,8 @@ class Order extends Model
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 
 	public const VALIDATE_MESSAGE 	= [
+		'items_name.lte'			=>	'All the items need to have a item number.',
+		'items_number.lte'			=>	'All the items need to have a item number.',
 		'items_name.required'		=>	'Product table cannot be empty.',
 		'items_name.*.required'		=>	'Product name :index cannot be empty.',
 		'items_number.*.required'	=>	'Product number :index field cannot be empty.',
@@ -80,8 +82,8 @@ class Order extends Model
 			'lat'				=>	'required|numeric',
 			'lng'				=>	'required|numeric',
 			'delivery_date' 	=> 	'required|date_format:Y-m-d|after_or_equal:today',
-			'items_name' 		=> 	'required|array',
-			'items_number' 		=> 	'required|array',
+			'items_name' 		=> 	'required|array|lte:items_number',
+			'items_number' 		=> 	'required|array|lte:items_name',
 			'items_name.*' 		=> 	'required|string',
 			'items_number.*' 	=> 	'required|integer',
 		];

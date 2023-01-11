@@ -21,6 +21,7 @@ class OrderImport extends BaseImport
 	}
 
 	public function model(array $row){
+        // return dd($row);
         $data   =   $this->processData($row);
         return new Order($data);
 	}
@@ -51,7 +52,7 @@ class OrderImport extends BaseImport
                 $http = new \GuzzleHttp\Client;
                 $response = $http->post('https://maps.googleapis.com/maps/api/place/findplacefromtext/json', [
                     'query'	=>	[
-                        // 'input'         =>  $place,
+                        'input'         =>  $place,
                         'inputtype'     =>  'textquery',
                         'fields'        =>  'geometry',
                         'key'           =>  Constants::GOOGLE_MAP_KEY,
