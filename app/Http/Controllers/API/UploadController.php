@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class UploadController extends BaseController {
     public function fileImport(Request $request, string $model = '', int $id = -1){
@@ -30,6 +32,17 @@ class UploadController extends BaseController {
             }
             return $this->sendError('Error Occur', $errMsg, 400);
         }
-        // return dd($className);
+    }
+
+    public function testPy(){
+		$url = Storage::disk('csv')->url('sample_data.csv');
+		$process = new Process(['python', 'CVRP.py', $url]);
+        $process->run();
+        // error handling
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        $output_data = $process->getOutput();
+        return $output_data;
     }
 }

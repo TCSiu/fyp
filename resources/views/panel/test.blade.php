@@ -10,11 +10,13 @@ $account = auth()->user();
 		<div class="row justify-content-center">
 			<div class="col-12 col-xl-12">
 				<div class="card">
+					
 					<div class="card-header">
 						<h3 class="text-center">{{ __('Test') }}</h3>
 					</div>
 					<div class="col-12">
-						<div class="border-primary bg-light dropzone" id="upload-dropzone"></div>
+						{{ isset($output) ? $output : '' }}
+						<button class="btn" id="run_python">{{ __('Run Python') }}</button>
                     </div>
 				</div>
 			</div>
@@ -25,16 +27,6 @@ $account = auth()->user();
 
 @push('scripts')
 <script>
-Dropzone.autoDiscover = false;
-let dropzone = new Dropzone("#upload-dropzone", {
-	url: "{{ route('import', ['model' => 'order', 'id' => $account->id]) }}",
-	method: "POST",
-	parallelUploads: 20,
-	maxFilesize: 1,
-	paramName: "file",
-	init: function(){
 
-	}
-});
 </script>
 @endpush

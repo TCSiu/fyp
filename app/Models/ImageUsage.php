@@ -35,11 +35,11 @@ class ImageUsage extends Model
             if(count($imageUsage) > 1){
                 forEach($imageUsage as $row){
                     $image = ImageUpload::find($row['image_id']);
-                    array_push($images, Storage::disk('upload')->url($image->image));
+                    array_push($images, Storage::disk('media')->url($image->image));
                 }
             }else{
                 $image = ImageUpload::find($imageUsage[0]['image_id']);
-                return Storage::disk('upload')->url($image->image);
+                return Storage::disk('media')->url($image->image);
             }
         }
         return $images;

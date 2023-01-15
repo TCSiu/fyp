@@ -26,7 +26,7 @@ class ImageController extends BaseController {
             }
 
             $imageName = $file->getClientOriginalName();
-            $path = $file->storeAs('/', $imageName, 'upload');
+            $path = $file->storeAs('/', $imageName, 'media');
 
             $imageUpload = new ImageUpload();
             $imageUpload->image = $imageName;
@@ -42,7 +42,7 @@ class ImageController extends BaseController {
         $data = ImageUpload::getData(-1, $company_id);
         $data = $data->toArray();
         array_walk($data, function(&$e){
-            $e['path'] = secure_asset(Storage::disk('upload')->url($e['image']));
+            $e['path'] = secure_asset(Storage::disk('meida')->url($e['image']));
         });
         return $this->sendResponse($data, 'All the images');
     }

@@ -96,7 +96,7 @@ class RegisterController extends BaseController
 			Cookie::queue('company', $company);
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
-		if(Auth::check() && Cookie::has('Company')){
+		if(Auth::check() && Cookie::has('company')){
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
 		return view('register');
@@ -149,7 +149,7 @@ class RegisterController extends BaseController
 				return redirect()->back()->with('errors', ['Wrong Password!'])->withInput();
 			}
 		}
-		if(Auth::check() && Cookie::has('Company')){
+		if(Auth::check() && Cookie::has('company')){
 			return redirect(route('panel'))->with('title', 'Panel');
 		}
 		return view('login');

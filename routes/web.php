@@ -20,12 +20,12 @@ use App\Http\Controllers\API\ImageController;
 */
 
 Route::redirect('/', '/login');
-Route::get('login', [RegisterController::class, 'login'])->name('login');
-Route::get('register', [RegisterController::class, 'register'])->name('register');
+Route::get('login',                             [RegisterController::class, 'login'])->name('login');
+Route::get('register',                          [RegisterController::class, 'register'])->name('register');
+Route::post('login',                            [RegisterController::class, 'login']);
+Route::post('register',                         [RegisterController::class, 'register']);
 // Route::view('register', 'register')->name('register');
 
-Route::post('login', [RegisterController::class, 'login']);
-Route::post('register', [RegisterController::class, 'register']);
 
 
 Route::group(['prefix' => '/'], function(){

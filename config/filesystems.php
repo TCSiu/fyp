@@ -56,13 +56,23 @@ return [
             'throw' => false,
         ],
 
-        'upload' => [
+        'media' => [
             'driver' => 'local',
-            'root' => storage_path('uploads'),
-            'url' => env('APP_URL').'/storage',
+            'root' => storage_path('media'),
+            'url' => env('APP_URL').'/storage/media',
             'visibility' => 'public',
             'throw' => false,
         ],
+
+        'csv' => [
+            'driver' => 'local',
+            'root' => storage_path('csv'),
+            'url' => env('APP_URL').'/storage/csv',
+            'visibility' => 'public',
+            'throw' => false,
+        ]
+
+
     ],
 
     /*
@@ -77,7 +87,8 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('uploads'),
+        public_path('storage\media') => storage_path('media'),
+        public_path('storage\csv') => storage_path('csv'),
     ],
 
 ];

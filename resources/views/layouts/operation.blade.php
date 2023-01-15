@@ -56,9 +56,10 @@ let dropzone = new Dropzone("#upload-dropzone", {
 @endif
 
 @if(strcmp($operation, 'gen_csv') == 0)
-<a class="btn btn-secondary white-space-nowrap" href="{{ route('cms.get_csv', ['model' => $model]) }}" id="btn_gen_csv">
+@includeif('panel/part/loading')
+<button class="btn btn-secondary white-space-nowrap" id="btn_gen_csv">
     <i class="align-middle me-2" data-feather="plus"></i>{{ __('Generate CSV') }}
-</a>
+</button>
 @endif
 @endforeach
 </div>

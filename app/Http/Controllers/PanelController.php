@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class PanelController extends Controller
 {
@@ -200,4 +202,18 @@ class PanelController extends Controller
 	public function test(){
         return view('panel/test')->with('title', 'Panel Page');
 	}
+
+	// public function testPy(){
+	// 	$url = Storage::disk('csv')->url('sample_data.csv');
+	// 	$process = new Process(['python', 'CVRP.py', $url]);
+    //     $process->run();
+
+    //     // error handling
+    //     if (!$process->isSuccessful()) {
+    //         throw new ProcessFailedException($process);
+    //     }
+
+    //     $output_data = $process->getOutput();
+    //     return view('panel/test')->with('title', 'Panel Page')->with('output', $output_data);
+    // }
 }
