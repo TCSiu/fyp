@@ -34,7 +34,7 @@ class UploadController extends BaseController {
         }
     }
 
-    public function testPy(){
+    public function routePlanning(){
 		$url = Storage::disk('csv')->url('sample_data.csv');
 		$process = new Process(['python', 'CVRP.py', $url]);
         $process->run();
@@ -43,6 +43,6 @@ class UploadController extends BaseController {
             throw new ProcessFailedException($process);
         }
         $output_data = $process->getOutput();
-        return $output_data;
+        return $this->sendResponse($output_data, 'Route Planning Success!');
     }
 }

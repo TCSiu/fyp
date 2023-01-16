@@ -59,8 +59,8 @@ class DepotInfo():
         
 class NodeInfo():
     def __init__(self, number, demand, lng, lat):
-        self.number = number
-        self.demand = demand
+        self.number = int(number)
+        self.demand = int(demand)
         self.lng = lng
         self.lat = lat
     def getNumber(self):
@@ -78,10 +78,10 @@ class NodeInfo():
         self.lat = lat
     def getInfo(self):
         return {
-            'id'     : self.number,
-            'lat'    : self.lat,
-            'lng'    : self.lng,
-            'demand' : self.demand,
+            "id"     : self.number,
+            "lat"    : self.lat,
+            "lng"    : self.lng,
+            "demand" : self.demand,
         }
 
 def calBearing(a: list, b: list):
@@ -453,7 +453,7 @@ for i in range(0, len(best_route)):
         location = j.getLocation()
         tuple_coor_list.append(tuple(location))
         this_information.append(j.getInfo())
-    all_information[str(count)] = this_information
+    all_information[count] = this_information
     count += 1
     all_tuple_coor_list.append(tuple_coor_list)
     mlrose_list.append(mlrose.TSPOpt(length = len(tuple_coor_list), coords = tuple_coor_list, maximize=False))
@@ -473,7 +473,7 @@ output = {}
 for f in range(0, len(final_path)):
     curr_path = []
     route = final_path[f]
-    route_information = all_information[str(f)]
+    route_information = all_information[f]
     for p in range(0, len(route)):
         curr_path.append(route_information[route[p]])
     output[str(f)] = curr_path

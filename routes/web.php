@@ -26,8 +26,6 @@ Route::post('login',                            [RegisterController::class, 'log
 Route::post('register',                         [RegisterController::class, 'register']);
 // Route::view('register', 'register')->name('register');
 
-
-
 Route::group(['prefix' => '/'], function(){
     Route::get('panel',                         [PanelController::class,    'index'])           ->name('panel');
     Route::get('logout',                        [RegisterController::class, 'logout'])          ->name('logout');

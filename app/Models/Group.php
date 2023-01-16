@@ -12,7 +12,7 @@ class Group extends Model
 	protected $table = 'order_group';
 
 	public const PAGE_TITLE 	= 'Order Group';
-	public const OPERATION		= ['gen_csv'];	
+	public const OPERATION		= ['route_planning'];	
 
 	// protected $fillable = [
 	// 	 'product_name',

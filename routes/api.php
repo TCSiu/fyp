@@ -28,6 +28,6 @@ Route::post('register', [AccountController::class, 'register']);
 Route::get('/image/viewAll/{company_id}',   [ImageController::class,    'getImageInventory'])   ->name('getImageInventory')->whereNumber('company_id');
 Route::post('/image/upload/{user_id}',      [ImageController::class,    'fileStore'])           ->name('upload')->whereNumber('user_id');
 
-Route::post('test/{model}/{id}/upload',     [UploadController::class,   'fileImport'])          ->name('import')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');
+Route::post('file/{model}/{id}/upload',     [UploadController::class,   'fileImport'])          ->name('import')->where('model', Constants::MODEL_REGEXP)->whereNumber('id');
 
-Route::get('test/py',                           [UploadController::class,   'testPy'])          ->name('testPy');
+Route::get('planning',                      [UploadController::class,   'routePlanning'])       ->name('routePlanning');

@@ -6,26 +6,3 @@
         <div></div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-window.addEventListener('DOMContentLoaded', function(){
-	let btn_gen_csv = document.getElementById('btn_gen_csv');
-	btn_gen_csv.addEventListener('click', testPy);
-});
-
-function testPy(){
-	let xhr = new XMLHttpRequest();
-    let loading = document.getElementById('loading');
-    xhr.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-            loading.style.display = 'none';
-        }else if(this.readyState == 1){
-            loading.style.display = 'flex';
-        }
-    }
-    xhr.open("GET", "{{ route('testPy') }}", true);
-    xhr.send();
-}
-</script>
-@endpush
