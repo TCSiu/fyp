@@ -38,6 +38,7 @@ Dropzone.autoDiscover = false;
 let dropzone = new Dropzone("#upload-dropzone", {
 	url: "{{ route('import', ['model' => 'order', 'id' => $account->id]) }}",
 	method: "POST",
+  params: {"modal": "order", "id":"{{ $account->id }}"},
 	parallelUploads: 20,
 	maxFilesize: 1,
 	paramName: "file",
@@ -57,9 +58,30 @@ let dropzone = new Dropzone("#upload-dropzone", {
 
 @if(strcmp($operation, 'route_planning') == 0)
 @includeif('panel/part/loading')
-<button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
-    <i class="align-middle me-2" data-feather="plus"></i>{{ __('Route Planning') }}
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#route_planning_requirement_modal">
+  {{ __('Route Planning') }}
 </button>
+
+<div class="modal fade" id="route_planning_requirement_modal" tabindex="-1" aria-labelledby="route_planning_requirement_modal_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="route_planning_requirement_modal_label">{{ __('Select Route Planning Requirement') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+        <button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
+          <i class="align-middle me-2" data-feather="plus"></i>{{ __('Submit') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal" tabindex="-1" id="route_planning_modal">
   <div class="modal-dialog modal-xl">
@@ -89,7 +111,7 @@ let dropzone = new Dropzone("#upload-dropzone", {
   </h2>
   <div id="preview_planning_%id%" class="accordion-collapse collapse" aria-labelledby="preview_planning_header_%id%" data-bs-parent="#preview_planning_accordion">
     <div class="accordion-body">
-      <table class="table" id="route_planning_table">
+      <table class="table table-striped" id="route_planning_table">
         <thead>
           <th scope="col">#</th>
           <th scope="col">Route</th>
@@ -104,7 +126,7 @@ let dropzone = new Dropzone("#upload-dropzone", {
 
 <template id="template_preview_row">
   <td>
-    <span class="preview_id"></span>
+    <span class="preview_id">{{ __('%id%') }}</span>
   </td>
   <td id="preview_route_%id%"></td>
 </template>
@@ -135,35 +157,29 @@ window.addEventListener('DOMContentLoaded', function(){
 
   function routePreview(json = ''){
     let data = JSON.parse(json.replaceAll('\'', '\"'));
-    count = 0;
-    let target_modal_body     = document.getElementById('preview_modal_body');
-    let template_accordion    = document.getElementById('template_accordion');
-    let template_row          = document.getElementById('template_preview_row');
-
+    let count_accordion = 0;
+    let preview_planning_accordion      = document.getElementById('preview_planning_accordion');
+    let template_accordion              = document.getElementById('template_accordion');
+    let template_row                    = document.getElementById('template_preview_row');
+    preview_planning_accordion.innerHTML = '';
     // let template_table = document.getElementById('template_route_planning');
-    // let tbody = document.getElementById('preview_tbody');
     for(let key in data){
+      let count_row = 0;
       value = data[key];
-      route = '';
+      let temp_accordion = document.createElement('div');
+      temp_accordion.classList.add('accordion-item');
+      temp_accordion.innerHTML = template_accordion.innerHTML.replaceAll(/\%id\%/gi, ++count_accordion);
+      preview_planning_accordion.appendChild(temp_accordion);
       for(let kkey in value){
-        if(kkey == value.length - 1){
-          route += value[kkey].id;
-          break;
-        }
-        route += value[kkey].id + ' > ';
+        let tbody = document.getElementById('preview_tbody_' + count_accordion);
+        let temp = document.createElement('tr');
+        temp.innerHTML = template_row.innerHTML.replaceAll(/\%id\%/gi, ++count_row);
+        tbody.appendChild(temp);
+        let preview_route = document.querySelector('#preview_tbody_' + count_accordion + ' #preview_route_' + count_row);
+        preview_route.innerText = value[kkey].id;
       }
-      let temp = document.createElement('div');
-      temp.classList.add('accordion-item');
-      temp.innerHTML = template_accordion.innerHTML.replaceAll(/\%id\%/gi, ++count);
-      target_modal_body.appendChild(temp);
-      // let temp = document.createElement('tr');
-      // temp.innerHTML = template.innerHTML.replaceAll(/\%id\%/gi, ++count);
-      // tbody.appendChild(temp);
-      // let preview_route = document.getElementById('preview_route_' + count);
-      // preview_route.innerText = route;
       feather.replace();
     }
-    [...document.querySelectorAll('#preview_tbody .preview_id')].map(function(e, k){e.innerText = k + 1;});
   }
 	let btn_route_planning = document.getElementById('btn_route_planning');
 	btn_route_planning.addEventListener('click', routePlanning);
