@@ -51,10 +51,10 @@ if(isset($record)){
 				<label for="orderPhoneNumber" class="form-label form-required">{{ __('Phone Number:') }}{!! Utility::required() !!}</label>
 				<input type="tel" class="form-control" aria-describedby="orderPhoneNumber" name="phone_number" id="orderPhoneNumber" value="{{ $record['phone_number'] ?? old('phone_number') ?? '' }}" />
 			</div>
-			<div class="col-12 col-md-8">
+			<!-- <div class="col-12 col-md-8">
 				<label for="orderDeliveryDate" class="form-label form-required">{{ __('Delivery Date:') }}{!! Utility::required() !!}</label>
-				<input type="text" class="form-control datepicker" aria-describedby="orderDeliveryDate" name="delivery_date" id="orderDeliveryDate" value="{{ $record['delivery_date'] ?? old('delivery_date') ?? date('Y-m-d') }}" />
-			</div>
+				<input type="text" class="form-control datepicker" aria-describedby="orderDeliveryDate" name="delivery_date" id="orderDeliveryDate" value="{{ $record['delivery_date'] ?? old('delivery_date') ?? date('Y-m-d', strtotime('+2 day')) }}" />
+			</div> -->
 		</div>
 		<div class="row">
 			<div class="col-12">{{ __('Delivery Items') }}{!! Utility::required() !!}</div>
@@ -114,8 +114,11 @@ if(isset($record)){
 				<button type="submit" class="btn btn-success me-2" id="orderFormSubmit">
 					<i class="align-middle" data-feather="save"></i> {{ __('Save') }}
 				</button>
-				<button type="reset" class="btn btn-secondary me-2">
+				<button type="reset" class="btn btn-danger me-2">
 					<i class="align-middle" data-feather="rotate-ccw"></i> {{ __('Reset') }}
+				</button>
+				<button type="{{ url()->previous() }}" class="btn btn-secondary me-2">
+					<i class="align-middle" data-feather="corner-down-right"></i> {{ __('Cancel') }}
 				</button>
 			</div>
 		</div>

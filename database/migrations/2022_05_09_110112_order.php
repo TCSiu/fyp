@@ -20,8 +20,8 @@ return new class extends Migration
 			$table->string('first_name')->nullable();
 			$table->string('last_name')->nullable();
 			$table->string('phone_number')->nullable();
-			$table->string('deliver1')->nullable();
-			$table->string('deliver2')->nullable();
+			$table->string('delivery1')->nullable();
+			$table->string('delivery2')->nullable();
 			$table->double('lat')->default(0);
 			$table->double('lng')->default(0);
 			$table->date('delivery_date')->nullable();

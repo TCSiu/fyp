@@ -103,7 +103,7 @@ class Account extends Authenticatable
 			if(array_key_exists($key, static::VIWES_FIELDS)){
 				$temp[$key] = $value;
 			}
-			if(in_array($key, ['password'] > 0)){
+			if(in_array($key, ['password']) > 0){
 				$temp[$key] = password_hash($value, PASSWORD_DEFAULT);
 			}
 		}

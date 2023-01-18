@@ -111,7 +111,6 @@ class PanelController extends Controller
 				$account_id		=	$account->id;
 				$sidebar_image	=	ImageUsage::getImages('\App\Models\Account', $account_id);
 				$images 		= 	ImageUsage::getImages($className, $id);
-				// return dd($images);
 
 				return view('panel/create')
 					->with('model', $model)
@@ -124,6 +123,9 @@ class PanelController extends Controller
 					->with('sidebar_image', $sidebar_image)
 					->with('images', $images);
 			}
+			$message['type'] = 'errors';
+			$message['message'][] = 'This record cannot be edited.';
+			return redirect()->back()->with('msg', $message);
 		}
 		throw new \Exception();
 	}

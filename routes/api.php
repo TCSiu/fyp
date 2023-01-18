@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AccountController;
-use App\Http\Controllers\API\ImageController;
+use App\Http\Controllers\API\PanelController;
 use App\Http\Controllers\API\UploadController;
 
 /*
@@ -21,13 +21,15 @@ use App\Http\Controllers\API\UploadController;
 //     return $request->user();
 // });
 
-Route::post('register', [AccountController::class, 'register']);
-Route::post('login',    [AccountController::class, 'login']);
-Route::post('register', [AccountController::class, 'register']);
+Route::post('register',                     [AccountController::class,  'register']);
+Route::post('login',                        [AccountController::class,  'login']);
+Route::post('register',                     [AccountController::class,  'register']);
 
-Route::get('/image/viewAll/{company_id}',   [ImageController::class,    'getImageInventory'])   ->name('getImageInventory')->whereNumber('company_id');
-Route::post('/image/upload/{user_id}',      [ImageController::class,    'fileStore'])           ->name('upload')->whereNumber('user_id');
+Route::get('/image/viewAll/{company_id}',   [UploadController::class,   'getImageInventory'])   ->name('getImageInventory')->whereNumber('company_id');
+Route::post('/image/upload/{user_id}',      [UploadController::class,   'fileStore'])           ->name('upload')->whereNumber('user_id');
 
 Route::post('file/upload',                  [UploadController::class,   'fileImport'])          ->name('import');
 
-Route::get('planning',                      [UploadController::class,   'routePlanning'])       ->name('routePlanning');
+// Route::get('route/prepare/{company_id}',    [PanelController::class,   'routePrepare'])         ->name('route.prepare')->whereNumber('company_id');
+Route::post('route/planning',               [PanelController::class,    'routePlanning'])       ->name('route.planning');
+Route::post('route/storing',                [PanelController::class,    'routeStoring'])        ->name('route.storing');

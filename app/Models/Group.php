@@ -14,11 +14,12 @@ class Group extends Model
 	public const PAGE_TITLE 	= 'Order Group';
 	public const OPERATION		= ['route_planning'];	
 
-	// protected $fillable = [
-	// 	 'product_name',
-	// 	 'no_of_items',
-	// 	 'address',
-	// ];
+	protected $fillable = [
+		 'company_id',
+		 'route_order',
+		 'relative_staff',
+		 'status',
+	];
 
 	/**
 	 * The attributes that should be hidden for serialization.
@@ -33,8 +34,8 @@ class Group extends Model
 		return static::PAGE_TITLE;
 	}
 
-	public static function getCsvData(){
-		return Order::select('id', 'lat', 'lng', 'deliver1', 'deliver2')->where('is_delete', 0)->where('is_in_group', 0)->where('is_complete', 0)->get();
-	}
+	// public static function getCsvData(){
+	// 	return Order::select('id', 'lat', 'lng', 'deliver1', 'deliver2')->where('is_delete', 0)->where('is_in_group', 0)->where('is_complete', 0)->get();
+	// }
 	
 }

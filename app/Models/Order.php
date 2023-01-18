@@ -29,24 +29,25 @@ class Order extends Model
 		'first_name' 				=> 	'normal',
 		'last_name' 				=> 	'normal',
 		'phone_number' 				=> 	'normal',
-		'deliver1' 					=> 	'normal',
-		'deliver2' 					=> 	'normal',
+		'delivery1' 				=> 	'special.delivery_address',
+		'delivery2' 				=> 	'special.Apartment,_unit,_suite,_or_floor_#',
 		'lat'						=>	'none',
 		'lng'						=>	'none',
 		'delivery_date' 			=> 	'normal',
 		'product_name_and_number' 	=> 	'table',
-		'is_in_group' 				=> 	'none',
+		'is_in_group' 				=> 	'boolean',
 		'is_complete' 				=> 	'boolean',
 		'is_delete' 				=>	'none',
 	];
 
 	protected $fillable = [
 		'sex',
+		'company_id',
 		'first_name',
 		'last_name',
 		'phone_number',
-		'deliver1',
-		'deliver2',
+		'delivery1',
+		'delivery2',
 		'lat',
 		'lng',
 		'delivery_date',
@@ -62,8 +63,8 @@ class Order extends Model
 	 * @var array<int, string>
 	 */
 	protected $hidden = [
-		'deliver1',
-		'deliver2',
+		'delivery1',
+		'delivery2',
 		'phone_number',
 	];
 
@@ -77,11 +78,11 @@ class Order extends Model
 			'first_name' 		=> 	'required|string|max:255',
 			'last_name' 		=> 	'required|string|max:255',
 			'phone_number' 		=> 	'required|Regex:/^(\+\d{1,3})?([.\s-]?)(\d){4}([.\s-]?)(\d){4}$/',
-			'deliver1' 			=> 	'required|string',
-			'deliver2' 			=> 	'nullable|string',
+			'delivery1' 		=> 	'required|string',
+			'delivery2' 		=> 	'nullable|string',
 			'lat'				=>	'required|numeric',
 			'lng'				=>	'required|numeric',
-			'delivery_date' 	=> 	'required|date_format:Y-m-d|after_or_equal:today',
+			// 'delivery_date' 	=> 	'required|date_format:Y-m-d|after:tomorrow',
 			'items_name' 		=> 	'required|array|lte:items_number',
 			'items_number' 		=> 	'required|array|lte:items_name',
 			'items_name.*' 		=> 	'required|string',
@@ -148,5 +149,14 @@ class Order extends Model
 			}
 		}
 		return $data;
+	}
+
+	public static function getUngroupOrder(int $company_id = -1){
+		return static::where([['is_in_group', '=', 0], ['is_delete', '=', 0], ['company_id', '=', $company_id]])->whereNull('delivery_date')->get();
+	}
+
+	public static function findRecord(int $id = -1){
+		$record = static::where('id', $id)->first();
+		return ($record->is_in_group > 0) ? false : $record;
 	}
 }

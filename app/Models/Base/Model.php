@@ -62,12 +62,11 @@ class Model extends EloquentModel
 		return $data;
 	}
 
-	public static function findRecord(int $id = 1){
+	public static function findRecord(int $id = -1){
 		return static::where('id', $id)->first();
 	}
 
 	public static function modifyData(array $data = []){
 		return $data;
 	}
-
 }

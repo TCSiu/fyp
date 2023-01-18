@@ -36,7 +36,7 @@ $account = auth()->user();
 <script>
 Dropzone.autoDiscover = false;
 let dropzone = new Dropzone("#upload-dropzone", {
-	url: "{{ route('import', ['model' => 'order', 'id' => $account->id]) }}",
+	url: "{{ route('import') }}",
 	method: "POST",
   params: {"modal": "order", "id":"{{ $account->id }}"},
 	parallelUploads: 20,
@@ -59,29 +59,36 @@ let dropzone = new Dropzone("#upload-dropzone", {
 @if(strcmp($operation, 'route_planning') == 0)
 @includeif('panel/part/loading')
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#route_planning_requirement_modal">
-  {{ __('Route Planning') }}
+<button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
+  <i class="align-middle me-2" data-feather="plus"></i>{{ __('Route Planning') }}
+</button>
+
+<!-- <button type="button" class="btn btn-primary" id="btn_route_prepare" data-bs-toggle="modal" data-bs-target="#route_planning_requirement_modal">
+  <i class="align-middle me-2" data-feather="plus"></i>{{ __('Route Planning') }}
 </button>
 
 <div class="modal fade" id="route_planning_requirement_modal" tabindex="-1" aria-labelledby="route_planning_requirement_modal_label" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content align">
       <div class="modal-header">
         <h5 class="modal-title" id="route_planning_requirement_modal_label">{{ __('Select Route Planning Requirement') }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+      <select class="form-select" id="select_route_prepare_date" aria-label="Default select example">
+        <option selected>Select a Date</option>
         
+      </select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
         <button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
-          <i class="align-middle me-2" data-feather="plus"></i>{{ __('Submit') }}
+          {{ __('Submit') }}
         </button>
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="modal" tabindex="-1" id="route_planning_modal">
   <div class="modal-dialog modal-xl">
@@ -92,12 +99,12 @@ let dropzone = new Dropzone("#upload-dropzone", {
       </div>
       <div class="modal-body" id="preview_modal_body">
         <div class="accordion accordion-flush" id="preview_planning_accordion">
-      
+
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a role="button" class="btn btn-primary" href="">Confirm</a>
+        <button type="button" class="btn btn-primary" id="btn_route_storing">Confirm</a>
       </div>
     </div>
   </div>
@@ -111,7 +118,7 @@ let dropzone = new Dropzone("#upload-dropzone", {
   </h2>
   <div id="preview_planning_%id%" class="accordion-collapse collapse" aria-labelledby="preview_planning_header_%id%" data-bs-parent="#preview_planning_accordion">
     <div class="accordion-body">
-      <table class="table table-striped" id="route_planning_table">
+      <table class="table table-striped table-secondary" id="route_planning_table">
         <thead>
           <th scope="col">#</th>
           <th scope="col">Route</th>
@@ -136,9 +143,9 @@ let dropzone = new Dropzone("#upload-dropzone", {
 window.addEventListener('DOMContentLoaded', function(){
   let loading = document.getElementById('loading');
   let route_planning_modal = new bootstrap.Modal(document.getElementById('route_planning_modal'));
-
+  let data;
   function routePlanning(){
-  let xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
           let json = JSON.parse(xhr.responseText)
@@ -151,18 +158,17 @@ window.addEventListener('DOMContentLoaded', function(){
           loading.style.display = 'flex';
         }
     }
-    xhr.open("GET", "{{ route('routePlanning') }}", true);
+    xhr.open("POST", "{{ route('route.planning') }}", true);
     xhr.send();
   }
 
   function routePreview(json = ''){
-    let data = JSON.parse(json.replaceAll('\'', '\"'));
+    data = JSON.parse(json.replaceAll('\'', '\"'));
     let count_accordion = 0;
     let preview_planning_accordion      = document.getElementById('preview_planning_accordion');
     let template_accordion              = document.getElementById('template_accordion');
     let template_row                    = document.getElementById('template_preview_row');
     preview_planning_accordion.innerHTML = '';
-    // let template_table = document.getElementById('template_route_planning');
     for(let key in data){
       let count_row = 0;
       value = data[key];
@@ -181,8 +187,26 @@ window.addEventListener('DOMContentLoaded', function(){
       feather.replace();
     }
   }
+
+  function routeStoring(){
+    let xhr = new XMLHttpRequest();
+    company_id = {{ $account->company_id }};
+    let params = JSON.stringify({'data': data, 'company_id':company_id});
+    xhr.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+          
+        }
+    }
+    xhr.open("POST", "{{ route('route.storing') }}", true);
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.send(params);
+  }
+
 	let btn_route_planning = document.getElementById('btn_route_planning');
 	btn_route_planning.addEventListener('click', routePlanning);
+
+  let btn_route_storing = document.getElementById('btn_route_storing');
+	btn_route_storing.addEventListener('click', routeStoring);
 });
 
 </script>

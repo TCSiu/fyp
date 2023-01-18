@@ -6,7 +6,6 @@ use App\Commons\Constants;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PanelController;
-use App\Http\Controllers\API\ImageController;
 
 /*
 |--------------------------------------------------------------------------

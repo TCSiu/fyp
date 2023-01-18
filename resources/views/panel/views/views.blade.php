@@ -1,7 +1,7 @@
 <div class="card-body">
     @foreach($fields as $field => $format)
         @if(Str::is('normal', $format))
-        <div class="fs-4 card-text"> {{ __(ucwords(str_replace('_', ' ', $field)) . ': ' . $data[$field]) }}</div>
+        <div class="fs-4 card-text"> {{ __(isset($data[$field]) ? ucwords(str_replace('_', ' ', $field)) . ': ' . $data[$field] : ucwords(str_replace('_', ' ', $field)) . ': ') }}</div>
         @elseif(Str::is('special.*', $format))
         <div class="fs-4 card-text"> {{ __(ucwords(str_replace('_', ' ', substr($format, strpos($format, ".") + 1))) . ': ' . $data[$field]) }}</div>
         @elseif(Str::is('table', $format))

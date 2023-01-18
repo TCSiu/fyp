@@ -7,7 +7,7 @@ $actions = [
 	'edit' => [
 		'icon' 	=> 	'edit',
 		'type'	=>	'normal',
-		],
+	],
 	'delete' => [
 		'icon' 	=> 	'trash-2',
 		'class'	=> 	'text-danger',
