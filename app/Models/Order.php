@@ -13,7 +13,7 @@ class Order extends Model
 
 	public const PAGE_TITLE 		= 'Order';
 	public const OPERATION	 		= ['create', 'import_csv'];
-	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'deliver1', 'is_in_group', 'is_complete'];
+	public const TABLE_FIELDS 		= ['id', 'delivery_date', 'delivery1', 'is_in_group', 'is_complete'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 
 	public const VALIDATE_MESSAGE 	= [

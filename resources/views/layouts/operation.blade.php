@@ -38,7 +38,7 @@ Dropzone.autoDiscover = false;
 let dropzone = new Dropzone("#upload-dropzone", {
 	url: "{{ route('import') }}",
 	method: "POST",
-  params: {"modal": "order", "id":"{{ $account->id }}"},
+  params: {"model": "order", "id":"{{ $account->id }}"},
 	parallelUploads: 20,
 	maxFilesize: 1,
 	paramName: "file",
@@ -143,9 +143,11 @@ let dropzone = new Dropzone("#upload-dropzone", {
 window.addEventListener('DOMContentLoaded', function(){
   let loading = document.getElementById('loading');
   let route_planning_modal = new bootstrap.Modal(document.getElementById('route_planning_modal'));
+  let company_id = '{{ $account->company_id }}';
   let data;
   function routePlanning(){
     let xhr = new XMLHttpRequest();
+    let params = JSON.stringify({'company_id' : company_id, 'available_vehicle' : 4});
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
           let json = JSON.parse(xhr.responseText)
@@ -159,7 +161,8 @@ window.addEventListener('DOMContentLoaded', function(){
         }
     }
     xhr.open("POST", "{{ route('route.planning') }}", true);
-    xhr.send();
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.send(params);
   }
 
   function routePreview(json = ''){
@@ -190,8 +193,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
   function routeStoring(){
     let xhr = new XMLHttpRequest();
-    company_id = {{ $account->company_id }};
-    let params = JSON.stringify({'data': data, 'company_id':company_id});
+    let params = JSON.stringify({'data' : data, 'company_id' : company_id});
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
           

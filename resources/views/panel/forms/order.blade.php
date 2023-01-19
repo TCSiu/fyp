@@ -36,14 +36,14 @@ if(isset($record)){
 			<div class="col-12 mb-3">
 				<label for="orderDeliver1" class="form-label form-required">{{ __('Deliver Address:') }}{!! Utility::required() !!}</label>
 				<div class="input-group">
-					<input type="text" class="form-control" aria-describedby="orderDeliver1" role="presentation" name="deliver1" id="autocomplete" value="{{ $record['deliver1'] ?? old('deliver1') ?? '' }}" />
+					<input type="text" class="form-control" aria-describedby="orderDeliver1" role="presentation" name="delivery1" id="autocomplete" value="{{ $record['delivery1'] ?? old('delivery1') ?? '' }}" />
 					<input type="number" step="0.00001" min="0" max="400" class="form-control text-center" placeholder="lat" readonly name="lat" style="max-width:160px;" value="{{ $record['lat'] ?? old('lat') ?? '' }}" />
 					<input type="number" step="0.00001" min="0" max="400" class="form-control text-center" placeholder="lng" readonly name="lng" style="max-width:160px;" value="{{ $record['lng'] ?? old('lng') ?? '' }}" />
 				</div>
 			</div>
 			<div class="col-12 mb-3">
 				<label for="orderDeliver2" class="form-label">{{ __('Apartment, unit, suite, or floor #:') }}</label>
-				<input type="text" class="form-control" aria-describedby="orderDeliver2" role="presentation" name="deliver2" id="orderAddress2" value="{{ $record['deliver2'] ?? old('deliver2') ?? '' }}" />
+				<input type="text" class="form-control" aria-describedby="orderDeliver2" role="presentation" name="delivery2" id="orderAddress2" value="{{ $record['delivery2'] ?? old('delivery2') ?? '' }}" />
 			</div>
 		</div>
 		<div class="row mb-3">

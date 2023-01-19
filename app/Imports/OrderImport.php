@@ -27,10 +27,10 @@ class OrderImport extends BaseImport
 	}
 
 	public function processData(array $input = []){
-        if(isset($input) && !empty($input) && sizeOf($input) == 9 ){
+        if(isset($input) && !empty($input) && sizeOf($input) == 8 ){
             $input['items_name']	= json_decode(substr($input['items_name'],1,-1), true);
             $input['items_number']	= json_decode(substr($input['items_number'],1,-1), true);
-            $geometry               = static::getGeoLocation($input['deliver1'] ?? '');
+            $geometry               = static::getGeoLocation($input['delivery1'] ?? '');
             $input['lat']           = $geometry['lat'] ?? null;
             $input['lng']           = $geometry['lng'] ?? null;
             $temp					= Order::modifyData($input);

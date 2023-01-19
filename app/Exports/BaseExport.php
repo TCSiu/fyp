@@ -4,8 +4,9 @@ namespace App\Exports;
 
 use App\Models\Model;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class BaseImport implements FromCollection
+class BaseExport implements FromCollection, WithHeadings
 {
     public const MODEL_NAMESPACE 	= '\\App\\Exports\\';
 
@@ -14,6 +15,10 @@ class BaseImport implements FromCollection
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
+
+	public function __construct(int $company_id = -1){
+        $this->company_id = $company_id;
+    }
 
 	public function getCsvSettings(): array{
 		return [
@@ -43,7 +48,7 @@ class BaseImport implements FromCollection
 	}
 
 	public static function getModelClassName(string $model = ''){
-		return trim(static::MODEL_NAMESPACE).trim(str_replace(' ', '', static::getModelName($model))).'Import';
+		return trim(static::MODEL_NAMESPACE).trim(str_replace(' ', '', static::getModelName($model))).'Export';
 	}
 
 	public static function getModelName(string $model = ''){
@@ -53,4 +58,8 @@ class BaseImport implements FromCollection
     public function processData(array $data = []){
         return $data;
     }
+
+	public function collection(){
+        return collect();
+	}
 }
