@@ -43,24 +43,21 @@ class KmeansGroup():
 	
 	
 class DepotInfo():
-	def __init__(self, demand, lat, lng):
-#		 self.demand = demand
-		self.lng = lng
-		self.lat = lat
-#	 def getDemand(self):
-#		 return self.demand
+	def __init__(self, number, address, lat, lng):
+		self.number 		= number
+		self.address 		= address
+		self.lng 			= lng
+		self.lat 			= lat
 	def getLocation(self):
 		return [self.lat, self.lng]
-#	 def setDemand(self, demand):
-#		 self.demand = demand
 	def setLocation(self, lng, lat):
 		self.lng = lng
 		self.lat = lat	
 		
 class NodeInfo():
-	def __init__(self, number, id, sex, first_name, last_name, phone_number, delivery1, delivery2, lat, lng, product_name_and_number, demand):
+	def __init__(self, number, order_id, sex, first_name, last_name, phone_number, delivery1, delivery2, lat, lng, demand):
 		self.number					 	=	int(number)
-		self.id						 	=	id
+		self.order_id					=	int(order_id)
 		self.sex						=	sex
 		self.first_name				 	=	first_name
 		self.last_name					=	last_name
@@ -69,7 +66,6 @@ class NodeInfo():
 		self.delivery2					=	delivery2
 		self.lat						=	lat
 		self.lng						=	lng
-		self.product_name_and_number	=	product_name_and_number 
 		self.demand					 	=	int(demand)
 	def getNumber(self):
 		return self.id
@@ -87,16 +83,15 @@ class NodeInfo():
 	def getInfo(self):
 		return {
 			"number"					:	self.number,
-			"id"						:	self.id,
+			"id"						:	self.order_id,
 			"sex"						:	self.sex,
 			"first_name"				:	self.first_name,
 			"last_name"					:	self.last_name,
 			"phone_number"				:	self.phone_number,
 			"delivery1"					:	self.delivery1,
-			"delivery2"					:	self.delivery2,
+			"delivery2"					:	self.delivery2 if self.delivery2 is None else str(),
 			"lat"						:	self.lat,
 			"lng"						:	self.lng,
-			"product_name_and_number"	:	self.product_name_and_number,
 			"demand"					:	self.demand,
 		}
 
@@ -302,11 +297,10 @@ def feasibility(_chromo):
 vrp = {}
 
 num_vehicles = 10
-vehicle_payload = 20
+vehicle_payload = 100
 
 best_sse = 0
 best_cluster = 0
-kmax = 18
 
 num_population = 200
 num_generations = 1000
@@ -314,13 +308,14 @@ prob_crossover = 0.4
 prob_mutation = 0.6
 
 url = sys.argv[1]
+# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc1_2023_01_20_11_29_43.csv"
 
-input_data = pd.read_csv(url, sep = ",", header = 0)
+input_data = pd.read_csv(url, sep = ";", header = 0)
 
-center = input_data.iloc[0, 1:3]
-depot = DepotInfo(0, center['Lat'], center['Lng'])
-data = input_data.iloc[1:,0:3]
-location_data = data.iloc[0:,1:3]
+center = input_data.iloc[0, 0:14]
+depot = DepotInfo(center['#'], center['delivery1'], center['lat'], center['lng'])
+data = input_data.iloc[1:,0:14]
+location_data = data.iloc[0:,8:10]
 
 vrp['nodes'] = []
 temp = []
@@ -337,13 +332,15 @@ best_fit_list = []
 best_sol_list = []
 
 for index, row in data.iterrows():
-	node = NodeInfo(row['Number'], 1, row['Lng'], row['Lat'])
+	node = NodeInfo(row['#'], row['id'], row['sex'], row['first_name'], row['last_name'], row['phone_number'], row['delivery1'], row['delivery2'], row['lat'], row['lng'], row['demand'])
 	temp.append(node.getLocation())
 	vrp['nodes'].append(node)
 
 # In[4]:
 
-for i in range(2, kmax + 1):
+kmax = 19 if len(temp) > 19 else len(temp) - 1
+
+for i in range(2, kmax):
 	km = KMeans(n_clusters = i)
 	km_labels = km.fit_predict(temp)
 	km_sse = silhouette_score(temp, km_labels, metric = 'euclidean')

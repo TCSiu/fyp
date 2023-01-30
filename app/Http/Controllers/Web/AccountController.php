@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\Models\Account;
 use App\Models\Company;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends BaseController
+class AccountController extends BaseController
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 

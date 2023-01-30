@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\Models\Base\Model;
 use App\Models\ImageUsage;
@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use App\Http\Controllers\Controller;
 
 class PanelController extends Controller
 {
@@ -171,35 +172,35 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	public function get_csv(WebRequest $request, string $model = ''){
-		if($className = Model::checkModel($model)){
-			$orders	=	$className::getCsvData();
-			$path = 'order\\';
-			$storage_path = storage_path('app\\'.$path);
-			$filename = 'order_to_group.csv';
-			$columns = ['#', 'lat', 'lng', 'Location'];
+	// public function get_csv(WebRequest $request, string $model = ''){
+	// 	if($className = Model::checkModel($model)){
+	// 		$orders	=	$className::getCsvData();
+	// 		$path = 'order\\';
+	// 		$storage_path = storage_path('app\\'.$path);
+	// 		$filename = 'order_to_group.csv';
+	// 		$columns = ['#', 'lat', 'lng', 'Location'];
 
-			if(!Storage::exists($path)){
-				Storage::makeDirectory($path, 0664, true, true);
-			}
+	// 		if(!Storage::exists($path)){
+	// 			Storage::makeDirectory($path, 0664, true, true);
+	// 		}
 			
-			$file = fopen($storage_path.$filename, 'w');
-			fputcsv($file, $columns);
+	// 		$file = fopen($storage_path.$filename, 'w');
+	// 		fputcsv($file, $columns);
 			
-			foreach($orders as $order){
-				$data = [
-					'#'			=>	$order->id,
-					'lat'		=>	$order->lat,
-					'lng'		=>	$order->lng,
-					'location'	=>	trim($order->deliver1 . ' ' . $order->deliver2),
-				];
-				fputcsv($file, $data);
-			}
-			fclose($file);
-			return redirect()->back();
-		}
-		throw new \Exception();
-	}
+	// 		foreach($orders as $order){
+	// 			$data = [
+	// 				'#'			=>	$order->id,
+	// 				'lat'		=>	$order->lat,
+	// 				'lng'		=>	$order->lng,
+	// 				'location'	=>	trim($order->deliver1 . ' ' . $order->deliver2),
+	// 			];
+	// 			fputcsv($file, $data);
+	// 		}
+	// 		fclose($file);
+	// 		return redirect()->back();
+	// 	}
+	// 	throw new \Exception();
+	// }
 
 	public function test(){
         return view('panel/test')->with('title', 'Panel Page');

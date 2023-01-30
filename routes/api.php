@@ -18,18 +18,18 @@ use App\Http\Controllers\API\UploadController;
 */
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
+//	 return $request->user();
 // });
 
-Route::post('register',                     [AccountController::class,  'register']);
-Route::post('login',                        [AccountController::class,  'login']);
-Route::post('register',                     [AccountController::class,  'register']);
+// Route::post('register',					 	[AccountController::class,  'register']);
+Route::post('login',						[AccountController::class,  'login']);
+Route::post('register',					 	[AccountController::class,  'register']);
 
-Route::get('/image/viewAll/{company_id}',   [UploadController::class,   'getImageInventory'])   ->name('getImageInventory')->whereNumber('company_id');
-Route::post('/image/upload/{user_id}',      [UploadController::class,   'fileStore'])           ->name('upload')->whereNumber('user_id');
+Route::get('/image/inventory/{company_id}',	[UploadController::class,   'getImageInventory'])	->name('getImageInventory')->whereNumber('company_id');
+Route::post('/image/upload',				[UploadController::class,   'fileStore'])			->name('upload');
 
-Route::post('file/upload',                  [UploadController::class,   'fileImport'])          ->name('import');
+Route::post('/file/upload',				 	[UploadController::class,   'fileImport'])			->name('import');
 
-// Route::get('route/prepare/{company_id}',    [PanelController::class,   'routePrepare'])         ->name('route.prepare')->whereNumber('company_id');
-Route::post('route/planning',               [PanelController::class,    'routePlanning'])       ->name('route.planning');
-Route::post('route/storing',                [PanelController::class,    'routeStoring'])        ->name('route.storing');
+// Route::get('route/prepare/{company_id}',	[PanelController::class,   'routePrepare'])		 ->name('route.prepare')->whereNumber('company_id');
+Route::post('/route/planning',			  	[PanelController::class,	'routePlanning'])		->name('route.planning');
+Route::post('/route/storing',			   	[PanelController::class,	'routeStoring'])		->name('route.storing');

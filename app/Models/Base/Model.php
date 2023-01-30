@@ -16,7 +16,7 @@ class Model extends EloquentModel
 	public const ALLOW_ACTIONS 		= ['view'];
 	public const VALIDATE_RULES 	= [];
 	public const VALIDATE_MESSAGE 	= [];
-	public const FIELDS				= []; 
+	public const VIWES_FIELDS 		= ['id' => 'normal'];
 
 	public static function checkModel(string $model = ''){
 		if(isset($model) && is_string($model)){

@@ -18,7 +18,7 @@ class OrderExport extends BaseExport
     }
 
 	public function headings(): array{
-		return ['#', 'id', 'sex', 'first_name', 'last_name', 'phone_number', 'delivery1', 'delivery2', 'lat', 'lng', 'product_name_and_number', 'demand'];
+		return ['#', 'id', 'sex', 'first_name', 'last_name', 'phone_number', 'delivery1', 'delivery2', 'lat', 'lng', 'demand'];
 	}
 
 	public function collection(){
@@ -33,11 +33,10 @@ class OrderExport extends BaseExport
             'first_name'                =>  '',
             'last_name'                 =>  '',
             'phone_number'              =>  '',
-            'delivery1'                 =>  $warehouse->deliver1,
+            'delivery1'                 =>  $warehouse->warehouse_address1,
             'delivery2'                 =>  '',
             'lat'                       =>  $warehouse->lat,
             'lng'                       =>  $warehouse->lng,
-            'product_name_and_number'   =>  '',
             'demand'                    =>  0,
         ];
         foreach ($records as $record) {
@@ -48,11 +47,10 @@ class OrderExport extends BaseExport
                 'first_name'                =>  $record->first_name,
                 'last_name'                 =>  $record->last_name,
                 'phone_number'              =>  $record->phone_number,
-                'delivery1'                 =>  $record->deliver1,
-                'delivery2'                 =>  $record->delivery2,
+                'delivery1'                 =>  $record->delivery1,
+                'delivery2'                 =>  (isset($record->delivery2) && is_null($record->delivery2)) ? $record->delivery2 : '',
                 'lat'                       =>  $record->lat,
                 'lng'                       =>  $record->lng,
-                'product_name_and_number'   =>  json_encode($record->product_name_and_number),
                 'demand'                    =>  static::countDemand($record->product_name_and_number),
             ];
         }

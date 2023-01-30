@@ -88,8 +88,9 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   let dropzone = new Dropzone("#upload-dropzone", {
-    url: "{{ route('upload', ['user_id' => $account->id]) }}",
+    url: "{{ route('upload') }}",
     method: "POST",
+    params: {"id":"{{ $account->id }}"},
     parallelUploads: 20,
     maxFilesize: 1,
     paramName: "file",

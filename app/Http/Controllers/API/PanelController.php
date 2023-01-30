@@ -24,15 +24,16 @@ class PanelController extends BaseController {
                 if($exportName = BaseExport::checkModel('order')){
                     $filename = $company->company_name . '_' . date('Y_m_d_H_i_s') . '.csv';
                     $file = Excel::store(new $exportName($company_id), $filename, 'csv');
-                    return dd($file);
                     if($file){
                         $url = Storage::disk('csv')->url($filename);
                         $process = new Process(['python', 'CVRP.py', $url]);
+                        $process->setTimeout(120);
                         $process->run();
                         // error handling
                         if (!$process->isSuccessful()) {
                             throw new ProcessFailedException($process);
                         }
+                        // return dd($process->getOutput());
                         $output_data = $process->getOutput();
                         return $this->sendResponse($output_data, 'Route Planning Success!');
                     }

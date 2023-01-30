@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UploadController extends BaseController {
-    public function fileStore(Request $request, int $id = -1){
+    public function fileStore(Request $request){
+        $id = $request->id;
         if($request->hasFile('file')){
             $account = Account::findRecord($id);
             $company_id = $account->company_id;

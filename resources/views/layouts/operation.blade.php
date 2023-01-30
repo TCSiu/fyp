@@ -27,7 +27,7 @@ $account = auth()->user();
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="btn_save_image" data-bs-dismiss="modal">Save changes</button>
+        <!-- <button type="button" class="btn btn-primary" id="btn_save_image" data-bs-dismiss="modal">Save changes</button> -->
       </div>
     </div>
   </div>
@@ -49,6 +49,9 @@ let dropzone = new Dropzone("#upload-dropzone", {
         var errorDisplay = document.querySelectorAll('[data-dz-errormessage]');
         errorDisplay[errorDisplay.length - 1].innerHTML = response['data'];
       }
+    });
+    this.on('success', function(){
+      location.reload();
     });
 	}
 });
@@ -150,7 +153,7 @@ window.addEventListener('DOMContentLoaded', function(){
     let params = JSON.stringify({'company_id' : company_id, 'available_vehicle' : 4});
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
-          let json = JSON.parse(xhr.responseText)
+          let json = JSON.parse(xhr.responseText);
           loading.style.display = 'none';
           route_planning_modal.show();
           routePreview(json.data);
@@ -196,7 +199,7 @@ window.addEventListener('DOMContentLoaded', function(){
     let params = JSON.stringify({'data' : data, 'company_id' : company_id});
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
-          
+          location.reload();
         }
     }
     xhr.open("POST", "{{ route('route.storing') }}", true);
