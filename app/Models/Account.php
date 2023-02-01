@@ -14,7 +14,7 @@ class Account extends Authenticatable
 
 	protected $table = 'account';
 
-	public const PAGE_TITLE 		= 'Account';
+	public const PAGE_TITLE 		= 'Staff Account';
 	public const CAN_CREATE 		= true;
     public const TABLE_FIELDS 		= ['username', 'first_name', 'last_name', 'is_locked', 'is_active'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];

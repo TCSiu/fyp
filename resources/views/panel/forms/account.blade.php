@@ -79,9 +79,15 @@ if(isset($images)){
 					<button type="submit" class="btn btn-success me-2" id="orderFormSubmit">
 						<i class="align-middle" data-feather="save"></i> {{ __('Save') }}
 					</button>
-					<a href="{{ route('cms.view', ['model' => 'account', 'id' => $account->id]) }}" class="btn btn-secondary me-2">
+					@isset($id)
+					<a href="{{ route('cms.view', ['model' => $model, 'id' => $id]) }}" class="btn btn-secondary me-2">
 						<i class="align-middle" data-feather="x"></i> {{ __('Cancel') }}
 					</a>
+					@else
+					<a href="{{ route('cms.list', ['model' => $model]) }}" class="btn btn-secondary me-2">
+						<i class="align-middle" data-feather="x"></i> {{ __('Cancel') }}
+					</a>
+					@endisset
 				</div>
 			</div>
 		</div>

@@ -11,7 +11,7 @@ class Group extends Model
 
 	protected $table = 'order_group';
 
-	public const PAGE_TITLE 	= 'Order Group';
+	public const PAGE_TITLE 	= 'Route';
 	public const OPERATION		= ['route_planning'];	
 
 	protected $fillable = [
