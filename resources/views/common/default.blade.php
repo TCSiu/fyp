@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	@include('layouts/head')
+	@include('common/head')
 </head>
 <body>
 	<div class="wrapper">
-		@includeIf('layouts/sidebar')
+		@includeIf('common/sidebar')
 		<div class="main">
-			@includeIf('layouts/navbar')
+			@includeIf('common/navbar')
 			@hasSection('content')
 				@yield('content')
 			@endif
-			@includeIf('layouts/footer')
+			@includeIf('common/footer')
 		</div>
 	</div>
-	@includeIf('layouts/scripts')
+	@includeIf('common/scripts')
 </body>
 </html>

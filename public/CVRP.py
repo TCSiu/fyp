@@ -332,6 +332,14 @@ all_client_dis = []
 best_fit_list = []
 best_sol_list = []
 
+all_tuple_coor_list = []
+mlrose_list = []
+all_information = {}
+
+final_path = []
+output = {}
+
+
 for index, row in data.iterrows():
 	node = NodeInfo(row['#'], row['id'], row['sex'], row['first_name'], row['last_name'], row['phone_number'], row['delivery1'], row['delivery2'], row['lat'], row['lng'], row['demand'])
 	temp.append(node.getLocation())
@@ -452,9 +460,6 @@ best_route = get_route_set(best_sol)
 
 # In[]:
 
-all_tuple_coor_list = []
-mlrose_list = []
-all_information = {}
 count = 0
 
 for i in range(0, len(best_route)):
@@ -476,15 +481,11 @@ for i in range(0, len(best_route)):
 
 # In[]:
 
-final_path = []
-
 for i in mlrose_list:
 	temp_result = mlrose.genetic_alg(i, random_state = 2)
 	final_path.append(temp_result[0])
 
 # In[]:
-
-output = {}
 
 for f in range(0, len(final_path)):
 	curr_path = []

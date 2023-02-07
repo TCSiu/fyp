@@ -21,7 +21,7 @@ class PanelController extends Controller
 		$sidebar_image		= 	ImageUsage::getImages('\App\Models\Account', $account_id);
 		// return dd($sidebar_image);
 
-		return view('panel/panel')
+		return view('panel/dashboard')
 			->with('title', 'Panel Page')
 			->with('sidebar_image', $sidebar_image);
 	}

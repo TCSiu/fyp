@@ -1,7 +1,7 @@
 @php
 $account = auth()->user();
 @endphp
-@extends('layouts/default')
+@extends('common/default')
 
 @section('content')
 <main class="content">

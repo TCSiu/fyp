@@ -13,13 +13,13 @@
 					@foreach($target_fields as $field)
 						<td>{{ $item[$field] }}</td>
 					@endforeach
-					@includeIf('layouts/default_action')
+					@includeIf('common/action_button')
 					</tr>
 				@endforeach
 			</tbody>
 		</table>
 	</div>
-	@includeIf('layouts/view_paginator')
+	@includeIf('common/view_paginator')
 	@hasSection('paginator')
 		@yield('paginator')
 	@endif

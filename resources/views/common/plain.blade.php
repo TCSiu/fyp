@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	@include('layouts/head')
+	@include('common/head')
 </head>
 <body class="m-0 p-0 overflow-hidden vh-100">
 	@yield('content')
-	@include('layouts/scripts')
+	@include('common/scripts')
 	@yield('scripts')
 </body>
 </html>

@@ -26,7 +26,7 @@ $actions = [
 			<a class="text-nowrap {{ $config['class'] ?? '' }}" id="btn_is_delete_modal" data-bs-toggle="modal" data-bs-target="#is_delete_modal">
                 <i class="align-middle" data-feather="{{ $config['icon'] ?? '' }}"></i>
 			</a>
-            {{ View::make('panel/part/modal', ['type' => 'delete', 'id' => $item->id, 'model' => $model]) }}
+            {{ View::make('panel/part/delete', ['id' => $item->id, 'model' => $model]) }}
 			@endif
 			@endif
 			@endif

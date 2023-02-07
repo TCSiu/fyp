@@ -6,7 +6,7 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 	}
 }
 @endphp
-@extends('layouts/default')
+@extends('common/default')
 
 @section('content')
 <main class="content">

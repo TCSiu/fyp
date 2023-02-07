@@ -1,4 +1,3 @@
-@if(Str::is('delete', $type))
 <div class="modal fade" id="is_delete_modal" tabindex="-1" aria-labelledby="is_delete_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -18,4 +17,3 @@
         </div>
     </div>
 </div>
-@endif

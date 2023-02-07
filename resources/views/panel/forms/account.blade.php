@@ -21,7 +21,7 @@ if(isset($images)){
 					<img src="{{ isset($image) ? secure_asset($image) : secure_asset('img/default icon.jpg') }}" id="profile_icon" class="rounded img-thumbnail" alt="Profile Icon" style="width:150px;height:auto;" />
 				</div>
 				<div class="col-12 col-md-3">
-					@includeIf('panel/part/imageUpload')
+					@includeIf('panel/part/image_upload')
 				</div>
 				<div class="col-12 col-md-6">
 					<label for="sex" class="form-label">Gender:</label>

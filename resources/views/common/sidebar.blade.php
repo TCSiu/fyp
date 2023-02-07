@@ -22,7 +22,7 @@ if(isset($images) && !empty($images)){
 						{{ __($account->first_name . " " . $account->last_name) }}	
 					</a>
 					<div class="dropdown-menu dropdown-menu-start">
-						@includeIf('layouts/personal_menu')
+						@includeIf('common/personal_menu')
 					</div>
 					<div class="sidebar-user-subtitle">{{ __($company['company_name']) }}</div>
 				</div>

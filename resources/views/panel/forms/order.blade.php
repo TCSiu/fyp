@@ -162,5 +162,5 @@ document.addEventListener('DOMContentLoaded', function(event){
 });
 
 </script>
-{{ View::make('layouts/google_map', ['type' => 'autocomplete']) }}
+{{ View::make('common/google_map', ['type' => 'autocomplete']) }}
 @endpush

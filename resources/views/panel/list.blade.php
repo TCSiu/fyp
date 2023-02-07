@@ -6,7 +6,7 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 	}
 }
 @endphp
-@extends('layouts/default')
+@extends('common/default')
 
 @section('content')
 <main class="content">
@@ -28,12 +28,12 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 									{{ __('Showing :count of :total records.', ['count' => sizeof($data), 'total' => intval($total_count)]) }}
 								@endif
 							</h6>
-							{{ View::make('layouts/operation', ['model'	=>	$model, 'operations'	=>	$operations]) }}
+							{{ View::make('common/operation', ['model'	=>	$model, 'operations'	=>	$operations]) }}
 						@else
 							<h6 class="card-subtitle text-muted">{{ __('An error has occured!') }}</h6>
 						@endif
 					</div>
-					@includeIf('layouts/default_list')
+					@includeIf('common/default_list')
 				</div>
 			</div>
 		</div>
