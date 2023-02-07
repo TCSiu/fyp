@@ -25,9 +25,9 @@ use App\Http\Controllers\API\UploadController;
 Route::post('login',						[AccountController::class,  'login']);
 Route::post('register',					 	[AccountController::class,  'register']);
 
-// Route::group(['prefix'  =>  '/', 'middleware'   =>  'authLapi'], function(){
-//     Route::get('/index', [])
-// });
+Route::group(['prefix'  =>  '/', 'middleware'   =>  'auth:api'], function(){
+    Route::get('/index',                    [AccountController::class, 'index']);
+});
 
 Route::get('/image/inventory/{company_id}',	[UploadController::class,   'getImageInventory'])	->name('getImageInventory')->whereNumber('company_id');
 Route::post('/image/upload',				[UploadController::class,   'fileStore'])			->name('upload');
