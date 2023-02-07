@@ -28,8 +28,6 @@ Route::post('register',                         [AccountController::class, 'regi
 Route::group(['prefix' => '/'], function(){
     Route::get('panel',                         [PanelController::class,    'index'])           ->name('panel');
     Route::get('logout',                        [AccountController::class,  'logout'])          ->name('logout');
-    Route::get('/profile',                      [PanelController::class,    'profile'])         ->name('profile');
-    Route::get('/company',                      [PanelController::class,    'company'])         ->name('company');
     Route::get('/test',                         [panelController::class,    'test'])            ->name('test');
     Route::get('/{model}',                      [PanelController::class,    'list'])            ->name('cms.list')->where('model', Constants::MODEL_REGEXP);
     Route::get('/{model}/create',               [PanelController::class,    'create'])          ->name('cms.create')->where('model', Constants::MODEL_REGEXP);
