@@ -34,6 +34,10 @@ class Group extends Model
 		return static::PAGE_TITLE;
 	}
 
+	public static function findRecord(int $id = -1){
+		return static::where([['relative_staff', '=', $id],['status', '!=', 'finished']])->get();
+	}
+
 	// public static function getCsvData(){
 	// 	return Order::select('id', 'lat', 'lng', 'deliver1', 'deliver2')->where('is_delete', 0)->where('is_in_group', 0)->where('is_complete', 0)->get();
 	// }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Account;
 use App\Models\Company;
-use App\Http\Requests\WebRequest;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -60,7 +60,10 @@ class AccountController extends BaseController
         }
     }
 
-    public function index(){
-        return $this->sendResponse('success','User index');
+    public function index(Request $request){
+        $user = request()->user();
+        $id = $user->id;
+        $allTask = Group::findRecord($id);
+        return $this->sendResponse('success', $allTask);
     }
 }
