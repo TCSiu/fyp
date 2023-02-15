@@ -46,7 +46,7 @@ if(isset($images)){
             <button type="button" class="btn btn-danger me-2" id="btn_is_delete_modal" data-bs-toggle="modal" data-bs-target="#is_delete_modal">
                 <i class="align-middle me-2" data-feather="trash-2"></i>{{ __('Delete') }}
             </button>
-            {{ View::make('panel/part/modal', ['type' => 'delete', 'id' => $id, 'model' => $model]) }}
+            {{ View::make('panel/part/delete', ['id' => $id, 'model' => $model]) }}
         </div>
     </div>
     @endif

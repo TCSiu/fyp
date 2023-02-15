@@ -307,8 +307,8 @@ num_generations = 1000
 prob_crossover = 0.4
 prob_mutation = 0.6
 
-url = sys.argv[1]
-# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc1_2023_01_20_11_56_13.csv"
+# url = sys.argv[1]
+url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_14_21_56_49.csv"
 # url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_01_16_26_18.csv"
 
 input_data = pd.read_csv(url, sep = ";", header = 0)

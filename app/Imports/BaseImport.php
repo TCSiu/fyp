@@ -6,8 +6,9 @@ use App\Models\Model;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
-class BaseImport implements ToModel, WithHeadingRow
+class BaseImport implements ToModel, WithHeadingRow, WithCustomCsvSettings
 {
     public const MODEL_NAMESPACE 	= '\\App\\Imports\\';
 
@@ -49,4 +50,10 @@ class BaseImport implements ToModel, WithHeadingRow
     public function processData(array $data = []){
         return $data;
     }
+
+	public function getCsvSettings(): array{
+		return [
+			'delimiter' => ';'
+		];
+	}
 }

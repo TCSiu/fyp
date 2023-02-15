@@ -28,6 +28,8 @@ class OrderImport extends BaseImport
 
 	public function processData(array $input = []){
         if(isset($input) && !empty($input) && sizeOf($input) == 8 ){
+            // dd(json_decode(substr($input['items_name'],1,-1), true));
+            // dd(json_decode('{"0":"Apple","1":"Orange"}', true));
             $input['items_name']	= json_decode(substr($input['items_name'],1,-1), true);
             $input['items_number']	= json_decode(substr($input['items_number'],1,-1), true);
             $geometry               = static::getGeoLocation($input['delivery1'] ?? '');
@@ -35,12 +37,12 @@ class OrderImport extends BaseImport
             $input['lng']           = $geometry['lng'] ?? null;
             $temp					= Order::modifyData($input);
             $validator				= Validator::make($temp, Order::getValidateRules(), Order::VALIDATE_MESSAGE);
+            // return dd($validator);
             if($validator->fails()){
                 $errors			    = $validator->errors()->toArray();
                 throw new \Exception(json_encode($errors));
             }
             $data					= Order::matchField($this->user, $temp);
-            // return dd($data);
             return $data;
         }
         throw new \Exception(json_encode(['Error' => ['Wrong Format!']]));

@@ -56,6 +56,9 @@
 				<button type="reset" class="btn btn-secondary me-2">
 					<i class="align-middle" data-feather="rotate-ccw"></i> {{ __('Reset') }}
 				</button>
+				<button type="{{ route('cms.list', ['model' => $model]) }}" class="btn btn-secondary me-2">
+					<i class="align-middle" data-feather="corner-down-right"></i> {{ __('Cancel') }}
+				</button>
 			</div>
 		</div>
 	</form>

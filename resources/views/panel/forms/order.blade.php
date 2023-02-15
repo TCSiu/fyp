@@ -117,9 +117,9 @@ if(isset($record)){
 				<button type="reset" class="btn btn-danger me-2">
 					<i class="align-middle" data-feather="rotate-ccw"></i> {{ __('Reset') }}
 				</button>
-				<button type="{{ url()->previous() }}" class="btn btn-secondary me-2">
-					<i class="align-middle" data-feather="corner-down-right"></i> {{ __('Cancel') }}
-				</button>
+				<a href="{{ route('cms.list', ['model' => $model]) }}" class="btn btn-secondary me-2">
+					<i class="align-middle" data-feather="x"></i> {{ __('Cancel') }}
+				</a>
 			</div>
 		</div>
 	</form>		   
