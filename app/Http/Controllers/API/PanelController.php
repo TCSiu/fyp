@@ -31,7 +31,7 @@ class PanelController extends BaseController {
                         $process->run();
                         // error handling
                         if (!$process->isSuccessful()) {
-                            throw new ProcessFailedException($process);
+                            return $this->sendError('Route Planning Fail!', $process->getErrorOutput());
                         }
                         // return dd($process->getOutput());
                         $output_data = $process->getOutput();
@@ -52,13 +52,13 @@ class PanelController extends BaseController {
     // }
 
     public function routeStoring(Request $request){
+        $order_group_list = [];
         if($className = Model::checkModel('group')){
             $company_id = $request->company_id;
             $data = $request->data;
-            $order_group_list = [];
             foreach($data as $key => $value){
                 $temp['company_id']     = $company_id;
-                $temp['route_order']    = json_encode($value);
+                $temp['route_order']    = $className::initOrder($value);
                 $order_group            = $className::create($temp);
                 array_push($order_group_list, $order_group);
             }

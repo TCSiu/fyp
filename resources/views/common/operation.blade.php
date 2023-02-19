@@ -157,7 +157,7 @@ window.addEventListener('DOMContentLoaded', function(){
           loading.style.display = 'none';
           route_planning_modal.show();
           routePreview(json.data);
-        }else if(this.readyState == 4 && this.status == 500){
+        }else if(this.readyState == 4 && this.status == 404){
           loading.style.display = 'none';
         }else if(this.readyState == 1){
           loading.style.display = 'flex';

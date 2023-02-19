@@ -55,9 +55,9 @@ class DepotInfo():
 		self.lat = lat	
 		
 class NodeInfo():
-	def __init__(self, number, order_id, sex, first_name, last_name, phone_number, delivery1, delivery2, lat, lng, demand):
+	def __init__(self, number, uuid, sex, first_name, last_name, phone_number, delivery1, delivery2, lat, lng, demand):
 		self.number					 	=	int(number)
-		self.order_id					=	int(order_id)
+		self.uuid						=	uuid
 		self.sex						=	sex
 		self.first_name				 	=	first_name
 		self.last_name					=	last_name
@@ -68,7 +68,7 @@ class NodeInfo():
 		self.lng						=	lng
 		self.demand					 	=	int(demand)
 	def getNumber(self):
-		return self.id
+		return self.uuid
 	def getDemand(self):
 		return self.demand
 	def getLocation(self):
@@ -83,7 +83,7 @@ class NodeInfo():
 	def getInfo(self):
 		return {
 			"number"					:	self.number,
-			"id"						:	self.order_id,
+			"uuid"						:	self.uuid,
 			"sex"						:	self.sex,
 			"first_name"				:	self.first_name,
 			"last_name"					:	self.last_name,
@@ -308,13 +308,18 @@ prob_crossover = 0.4
 prob_mutation = 0.6
 
 # url = sys.argv[1]
-url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_14_21_56_49.csv"
+url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_20_00_11_53.csv"
 # url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_01_16_26_18.csv"
 
 input_data = pd.read_csv(url, sep = ";", header = 0)
 
 center = input_data.iloc[0, 0:14]
 depot = DepotInfo(center['#'], center['delivery1'], center['lat'], center['lng'])
+
+if len(input_data) < 2 :
+	raise Exception('Too few data')
+
+
 data = input_data.iloc[1:,0:14]
 location_data = data.iloc[0:,8:10]
 
@@ -341,7 +346,7 @@ output = {}
 
 
 for index, row in data.iterrows():
-	node = NodeInfo(row['#'], row['id'], row['sex'], row['first_name'], row['last_name'], row['phone_number'], row['delivery1'], row['delivery2'], row['lat'], row['lng'], row['demand'])
+	node = NodeInfo(row['#'], row['uuid'], row['sex'], row['first_name'], row['last_name'], row['phone_number'], row['delivery1'], row['delivery2'], row['lat'], row['lng'], row['demand'])
 	temp.append(node.getLocation())
 	vrp['nodes'].append(node)
 

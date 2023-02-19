@@ -18,7 +18,7 @@ class OrderExport extends BaseExport
     }
 
 	public function headings(): array{
-		return ['#', 'id', 'sex', 'first_name', 'last_name', 'phone_number', 'delivery1', 'delivery2', 'lat', 'lng', 'demand'];
+		return ['#', 'uuid', 'sex', 'first_name', 'last_name', 'phone_number', 'delivery1', 'delivery2', 'lat', 'lng', 'demand'];
 	}
 
 	public function collection(){
@@ -28,7 +28,7 @@ class OrderExport extends BaseExport
         $count = 0;
         $result[] = [
             '#'                         =>  $count++,
-            'id'                        =>  '',
+            'uuid'                      =>  '',
             'sex'                       =>  '',
             'first_name'                =>  '',
             'last_name'                 =>  '',
@@ -42,7 +42,7 @@ class OrderExport extends BaseExport
         foreach ($records as $record) {
             $result[] = [
                 '#'                         =>  $count++,
-                'id'                        =>  $record->id,
+                'uuid'                      =>  $record->uuid,
                 'sex'                       =>  $record->sex,
                 'first_name'                =>  $record->first_name,
                 'last_name'                 =>  $record->last_name,

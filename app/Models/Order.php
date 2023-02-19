@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use App\Models\Base\Model;
 
 class Order extends Model
@@ -41,6 +42,7 @@ class Order extends Model
 	];
 
 	protected $fillable = [
+		'uuid',
 		'sex',
 		'company_id',
 		'first_name',
@@ -88,6 +90,15 @@ class Order extends Model
 			'items_name.*' 		=> 	'required|string',
 			'items_number.*' 	=> 	'required|integer',
 		];
+	}
+
+	protected static function boot(){
+    	parent::boot();
+		static::creating(function ($model) {
+			if(!(isset($model->uuid) && is_string($model->uuid) && strlen($model->uuid) > 0)){
+				$model->uuid = Str::uuid()->toString();
+			}
+		});
 	}
 
 	public static function getData(int $paginate_size = -1, int $company_id = 0){
@@ -158,5 +169,9 @@ class Order extends Model
 	public static function findRecord(int $id = -1){
 		$record = static::where('id', $id)->first();
 		return ($record->is_in_group > 0) ? false : $record;
+	}
+
+	public static function batchUpdate(array $uuid_list = []){
+		return static::whereIn('uuid', $uuid_list)->update(['is_in_group' => true]);
 	}
 }
