@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Base\Model;
+use Illuminate\Support\Str;
 use Validator;
 
 class Group extends Model
@@ -31,12 +32,25 @@ class Group extends Model
 	//	 'address',
 	// ];
 
+	protected static function boot(){
+    	parent::boot();
+		static::creating(function ($model) {
+			if(!(isset($model->uuid) && is_string($model->uuid) && strlen($model->uuid) > 0)){
+				$model->uuid = Str::uuid()->toString();
+			}
+		});
+	}
+
 	public static function getTitle(){
 		return static::PAGE_TITLE;
 	}
 
 	public static function findRecord(int $id = -1){
-		return static::where([['relative_staff', '=', $id],['status', '!=', 'finished']])->first();
+		return static::where([['relative_staff', '=', $id],['status', '!=', 'finished']])->get(['id', 'uuid', 'status', 'updated_at']);
+	}
+
+	public static function findRecordByUuid(String $uuid = ''){
+		return static::where('uuid', $uuid)->first();
 	}
 
 	public static function initOrder($input = []){

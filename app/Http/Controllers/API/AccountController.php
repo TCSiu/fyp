@@ -62,14 +62,19 @@ class AccountController extends BaseController
         return $this->sendError('Unauthorised!', ['error'=>'Unauthorised!']);
     }
 
-    public function index(Request $request){
+    public function getAllTasks(Request $request){
         if($user = request()->user()){
             $id = $user->id;
-            $allTask = Group::findRecord($id);
-            $allTask->route_order = json_decode($allTask->route_order,true);
-            // dd($allTask->route_order);
-            return $this->sendResponse($allTask, 'success');
+            $allTasks = Group::findRecord($id);
+            // if(!$allTasks->isEmpty()){
+            //     $allTask->route_order = json_decode($allTasks->route_order,true);
+            // }
+            return $this->sendResponse($allTasks, 'success');
         }
         return $this->sendError('Unauthorised!', ['error'=>'Unauthorised!']); 
+    }
+
+    public function getTask(Rrequest $request){
+        return ;
     }
 }

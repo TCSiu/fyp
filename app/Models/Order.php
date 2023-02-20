@@ -42,7 +42,6 @@ class Order extends Model
 	];
 
 	protected $fillable = [
-		'uuid',
 		'sex',
 		'company_id',
 		'first_name',

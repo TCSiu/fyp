@@ -31,7 +31,10 @@ class PanelController extends BaseController {
                         $process->run();
                         // error handling
                         if (!$process->isSuccessful()) {
-                            return $this->sendError('Route Planning Fail!', $process->getErrorOutput());
+                            // throw new ProcessFailedException($process);
+                            $errorMsgs = preg_split('/\r\n/',$process->getIncrementalErrorOutput());
+                            $errorMsg = $errorMsgs[sizeof($errorMsgs) - 1];
+                            return $this->sendError('Route Planning Fail!', $errorMsg);
                         }
                         // return dd($process->getOutput());
                         $output_data = $process->getOutput();

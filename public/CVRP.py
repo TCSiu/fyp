@@ -293,7 +293,6 @@ def feasibility(_chromo):
 		excess_payload[to_vehicle] -= demand
 
 # In[3]:
-
 vrp = {}
 
 num_vehicles = 10
@@ -307,9 +306,9 @@ num_generations = 1000
 prob_crossover = 0.4
 prob_mutation = 0.6
 
-# url = sys.argv[1]
-url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_20_00_11_53.csv"
-# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_01_16_26_18.csv"
+url = sys.argv[1]
+# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_20_00_11_53.csv"
+# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_19_23_46_43.csv"
 
 input_data = pd.read_csv(url, sep = ";", header = 0)
 
@@ -349,6 +348,8 @@ for index, row in data.iterrows():
 	node = NodeInfo(row['#'], row['uuid'], row['sex'], row['first_name'], row['last_name'], row['phone_number'], row['delivery1'], row['delivery2'], row['lat'], row['lng'], row['demand'])
 	temp.append(node.getLocation())
 	vrp['nodes'].append(node)
+
+
 
 # In[4]:
 
