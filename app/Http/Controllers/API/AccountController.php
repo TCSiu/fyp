@@ -63,7 +63,7 @@ class AccountController extends BaseController
     }
 
     public function getAllTasks(Request $request){
-        if($user = request()->user()){
+        if($user = $request->user()){
             $id = $user->id;
             $allTasks = Group::findRecord($id);
             // if(!$allTasks->isEmpty()){
