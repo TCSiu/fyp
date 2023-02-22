@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AccountController;
 use App\Http\Controllers\API\PanelController;
 use App\Http\Controllers\API\UploadController;
+use App\Http\Controllers\API\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,7 @@ Route::post('register',					 	[AccountController::class,  'register']);
 
 Route::group(['prefix'  =>  '/', 'middleware'   =>  'auth:api'], function(){
     Route::get('/index',                    [AccountController::class,  'getAllTasks']);
-    Route::get('/task/{uuid}',              [AccountController::class,  'getTask'])->whereUuid('uuid');
+    Route::get('/task/{uuid}',              [TaskController::class,     'getTask'])->whereUuid('uuid');
 });
 
 Route::get('/image/inventory/{company_id}',	[UploadController::class,   'getImageInventory'])	->name('getImageInventory')->whereNumber('company_id');

@@ -10,5 +10,8 @@ use Illuminate\Http\Request;
 
 class TaskController extends BaseController
 {
-    
+    public function getTask(Request $request, String $uuid){
+        $task = Group::findRecordByUuid($uuid);
+        return $this->sendResponse($task, 'Task Details');;
+    }
 }

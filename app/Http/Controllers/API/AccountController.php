@@ -73,8 +73,4 @@ class AccountController extends BaseController
         }
         return $this->sendError('Unauthorised!', ['error'=>'Unauthorised!']); 
     }
-
-    public function getTask(Rrequest $request){
-        return ;
-    }
 }
