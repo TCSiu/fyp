@@ -27,7 +27,7 @@ Route::post('login',						[AccountController::class,  'login']);
 Route::post('register',					 	[AccountController::class,  'register']);
 
 Route::group(['prefix'  =>  '/', 'middleware'   =>  'auth:api'], function(){
-    Route::get('/index',                    [AccountController::class,  'getAllTasks']);
+    Route::get('/index',                    [TaskController::class,     'getAllTasks']);
     Route::get('/task/{uuid}',              [TaskController::class,     'getTask'])->whereUuid('uuid');
 });
 

@@ -69,6 +69,7 @@ class Group extends Model
 			throw new Exception();
 		}
 		Order::batchUpdate($request['uuid']);
+		OrderStatus::batchCreate($request['uuid']);
 		return json_encode($input);
 	}
 
