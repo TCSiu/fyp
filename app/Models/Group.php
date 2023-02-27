@@ -53,6 +53,16 @@ class Group extends Model
 		return static::where('uuid', $uuid)->first();
 	}
 
+	public static function getRouteUuid(String $uuid = ''){
+		$routes_uuid = [];
+		$task = static::where('uuid', $uuid)->first();
+		$routes = json_decode($task->route_order, true);
+		foreach($routes as $row){
+			array_push($routes_uuid, $row['uuid']);
+		}
+		return $routes_uuid;
+	}
+
 	public static function initOrder($input = []){
 		$request = [];
 		$uuid_list = [];
@@ -68,9 +78,15 @@ class Group extends Model
 		if($validator->fails()){
 			throw new Exception();
 		}
-		Order::batchUpdate($request['uuid']);
 		OrderStatus::batchCreate($request['uuid']);
+		Order::batchUpdate($request['uuid']);
 		return json_encode($input);
+	}
+
+	public static function updateStatus(String $uuid = ''){
+		$status_list = ['preparing', 'delivering', 'finished'];
+		$routes = static::getRouteUuid($uuid);
+		OrderStatus::countStatus($routes);
 	}
 
 	// public static function getCsvData(){
