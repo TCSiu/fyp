@@ -58,12 +58,15 @@ class OrderStatus extends Model
     }
 
     public static function countStatus(array $routes_uuid = []){
+        $output = [];
         $subquery = self::select(['uuid', DB::raw('MAX(created_at) AS latest')])->whereIn('uuid', $routes_uuid)->groupBy('uuid');
         // dd($subquery->get());
         $status_count = self::select(['status', DB::raw('count(status) as count')])->joinSub($subquery, 'b', function(JoinClause $join){
             $join->on('order_status.uuid', '=', 'b.uuid')->on('order_status.created_at', '=', 'b.latest');
-        })->groupBy('status')->get();
-        dd($status_count->toArray());
-        return $status_count->toArray();
+        })->groupBy('status')->get()->toArray();
+        foreach($status_count as $value){
+            $output[$value['status']] = $value['count'];
+        }
+        return $output;
     }
 }

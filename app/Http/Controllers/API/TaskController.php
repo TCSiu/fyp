@@ -53,10 +53,10 @@ class TaskController extends BaseController
         $order_uuid = $request->order_uuid;
         $order_status = $request->order_status;
         Group::updateStatus($task_uuid);
-        // $result = OrderStatus::updateStatus($order_uuid, $order_status);
-        // if($result){
-        //     return $this->sendResponse($result, 'successful update');
-        // }
-        // return $this->sendError('Fail', ['error' => 'Error']);
+        $result = OrderStatus::updateStatus($order_uuid, $order_status);
+        if($result){
+            return $this->sendResponse($result, 'successful update');
+        }
+        return $this->sendError('Fail', ['error' => 'Error']);
     }
 }
