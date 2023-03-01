@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Company;
 use App\Models\Group;
 use App\Models\OrderStatus;
+use App\Models\TaskOrder;
 use Illuminate\Http\Request;
 
 class TaskController extends BaseController
@@ -39,7 +40,7 @@ class TaskController extends BaseController
     public function getAllTasks(Request $request){
         if($user = $request->user()){
             $id = $user->id;
-            $allTasks = Group::findRecord($id);
+            $allTasks = Group::findRecordByStaffId($id);
             // if(!$allTasks->isEmpty()){
             //     $allTask->route_order = json_decode($allTasks->route_order,true);
             // }
@@ -49,10 +50,11 @@ class TaskController extends BaseController
     }
 
     public function updateOrderStatus(Request $request){
-        $task_uuid = $request->task_uuid;
         $order_uuid = $request->order_uuid;
         $order_status = $request->order_status;
-        Group::updateStatus($task_uuid);
+        $task_uuid = TaskOrder::getTaskByOrderUuid($order_uuid);
+        $task_uuid = json_decode($task_uuid, true);
+        Group::updateStatus($task_uuid['task_uuid']);
         $result = OrderStatus::updateStatus($order_uuid, $order_status);
         if($result){
             return $this->sendResponse($result, 'successful update');

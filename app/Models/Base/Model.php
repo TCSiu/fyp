@@ -66,6 +66,10 @@ class Model extends EloquentModel
 		return static::where('id', $id)->first();
 	}
 
+	public static function findEditableRecord(int $id = -1){
+		return static::findRecord($id);
+	}
+
 	public static function modifyData(array $data = []){
 		return $data;
 	}

@@ -103,7 +103,7 @@ class PanelController extends Controller
 
 	public function edit(WebRequest $request, string $model = '', int $id = 1){
 		if($className = Model::checkModel($model)){
-			$record = $className::findRecord($id);
+			$record = $className::findEditableRecord($id);
 			if(isset($record) && $record instanceOf Model){
 				$msg 			= 	[];
 				$page_title 	= 	$className::PAGE_TITLE;

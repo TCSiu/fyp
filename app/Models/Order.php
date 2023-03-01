@@ -166,6 +166,11 @@ class Order extends Model
 	}
 
 	public static function findRecord(int $id = -1){
+		return static::where('id', $id)->first();
+		// return ($record->is_in_group > 0) ? false : $record;
+	}
+
+	public static function findEditableRecord(int $id = -1){
 		$record = static::where('id', $id)->first();
 		return ($record->is_in_group > 0) ? false : $record;
 	}

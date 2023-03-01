@@ -7,8 +7,6 @@ use App\Models\Base\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\JoinClause as JoinClause;
 
-
-
 class OrderStatus extends Model
 {
     use HasFactory;

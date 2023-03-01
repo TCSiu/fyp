@@ -1,5 +1,4 @@
 @php
-
 @endphp
 @extends('common/default')
 

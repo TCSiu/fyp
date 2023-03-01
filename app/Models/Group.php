@@ -46,7 +46,11 @@ class Group extends Model
 	}
 
 	public static function findRecord(int $id = -1){
-		return static::where([['relative_staff', '=', $id],['status', '!=', 'finished']])->get(['id', 'uuid', 'status', 'updated_at']);
+		return static::select(['id', 'uuid', 'status', 'updated_at'])->where('id', $id)->first();
+	}
+
+	public static function findRecordByStaffId(int $id = -1){
+		return static::select(['id', 'uuid', 'status', 'updated_at'])->where([['relative_staff', '=', $id],['status', '!=', 'finished']])->get();
 	}
 
 	public static function findRecordByUuid(String $uuid = ''){
@@ -63,7 +67,7 @@ class Group extends Model
 		return $routes_uuid;
 	}
 
-	public static function initOrder($input = []){
+	public static function initOrder(array $input = []){
 		$request = [];
 		$uuid_list = [];
 		$rules = [
@@ -76,16 +80,27 @@ class Group extends Model
 		$request['uuid'] = $uuid_list;
 		$validator = Validator::make($request, $rules);
 		if($validator->fails()){
-			throw new Exception();
+			return false;
 		}
-		OrderStatus::batchCreate($request['uuid']);
-		Order::batchUpdate($request['uuid']);
 		return json_encode($input);
+	}
+
+	public static function getOrderUuid(array $input = []){
+		$uuid_list = [];
+		foreach($input as $row){
+			array_push($uuid_list, $row['uuid']);
+		}
+		return $uuid_list;
 	}
 
 	public static function updateStatus(String $uuid = ''){
 		$status_list = ['preparing', 'delivering', 'finished'];
-		$routes = static::getRouteUuid($uuid);
+		$routes_list = [];
+		// $routes = static::getRouteUuid($uuid);
+		$routes = TaskOrder::getOrdersByTaskUuid($uuid)->toArray();
+		foreach($routes as $key => $value){
+			$routes_list[$key] = $value['order_uuid'];
+		}
 		$status_count = OrderStatus::countStatus($routes);
 		if(isset($status_count) & sizeOf($status_count) > 0){
 			if(sizeOf($status_count) == 1){

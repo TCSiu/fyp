@@ -56,17 +56,26 @@ class PanelController extends BaseController {
 
     public function routeStoring(Request $request){
         $order_group_list = [];
-        if($className = Model::checkModel('group')){
+        // dd(Model::checkModel('task order'));
+        if(($groupClass = Model::checkModel('group')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
             $company_id = $request->company_id;
             $data = $request->data;
             foreach($data as $key => $value){
                 $temp['company_id']     = $company_id;
-                $temp['route_order']    = $className::initOrder($value);
-                $order_group            = $className::create($temp);
-                array_push($order_group_list, $order_group);
+                $route_order            = $groupClass::initOrder($value);
+                if(!$route_order){
+                    continue;
+                }else{
+                    $temp['route_order']    = $route_order;
+                    $task                   = $groupClass::create($temp);
+                    $order_uuid_list        = $groupClass::getOrderUuid($value);
+                    $orderStatusClass::batchCreate($order_uuid_list);
+                    $orderClass::batchUpdate($order_uuid_list);
+                    $taskOrderClass::batchCreate($task->uuid, $order_uuid_list);
+                }
             }
             return $this->sendResponse('Success', 'Create Success!');
         }
-        throw new \Exception($e);
+        throw new \Exception();
     }
 }
