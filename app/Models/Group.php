@@ -95,16 +95,11 @@ class Group extends Model
 
 	public static function updateStatus(String $uuid = ''){
 		$status_list = ['preparing', 'delivering', 'finished'];
-		$routes_list = [];
-		// $routes = static::getRouteUuid($uuid);
 		$routes = TaskOrder::getOrdersByTaskUuid($uuid)->toArray();
-		foreach($routes as $key => $value){
-			$routes_list[$key] = $value['order_uuid'];
-		}
 		$status_count = OrderStatus::countStatus($routes);
 		if(isset($status_count) & sizeOf($status_count) > 0){
 			if(sizeOf($status_count) == 1){
-				for($i = 0; $i < sizeOf($status_count); $i++){
+				for($i = 0; $i < sizeOf($status_list); $i++){
 					if(array_key_exists($status_list[$i], $status_count)){
 						return static::where('uuid', $uuid)->update(['status' => $status_list[$i]]);
 						break;

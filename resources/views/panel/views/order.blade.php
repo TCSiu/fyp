@@ -44,8 +44,8 @@
             <th class="text-center">{{ __('Update Order Status to Finished') }}</th>
         </tr>
         <tr>
-            <td class="text-center">{!! QrCode::size(150)->generate('https://localhost/api/order/update?order_uuid='.$data->uuid.'&order_status=delivering') !!}</td>
-            <td class="text-center">{!! QrCode::size(150)->generate('https://localhost/api/order/update?order_uuid='.$data->uuid.'&order_status=finished') !!}</td>
+            <td class="text-center">{!! QrCode::size(150)->generate(json_encode(['order_uuid' => $data->uuid, 'order_status' => 'delivering'])) !!}</td>
+            <td class="text-center">{!! QrCode::size(150)->generate(json_encode(['order_uuid' => $data->uuid, 'order_status' => 'finished'])) !!}</td>
         </tr>
     </table>
     <div class="row">

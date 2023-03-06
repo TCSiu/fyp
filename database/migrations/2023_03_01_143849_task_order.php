@@ -17,6 +17,7 @@ return new class extends Migration
 			$table->bigIncrements('id');
 			$table->uuid('task_uuid');
 			$table->uuid('order_uuid');
+            $table->integer('order_sequence');
 			$table->timestamps();
 		});
     }
