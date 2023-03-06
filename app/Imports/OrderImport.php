@@ -67,7 +67,7 @@ class OrderImport extends BaseImport
                     throw new \Exception(json_encode(['Status' => [$response['status']]], JSON_FORCE_OBJECT));
                 }
             }catch(\Exception $e){
-                throw $e;
+                throw new \Exception(json_encode(['Error' => [$e]]));;
             }
         }
         return $place;
