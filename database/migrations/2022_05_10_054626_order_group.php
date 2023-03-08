@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_group', function (Blueprint $table) {
+        Schema::create('task', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('uuid');
             $table->integer('company_id');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_group');
+        Schema::dropIfExists('task');
     }
 };

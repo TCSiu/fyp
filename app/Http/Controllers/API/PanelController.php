@@ -57,24 +57,47 @@ class PanelController extends BaseController {
     public function routeStoring(Request $request){
         $order_group_list = [];
         // dd(Model::checkModel('task order'));
-        if(($groupClass = Model::checkModel('group')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
+        if(($taskClass = Model::checkModel('task')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
             $company_id = $request->company_id;
             $data = $request->data;
             foreach($data as $key => $value){
                 $temp['company_id']     = $company_id;
-                $route_order            = $groupClass::initOrder($value);
+                $route_order            = $taskClass::initOrder($value);
                 if(!$route_order){
                     continue;
                 }else{
                     $temp['route_order']    = $route_order;
-                    $task                   = $groupClass::create($temp);
-                    $order_uuid_list        = $groupClass::getOrderUuid($value);
+                    $task                   = $taskClass::create($temp);
+                    $order_uuid_list        = $taskClass::getOrderUuid($value);
                     $orderStatusClass::batchCreate($order_uuid_list);
                     $orderClass::batchUpdate($order_uuid_list);
                     $taskOrderClass::batchCreate($task->uuid, $order_uuid_list);
                 }
             }
             return $this->sendResponse('Success', 'Create Success!');
+        }
+        throw new \Exception();
+    }
+
+    public function OrderSearch(Request $request, String $order_uuid = ''){
+        $timeline = [];
+        if(($taskClass = Model::checkModel('task')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
+            // return $this->sendResponse($temp, 'success');
+            $order                      = $orderClass::findRecordByUuid($order_uuid);
+            if($order){
+                array_push($timeline, ['status' => 'Order Created', 'time' => $order->created_at]);
+                if($order->is_in_group){
+                    $task_uuid          = $taskOrderClass::getTaskByOrderUuid($order_uuid);
+                    if($task_uuid){
+                        $order_status   = $orderStatusClass::getOrderAllStatus($order_uuid);
+                        foreach($order_status as $value){
+                            array_push($timeline, ['status' => $value['status'], 'time' => $value['created_at']]);
+                        }
+                    }
+                }
+                return $this->sendResponse($timeline, 'success');
+            }
+            return $this->sendError('Fail', ['Order not found']);
         }
         throw new \Exception();
     }

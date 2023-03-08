@@ -175,6 +175,10 @@ class Order extends Model
 		return ($record->is_in_group > 0) ? false : $record;
 	}
 
+	public static function findRecordByUuid(String $uuid = ''){
+		return static::where('uuid', $uuid)->first();
+	}
+
 	public static function batchUpdate(array $uuid_list = []){
 		return static::whereIn('uuid', $uuid_list)->update(['is_in_group' => true]);
 	}

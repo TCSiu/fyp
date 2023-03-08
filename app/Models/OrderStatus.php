@@ -66,4 +66,8 @@ class OrderStatus extends Model
         }
         return $output;
     }
+
+    public static function getOrderAllStatus(String $order_uuid = ''){
+        return static::where('uuid', $order_uuid)->get();
+    }
 }

@@ -48,11 +48,11 @@ if(isset($images) && !empty($images)){
 			</li>
 
 			<li class="sidebar-header">
-				{{ __('Order Groups') }}
+				{{ __('Task') }}
 			</li>
 
-			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'group')?'active':'' }}">
-				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'group']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('Route Planning') }}</span></a>
+			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'task')?'active':'' }}">
+				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'task']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('Route Planning') }}</span></a>
 			</li>
 
 			<li class="sidebar-header">

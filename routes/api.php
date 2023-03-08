@@ -25,6 +25,7 @@ use App\Http\Controllers\API\TaskController;
 // Route::post('register',					 	[AccountController::class,  'register']);
 Route::post('login',						[AccountController::class,  'login']);
 Route::post('register',					 	[AccountController::class,  'register']);
+Route::get('/order/{uuid}',                 [PanelController::class,    'OrderSearch'])->whereUuid('uuid');
 
 Route::group(['prefix'  =>  '/', 'middleware'   =>  'auth:api'], function(){
     Route::get('/index',                    [TaskController::class,     'getAllTasks']);

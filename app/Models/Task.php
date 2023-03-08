@@ -7,13 +7,13 @@ use App\Models\Base\Model;
 use Illuminate\Support\Str;
 use Validator;
 
-class Group extends Model
+class Task extends Model
 {
 	use HasFactory;
 
-	protected $table = 'order_group';
+	protected $table = 'task';
 
-	public const PAGE_TITLE 	= 'Route';
+	public const PAGE_TITLE 	= 'Task';
 	public const OPERATION		= ['route_planning'];	
 
 	protected $fillable = [
