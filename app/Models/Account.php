@@ -26,7 +26,7 @@ class Account extends Model implements
 
 	public const PAGE_TITLE 		= 'Staff Account';
 	public const CAN_CREATE 		= true;
-    public const TABLE_FIELDS 		= ['username', 'first_name', 'last_name', 'is_locked', 'is_active'];
+    public const TABLE_FIELDS 		= ['username' => 'username', 'first_name' => 'first_name', 'last_name' => 'last_name', 'is_locked' => 'is_locked', 'is_active' => 'is_active'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 	public const OPERATION	 		= ['create'];
 	/**
@@ -126,5 +126,9 @@ class Account extends Model implements
 			return static::where(['company_id' => $company_id, 'is_delete'=> 0])->paginate($paginate_size);
 		}
 		return static::where('is_delete', 0)->get();
-	}	
+	}
+	
+	public static function getStaffList(int $company_id = 0){
+		return static::where(['company_id' => $company_id, 'type' => 'staff', 'is_delete' => 0])->get();
+	}
 }

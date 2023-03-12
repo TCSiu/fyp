@@ -26,6 +26,7 @@ class OrderExport extends BaseExport
         $warehouse = Company::findRecord($this->company_id);
         $records = Order::getUngroupOrder($this->company_id);
         $count = 0;
+        $total_demand = 0;
         $result[] = [
             '#'                         =>  $count++,
             'uuid'                      =>  '',
@@ -40,6 +41,7 @@ class OrderExport extends BaseExport
             'demand'                    =>  0,
         ];
         foreach ($records as $record) {
+            $record_demand = static::countDemand($record->product_name_and_number);
             $result[] = [
                 '#'                         =>  $count++,
                 'uuid'                      =>  $record->uuid,
@@ -51,9 +53,11 @@ class OrderExport extends BaseExport
                 'delivery2'                 =>  (isset($record->delivery2) && is_null($record->delivery2)) ? $record->delivery2 : '',
                 'lat'                       =>  $record->lat,
                 'lng'                       =>  $record->lng,
-                'demand'                    =>  static::countDemand($record->product_name_and_number),
+                'demand'                    =>  $record_demand,
             ];
+            $total_demand += $record_demand;
         }
+        $result[0]['demand'] = $total_demand;
         return collect($result);
 	}
 

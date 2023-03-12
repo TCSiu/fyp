@@ -12,7 +12,7 @@ class Model extends EloquentModel
 	public const MODEL_NAMESPACE 	= '\\App\\Models\\';
 	public const PAGE_TITLE 		= '';
 	public const OPERATION	 		= [];
-	public const TABLE_FIELDS		= ['id'];
+	public const TABLE_FIELDS		= ['id' => 'id'];
 	public const ALLOW_ACTIONS 		= ['view'];
 	public const VALIDATE_RULES 	= [];
 	public const VALIDATE_MESSAGE 	= [];
@@ -53,7 +53,7 @@ class Model extends EloquentModel
 
 	public static function getData(int $paginate_size = -1, int $company_id = 0){
 		if($paginate_size > 0){
-			return static::paginate($paginate_size);
+			return static::where('company_id', $company_id)->paginate($paginate_size);
 		}
 		return static::all();
 	}

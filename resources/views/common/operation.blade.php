@@ -62,36 +62,40 @@ let dropzone = new Dropzone("#upload-dropzone", {
 @if(strcmp($operation, 'route_planning') == 0)
 @includeif('panel/part/loading')
 
-<button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
+<!-- <button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
   <i class="align-middle me-2" data-feather="plus"></i>{{ __('Route Planning') }}
-</button>
+</button> -->
 
-<!-- <button type="button" class="btn btn-primary" id="btn_route_prepare" data-bs-toggle="modal" data-bs-target="#route_planning_requirement_modal">
+<button type="button" class="btn btn-primary" id="btn_route_prepare" data-bs-toggle="modal" data-bs-target="#route_planning_requirement_modal">
   <i class="align-middle me-2" data-feather="plus"></i>{{ __('Route Planning') }}
 </button>
 
 <div class="modal fade" id="route_planning_requirement_modal" tabindex="-1" aria-labelledby="route_planning_requirement_modal_label" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content align">
       <div class="modal-header">
         <h5 class="modal-title" id="route_planning_requirement_modal_label">{{ __('Select Route Planning Requirement') }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <select class="form-select" id="select_route_prepare_date" aria-label="Default select example">
-        <option selected>Select a Date</option>
-        
-      </select>
+        <div class="col-12">
+          <label for="routePlanningNumVehicle" class="form-label form-required">{{ __('Number of Vehicle:') }}{!! Utility::required() !!}</label>
+          <input type="number" class="form-control" aria-describedby="routePlanningNumVehicle" name="num_of_vehicle" id="routePlanningNumVehicle" value="1" />
+        </div>
+        <div class="col-12">
+          <label for="routePlanningCapacity" class="form-label form-required">{{ __('Vehicle Capacity:') }}{!! Utility::required() !!}</label>
+          <input type="number" class="form-control" aria-describedby="routePlanningCapacity" name="vehicle_capacity" id="routePlanningCapacity" value="1" />
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-        <button class="btn btn-secondary white-space-nowrap" id="btn_route_planning">
+        <button type="button" class="btn btn-secondary" id="route_planning_requirement_dismiss" data-bs-dismiss="modal">{{ __('Close') }}</button>
+        <button class="btn btn-secondary white-space-nowrap" id="btn_route_planning" data-bs-dismiss="modal">
           {{ __('Submit') }}
         </button>
       </div>
     </div>
   </div>
-</div> -->
+</div>
 
 <div class="modal" tabindex="-1" id="route_planning_modal">
   <div class="modal-dialog modal-xl">
@@ -149,8 +153,10 @@ window.addEventListener('DOMContentLoaded', function(){
   let company_id = '{{ $account->company_id }}';
   let data;
   function routePlanning(){
+    let num_vehicle = document.getElementById('routePlanningNumVehicle').value;
+    let vehicle_cap = document.getElementById('routePlanningCapacity').value;
     let xhr = new XMLHttpRequest();
-    let params = JSON.stringify({'company_id' : company_id, 'available_vehicle' : 4});
+    let params = JSON.stringify({'company_id' : company_id, 'available_vehicle' : num_vehicle, 'vehicle_capacity' : vehicle_cap});
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
           let json = JSON.parse(xhr.responseText);
@@ -183,12 +189,13 @@ window.addEventListener('DOMContentLoaded', function(){
       temp_accordion.innerHTML = template_accordion.innerHTML.replaceAll(/\%id\%/gi, ++count_accordion);
       preview_planning_accordion.appendChild(temp_accordion);
       for(let kkey in value){
+        console.log(value[kkey]);
         let tbody = document.getElementById('preview_tbody_' + count_accordion);
         let temp = document.createElement('tr');
         temp.innerHTML = template_row.innerHTML.replaceAll(/\%id\%/gi, ++count_row);
         tbody.appendChild(temp);
         let preview_route = document.querySelector('#preview_tbody_' + count_accordion + ' #preview_route_' + count_row);
-        preview_route.innerText = value[kkey].id;
+        preview_route.innerText = value[kkey].delivery1 + ' ' + value[kkey].delivery2;
       }
       feather.replace();
     }

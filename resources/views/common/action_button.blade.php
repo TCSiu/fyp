@@ -11,8 +11,13 @@ $actions = [
 	'delete' => [
 		'icon' 	=> 	'trash-2',
 		'class'	=> 	'text-danger',
-		'type' 	=>	'modal',
+		'type' 	=>	'delete',
 	],
+	'assign' => [
+		'icon'	=>	'check-square',
+		'class'	=>	'text-success',
+		'type'	=>	'assign',
+	]
 ];
 @endphp
 <td>
@@ -22,11 +27,18 @@ $actions = [
 			@isset($config['type'])
 			@if($config['type'] == 'normal')
 			<a href="{{ route('cms.'.$action, ['model' => $model, 'id' => $item->id]) }}" class="text-nowrap {{ $config['class'] ?? '' }}"><i class="align-middle" data-feather="{{ $config['icon'] ?? '' }}"></i></a>
-			@elseif($config['type'] == 'modal')
-			<a class="text-nowrap {{ $config['class'] ?? '' }}" id="btn_is_delete_modal" data-bs-toggle="modal" data-bs-target="#is_delete_modal">
+			@elseif($config['type'] == 'delete')
+			<a class="text-nowrap {{ $config['class'] ?? '' }}" id="{{ 'btn_is_delete_modal_' . $item->id }}" data-bs-toggle="modal" data-bs-target="#is_delete_modal">
                 <i class="align-middle" data-feather="{{ $config['icon'] ?? '' }}"></i>
 			</a>
             {{ View::make('panel/part/delete', ['id' => $item->id, 'model' => $model]) }}
+			@elseif($config['type'] == 'assign')
+			@if(is_null($item->relative_staff))
+			<a class="text-nowrap {{ $config['class'] ?? '' }}" id="{{ 'btn_assign_modal_' . $item->id }}" data-bs-toggle="modal" data-bs-target="#assign_modal" data-bs-value="{{ $item->id }}">
+                <i class="align-middle" data-feather="{{ $config['icon'] ?? '' }}"></i>
+			</a>
+			@endif
+			{{ View::make('panel/part/assign', ['model' => $model, 'company_id' => $company_id]) }}
 			@endif
 			@endif
 			@endif

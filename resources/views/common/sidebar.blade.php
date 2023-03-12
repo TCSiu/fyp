@@ -40,11 +40,11 @@ if(isset($images) && !empty($images)){
 			</li>
 
 			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'order')?'active':'' }}">
-				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'order']) }}"><i class="align-middle" data-feather="user"></i> <span class="align-middle">{{ __('View All Orders') }}</span></a>
+				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'order']) }}"><i class="align-middle" data-feather="package"></i> <span class="align-middle">{{ __('View All Orders') }}</span></a>
 			</li>
 
 			<li class="sidebar-item {{ (request()->routeIs('cms.create') && request()->route('model') == 'order')?'active':'' }}">
-				<a class="sidebar-link" href="{{ route('cms.create', ['model' => 'order']) }}"><i class="align-middle" data-feather="log-in"></i> <span class="align-middle">{{ __('Create Order') }}</span></a>
+				<a class="sidebar-link" href="{{ route('cms.create', ['model' => 'order']) }}"><i class="align-middle" data-feather="plus-circle"></i> <span class="align-middle">{{ __('Create Order') }}</span></a>
 			</li>
 
 			<li class="sidebar-header">
@@ -52,7 +52,7 @@ if(isset($images) && !empty($images)){
 			</li>
 
 			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'task')?'active':'' }}">
-				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'task']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('Route Planning') }}</span></a>
+				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'task']) }}"><i class="align-middle" data-feather="truck"></i> <span class="align-middle">{{ __('Route Planning') }}</span></a>
 			</li>
 
 			<li class="sidebar-header">
@@ -60,11 +60,11 @@ if(isset($images) && !empty($images)){
 			</li>
 
 			<li class="sidebar-item {{ (request()->routeIs('cms.list') && request()->route('model') == 'account')?'active':'' }}">
-				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'account']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('View All Staff Accounts') }}</span></a>
+				<a class="sidebar-link" href="{{ route('cms.list', ['model' => 'account']) }}"><i class="align-middle" data-feather="user"></i> <span class="align-middle">{{ __('View All Staff Accounts') }}</span></a>
 			</li>
 
 			<li class="sidebar-item {{ (request()->routeIs('cms.create') && request()->route('model') == 'account')?'active':'' }}">
-				<a class="sidebar-link" href="{{ route('cms.create', ['model' => 'account']) }}"><i class="align-middle" data-feather="square"></i> <span class="align-middle">{{ __('Create Staff Account') }}</span></a>
+				<a class="sidebar-link" href="{{ route('cms.create', ['model' => 'account']) }}"><i class="align-middle" data-feather="plus-circle"></i> <span class="align-middle">{{ __('Create Staff Account') }}</span></a>
 			</li>
 
 		</ul>

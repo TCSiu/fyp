@@ -44,3 +44,68 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 @hasSection('form-js')
 	@yield('form-js')
 @endif
+
+@if(in_array('assign', $allow_actions))
+@push('scripts')
+<script>
+window.addEventListener('DOMContentLoaded', function(){
+    let select_assign = document.getElementById('select_assign_task');
+
+    let btn_assign_modal = document.querySelectorAll('[id^="btn_assign_modal_"]');
+	let btn_route_assign = document.getElementById('btn_route_assign');
+
+	let order_id = 0;
+
+    function staffList(item){
+        let xhr = new XMLHttpRequest();
+        let opt;
+		order_id = item.getAttribute('data-bs-value');
+        xhr.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+                let json = JSON.parse(xhr.responseText);
+                select_assign.innerHTML = '';
+                opt = document.createElement('option');
+                opt.innerHTML = "{{ __('--Select a Staff--') }}";
+				opt.selected = true;
+                opt.disabled = true;
+                select_assign.appendChild(opt);
+                for(let index in json){
+                    opt = document.createElement('option');
+                    opt.innerHTML = json[index].first_name + ' ' + json[index].last_name;
+                    opt.value = json[index].id;
+                    select_assign.appendChild(opt);
+                }
+            }
+        }
+        xhr.open("GET", "{{ route('route.staff', ['id' => $company_id]) }}", true);
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.send();
+    }
+
+	function assignStaff(){
+        let xhr = new XMLHttpRequest();
+        let staff_id = select_assign.value;
+        let params = JSON.stringify({'staff_id' : staff_id, 'order_id' : order_id});
+        xhr.onreadstatechange = function(){
+            if(this.readState == 4 && this.status == 200){
+				location.reload();
+            }
+        }
+        xhr.open("POST", "{{ route('route.assign') }}", true);
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.send(params);
+    }
+
+	[...btn_assign_modal].forEach(function(item){
+		item.addEventListener('click', function(){
+			staffList(this);	
+		});
+	});
+
+	btn_route_assign.addEventListener('click', function(){
+		assignStaff();
+	});
+});
+</script>
+@endpush
+@endif

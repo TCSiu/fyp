@@ -13,14 +13,22 @@ class Task extends Model
 
 	protected $table = 'task';
 
-	public const PAGE_TITLE 	= 'Task';
-	public const OPERATION		= ['route_planning'];	
+	public const PAGE_TITLE 		= 'Task';
+	public const OPERATION			= ['route_planning'];
+	public const ALLOW_ACTIONS 		= ['view', 'assign'];	
+	public const TABLE_FIELDS 		= ['id' => 'id'];
 
 	protected $fillable = [
 		 'company_id',
 		 'route_order',
 		 'relative_staff',
 		 'status',
+	];
+
+	public const VIWES_FIELDS = [
+		'status'				=>	'normal',
+		'relative_staff'		=> 	'table_json.first_name/last_name/email/phone',
+		'route_order'			=>	'table.first_name/last_name/phone_number/delivery1/delivery2/status',
 	];
 
 	/**
@@ -46,11 +54,33 @@ class Task extends Model
 	}
 
 	public static function findRecord(int $id = -1){
-		return static::select(['id', 'uuid', 'status', 'updated_at'])->where('id', $id)->first();
+		$staff_info = [];
+		if(($orderStatusClass = Model::checkModel('order status')) && ($taskOrderClass = Model::checkModel('task order')) && ($account = Model::checkModel('account'))){
+			$data = static::where('id', $id)->first();
+			$taskOrder = $taskOrderClass::getOrdersByTaskUuid($data->uuid)->toArray();
+			$orderStatus = $orderStatusClass::getBatchStatusByUuid($taskOrder);
+			$route_order = json_decode($data->route_order, true);
+			forEach($route_order as $key => $value){
+				$target_uuid = $value['uuid'];
+				$value['status'] = $orderStatus[$target_uuid]['status'];
+				$route_order[$key] = $value;
+			}
+			$relative_staff = $account::findRecord($data->relative_staff);
+
+			$staff_info['first_name'] = $relative_staff->first_name;
+			$staff_info['last_name'] = $relative_staff->last_name;
+			$staff_info['email'] = $relative_staff->email;
+			$staff_info['phone'] = $relative_staff->phone;
+			
+			$data['route_order'] = $route_order;
+			$data['relative_staff'] = $staff_info;
+			return $data;
+		}
+		throw new \Exception();
 	}
 
-	public static function findRecordByStaffId(int $id = -1){
-		return static::select(['id', 'uuid', 'status', 'updated_at'])->where([['relative_staff', '=', $id],['status', '!=', 'finished']])->get();
+	public static function findRecordByStaffId(int $staff_id = -1){
+		return static::select(['id', 'uuid', 'status', 'updated_at'])->where([['relative_staff', '=', $staff_id],['status', '!=', 'finished']])->get();
 	}
 
 	public static function findRecordByUuid(String $uuid = ''){
@@ -108,6 +138,10 @@ class Task extends Model
 			}
 		}
 		return false;
+	}
+
+	public static function assignTask(int $order_id = 0, int $staff_id = 0){
+		return static::where('id', $order_id)->update(['relative_staff' => $staff_id]);
 	}
 
 	// public static function getCsvData(){

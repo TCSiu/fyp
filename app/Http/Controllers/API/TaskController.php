@@ -61,4 +61,11 @@ class TaskController extends BaseController
         }
         return $this->sendError('Fail', ['error' => 'Fail to update order status']);
     }
+
+    public function assignTask(Request $request){
+        $order_id = $request->order_id;
+        $staff_id = $request->staff_id;
+        $taskClass = Task::assignTask($order_id, $staff_id);
+        return $this->sendResponse('success', 'successful update');
+	}
 }

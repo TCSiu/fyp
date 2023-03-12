@@ -51,6 +51,7 @@ class PanelController extends Controller
 				->with('data', $data)
 				->with('total_count', $total_count)
 				->with('sidebar_image', $sidebar_image)
+				->with('company_id', $company_id)
 				->with('images', $images);
 		}
 		throw new \Exception();
@@ -172,51 +173,7 @@ class PanelController extends Controller
 		throw new \Exception();
 	}
 
-	// public function get_csv(WebRequest $request, string $model = ''){
-	// 	if($className = Model::checkModel($model)){
-	// 		$orders	=	$className::getCsvData();
-	// 		$path = 'order\\';
-	// 		$storage_path = storage_path('app\\'.$path);
-	// 		$filename = 'order_to_group.csv';
-	// 		$columns = ['#', 'lat', 'lng', 'Location'];
-
-	// 		if(!Storage::exists($path)){
-	// 			Storage::makeDirectory($path, 0664, true, true);
-	// 		}
-			
-	// 		$file = fopen($storage_path.$filename, 'w');
-	// 		fputcsv($file, $columns);
-			
-	// 		foreach($orders as $order){
-	// 			$data = [
-	// 				'#'			=>	$order->id,
-	// 				'lat'		=>	$order->lat,
-	// 				'lng'		=>	$order->lng,
-	// 				'location'	=>	trim($order->deliver1 . ' ' . $order->deliver2),
-	// 			];
-	// 			fputcsv($file, $data);
-	// 		}
-	// 		fclose($file);
-	// 		return redirect()->back();
-	// 	}
-	// 	throw new \Exception();
-	// }
-
 	public function test(){
         return view('panel/test')->with('title', 'Panel Page');
 	}
-
-	// public function testPy(){
-	// 	$url = Storage::disk('csv')->url('sample_data.csv');
-	// 	$process = new Process(['python', 'CVRP.py', $url]);
-    //     $process->run();
-
-    //     // error handling
-    //     if (!$process->isSuccessful()) {
-    //         throw new ProcessFailedException($process);
-    //     }
-
-    //     $output_data = $process->getOutput();
-    //     return view('panel/test')->with('title', 'Panel Page')->with('output', $output_data);
-    // }
 }

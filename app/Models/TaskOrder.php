@@ -31,11 +31,11 @@ class TaskOrder extends Model
         // dd($temp[$key]);
     }
 
-    public static function getOrdersByTaskUuid(String $task_uuid){
+    public static function getOrdersByTaskUuid(String $task_uuid = ''){
         return static::select(['order_uuid'])->where('task_uuid', $task_uuid)->orderBy('order_sequence')->get();
     }
 
-    public static function getTaskByOrderUuid(String $order_uuid){
+    public static function getTaskByOrderUuid(String $order_uuid = ''){
         return static::select(['task_uuid'])->where('order_uuid', $order_uuid)->first();
     }
 }

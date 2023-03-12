@@ -295,8 +295,11 @@ def feasibility(_chromo):
 # In[3]:
 vrp = {}
 
-num_vehicles = 10
-vehicle_payload = 120
+num_vehicles = int(sys.argv[2])
+vehicle_payload = int(sys.argv[3])
+
+# num_vehicles = 10
+# vehicle_payload = 80
 
 best_sse = 0
 best_cluster = 0
@@ -307,7 +310,7 @@ prob_crossover = 0.4
 prob_mutation = 0.6
 
 url = sys.argv[1]
-# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_20_00_11_53.csv"
+# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_11_20_39_47.csv"
 # url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_19_23_46_43.csv"
 
 input_data = pd.read_csv(url, sep = ";", header = 0)
@@ -353,11 +356,12 @@ for index, row in data.iterrows():
 
 # In[4]:
 
-# kmax = 19 if len(temp) > 19 else len(temp) - 1
-kmax = 18
+kmax = int((len(temp) / 2)) if (len(temp) % 2 == 0) else int((len(temp) + 1) / 2)
+
+# kmax = 18
 
 # for i in range(2, kmax + 1): #need imporve
-for i in range(3, kmax + 1):
+for i in range(2, kmax + 1):
 	km = KMeans(n_clusters = i)
 	km_labels = km.fit_predict(temp)
 	km_sse = silhouette_score(temp, km_labels, metric = 'euclidean')

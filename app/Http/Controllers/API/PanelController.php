@@ -17,7 +17,9 @@ use Maatwebsite\Excel\Facades\Excel;
 class PanelController extends BaseController {
     public function routePlanning(Request $request){
         // file upload and export csv
-        $company_id     =   intval($request->company_id);
+        $company_id             =   intval($request->company_id);
+        $available_vehicle      =   intval($request->available_vehicle);
+        $vehicle_capacity       =   intval($request->vehicle_capacity);
         if($className   =   Model::checkModel('company')){
             $company    =   $className::findRecord($company_id);
             if(isset($company)){
@@ -26,7 +28,7 @@ class PanelController extends BaseController {
                     $file = Excel::store(new $exportName($company_id), $filename, 'csv');
                     if($file){
                         $url = Storage::disk('csv')->url($filename);
-                        $process = new Process(['python', 'CVRP.py', $url]);
+                        $process = new Process(['python', 'CVRP.py', $url, $available_vehicle, $vehicle_capacity]);
                         $process->setTimeout(120);
                         $process->run();
                         // error handling
@@ -34,6 +36,7 @@ class PanelController extends BaseController {
                             // throw new ProcessFailedException($process);
                             $errorMsgs = preg_split('/\r\n/',$process->getIncrementalErrorOutput());
                             $errorMsg = $errorMsgs[sizeof($errorMsgs) - 1];
+                            dd($errorMsgs);
                             return $this->sendError('Route Planning Fail!', $errorMsg);
                         }
                         // return dd($process->getOutput());
@@ -53,6 +56,13 @@ class PanelController extends BaseController {
     //         return $this->sendResponse($output_data, 'Route Prepare Success!');
     //     }
     // }
+
+    public function getStaffList(int $company_id = 0){
+        if(($accountClass = Model::checkModel('account'))){
+            return $accountClass::getStaffList($company_id);
+        }
+        throw new Exception();
+    }
 
     public function routeStoring(Request $request){
         $order_group_list = [];
@@ -80,18 +90,18 @@ class PanelController extends BaseController {
     }
 
     public function OrderSearch(Request $request, String $order_uuid = ''){
-        $timeline = [];
+        $timeline = ['created' => null, 'preparing' => null, 'delivering' => null, 'finished' => null];
         if(($taskClass = Model::checkModel('task')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
             // return $this->sendResponse($temp, 'success');
             $order                      = $orderClass::findRecordByUuid($order_uuid);
             if($order){
-                array_push($timeline, ['status' => 'Order Created', 'time' => $order->created_at]);
+                $timeline['created'] = $order->created_at->format('Y-m-d H:i:s');
                 if($order->is_in_group){
                     $task_uuid          = $taskOrderClass::getTaskByOrderUuid($order_uuid);
                     if($task_uuid){
                         $order_status   = $orderStatusClass::getOrderAllStatus($order_uuid);
                         foreach($order_status as $value){
-                            array_push($timeline, ['status' => $value['status'], 'time' => $value['created_at']]);
+                            $timeline[$value['status']] = $value['created_at']->format('Y-m-d H:i:s');
                         }
                     }
                 }
@@ -100,5 +110,15 @@ class PanelController extends BaseController {
             return $this->sendError('Fail', ['Order not found']);
         }
         throw new \Exception();
+    }
+
+    public function viewOrder(Request $request, String $order_uuid = ''){
+        $order_items = [];
+        if($orderClass = Model::checkModel('order')){
+            $order                      = $orderClass::findRecordByUuid($order_uuid);
+            $order_items                = json_decode($order['product_name_and_number'], true);
+            return $this->sendResponse($order_items, 'success');
+        }
+        return $this->sendError('Fail', ['Order not found']);
     }
 }

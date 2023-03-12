@@ -14,7 +14,7 @@ class Order extends Model
 
 	public const PAGE_TITLE 		= 'Order';
 	public const OPERATION	 		= ['create', 'import_csv'];
-	public const TABLE_FIELDS 		= ['id', 'delivery1', 'is_in_group', 'is_complete'];
+	public const TABLE_FIELDS 		= ['id' => 'id', 'delivery1' => 'delivery_address', 'delivery2' => 'Apartment,_unit,_suite,_or_floor_#', 'is_in_group' => 'is_in_group'];
 	public const ALLOW_ACTIONS 		= ['view', 'edit', 'delete'];
 
 	public const VALIDATE_MESSAGE 	= [
@@ -102,7 +102,7 @@ class Order extends Model
 
 	public static function getData(int $paginate_size = -1, int $company_id = 0){
 		if($paginate_size > 0){
-			return static::where('is_delete', 0)->paginate($paginate_size);
+			return static::where(['is_delete' => 0, 'company_id' => $company_id])->paginate($paginate_size);
 		}
 		return static::where('is_delete', 0)->get();
 	}
