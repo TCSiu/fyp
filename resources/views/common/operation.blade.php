@@ -145,16 +145,30 @@ let dropzone = new Dropzone("#upload-dropzone", {
   <td id="preview_route_%id%"></td>
 </template>
 
+<template id="template_error_alert">
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		<div class="alert-message" id="template_alert_msg">	
+
+		</div>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+</template>
+
 @push('scripts')
 <script>
 window.addEventListener('DOMContentLoaded', function(){
-  let loading = document.getElementById('loading');
-  let route_planning_modal = new bootstrap.Modal(document.getElementById('route_planning_modal'));
-  let company_id = '{{ $account->company_id }}';
   let data;
+  let company_id            = '{{ $account->company_id }}';
+  let loading               = document.getElementById('loading');
+  let route_planning_modal  = new bootstrap.Modal(document.getElementById('route_planning_modal'));
+
   function routePlanning(){
-    let num_vehicle = document.getElementById('routePlanningNumVehicle').value;
-    let vehicle_cap = document.getElementById('routePlanningCapacity').value;
+    let num_vehicle           = document.getElementById('routePlanningNumVehicle').value;
+    let vehicle_cap           = document.getElementById('routePlanningCapacity').value;
+    let error_alert 			    = document.getElementById('error_alert');
+    let template_error_alert 	= document.getElementById('template_error_alert');
+    let alert_msg;
+    
     let xhr = new XMLHttpRequest();
     let params = JSON.stringify({'company_id' : company_id, 'available_vehicle' : num_vehicle, 'vehicle_capacity' : vehicle_cap});
     xhr.onreadystatechange = function(){
@@ -165,6 +179,10 @@ window.addEventListener('DOMContentLoaded', function(){
           routePreview(json.data);
         }else if(this.readyState == 4 && this.status == 404 || this.readyState == 4 && this.status == 500){
           loading.style.display = 'none';
+          let json = JSON.parse(xhr.responseText);
+          error_alert.innerHTML = template_error_alert.innerHTML;
+          alert_msg = document.getElementById('template_alert_msg');
+          alert_msg.innerHTML = json['data'];
         }else if(this.readyState == 1){
           loading.style.display = 'flex';
         }
@@ -189,7 +207,6 @@ window.addEventListener('DOMContentLoaded', function(){
       temp_accordion.innerHTML = template_accordion.innerHTML.replaceAll(/\%id\%/gi, ++count_accordion);
       preview_planning_accordion.appendChild(temp_accordion);
       for(let kkey in value){
-        console.log(value[kkey]);
         let tbody = document.getElementById('preview_tbody_' + count_accordion);
         let temp = document.createElement('tr');
         temp.innerHTML = template_row.innerHTML.replaceAll(/\%id\%/gi, ++count_row);

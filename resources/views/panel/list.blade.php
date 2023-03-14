@@ -13,9 +13,11 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 	<div class="container-fluid p-0">
 		<h1 class="h3 mb-3">{{ __('Content Management System') }}</h1>
 		<div class="row justify-content-center">
-		@if(isset($msg) && is_array($msg) && sizeOf($msg) > 0)
-		{{ View::make('panel/part/alert', [$msg['type'] => $msg['message']]) }}
-		@endif	
+			<div id="error_alert">
+				@if(isset($msg) && is_array($msg) && sizeOf($msg) > 0)
+				{{ View::make('panel/part/alert', [$msg['type'] => $msg['message']]) }}
+				@endif	
+			</div>
 			<div class="col-12">
 				<div class="card">
 					<div class="card-header">
@@ -39,6 +41,15 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 		</div>
 	</div>
 </main>
+
+<template id="template_error_alert">
+	<div class="alert alert-danger alert-dismissible fade show w-75" role="alert">
+		<div class="alert-message" id="template_alert_msg">	
+
+		</div>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+</template>
 @stop
 
 @hasSection('form-js')
@@ -57,9 +68,13 @@ window.addEventListener('DOMContentLoaded', function(){
 	let order_id = 0;
 
     function staffList(item){
-        let xhr = new XMLHttpRequest();
         let opt;
-		order_id = item.getAttribute('data-bs-value');
+		let alert_msg;
+        let xhr 					= new XMLHttpRequest();
+		let order_id 				= item.getAttribute('data-bs-value');
+		let error_alert 			= document.getElementById('error_alert');
+		let template_error_alert 	= document.getElementById('template_error_alert');
+
         xhr.onreadystatechange = function(){
             if(this.readyState == 4 && this.status == 200){
                 let json = JSON.parse(xhr.responseText);
@@ -75,7 +90,12 @@ window.addEventListener('DOMContentLoaded', function(){
                     opt.value = json[index].id;
                     select_assign.appendChild(opt);
                 }
-            }
+            }else if(this.readyState == 4 && this.status == 404 || this.readyState == 4 && this.status == 500){
+				let json = JSON.parse(xhr.responseText);
+				error_alert.innerHTML = template_error_alert.innerHTML;
+				alert_msg = document.getElementById('template_alert_msg');
+				alert_msg.innerHTML = json['data'];
+			}
         }
         xhr.open("GET", "{{ route('route.staff', ['id' => $company_id]) }}", true);
         xhr.setRequestHeader('content-type', 'application/json');

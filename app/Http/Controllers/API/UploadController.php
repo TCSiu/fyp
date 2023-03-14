@@ -68,6 +68,9 @@ class UploadController extends BaseController {
                 }
             }
             return $this->sendError('Error Occur', $errMsg, 400);
+
+            // dd($e->getMessage());
+            // return $this->sendError('Error Occur', $errors, 400);
         }
     }
 }

@@ -191,7 +191,7 @@ def cal_cost(_depotDistance, _allClientDistance, _route):
 	
 	for node in range(len(_route) - 1):
 		_curr = _route[node]
-		_next = _route[node]
+		_next = _route[node + 1]
 		dist += _allClientDistance[_curr][_next]
 	return dist
 
@@ -292,13 +292,24 @@ def feasibility(_chromo):
 		excess_payload[v_id] += demand
 		excess_payload[to_vehicle] -= demand
 
+def calClusterDemand(vrp, labels, num_of_cluster, payload):	
+	for i in range(0, num_of_cluster):
+		total_demand = 0
+		indices = [j for j, x in enumerate(labels) if x == i]
+		for j in indices:
+			total_demand += vrp[j].getDemand()
+			if total_demand > payload:
+				return False
+	return True
+
+
 # In[3]:
 vrp = {}
 
 num_vehicles = int(sys.argv[2])
 vehicle_payload = int(sys.argv[3])
 
-# num_vehicles = 10
+# num_vehicles = 4
 # vehicle_payload = 80
 
 best_sse = 0
@@ -310,7 +321,7 @@ prob_crossover = 0.4
 prob_mutation = 0.6
 
 url = sys.argv[1]
-# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_11_20_39_47.csv"
+# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_12_23_35_17.csv"
 # url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_19_23_46_43.csv"
 
 input_data = pd.read_csv(url, sep = ";", header = 0)
@@ -320,6 +331,9 @@ depot = DepotInfo(center['#'], center['delivery1'], center['lat'], center['lng']
 
 if len(input_data) < 2 :
 	raise Exception('Too few data')
+
+if int(center['demand']) > (num_vehicles * vehicle_payload):
+	raise Exception('Not enough payload')
 
 
 data = input_data.iloc[1:,0:14]
@@ -365,12 +379,14 @@ for i in range(2, kmax + 1):
 	km = KMeans(n_clusters = i)
 	km_labels = km.fit_predict(temp)
 	km_sse = silhouette_score(temp, km_labels, metric = 'euclidean')
-	if best_sse < km_sse:
-		best_sse = km_sse
-		best_km = km
-		best_result = i
-		best_labels = km_labels
-		best_centroid = km.cluster_centers_
+	is_below_payload = calClusterDemand(vrp['nodes'], km_labels, i, vehicle_payload)
+	if is_below_payload:
+		if best_sse < km_sse:
+			best_sse = km_sse
+			best_km = km
+			best_result = i
+			best_labels = km_labels
+			best_centroid = km.cluster_centers_
 
 # In[5]:
 
@@ -434,12 +450,12 @@ for ind, fit in zip(population, fitness_set):
 
 best_fit = math.inf
 for gen in range(0, num_generations):
-	# if(gen % 50 == 0):
-	#	 print(f'Generation: {gen:4} | Fitness: {best_fit: .2f}')
+	if(gen % 50 == 0):
+		print(f'Generation: {gen:4} | Fitness: {best_fit: .2f}')
 	offspring = tb.select(population, len(population), tournsize = 3)
 	offspring = list(map(tb.clone, offspring))
 	for child1, child2 in zip(offspring[0::2], offspring[1::2]):
-		if np.random.random() < prob_mutation:
+		if np.random.random() < prob_crossover:
 			tb.mate(child1, child2)
 			del child1.fitness.values
 			del child2.fitness.values
