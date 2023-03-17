@@ -65,7 +65,8 @@ class TaskController extends BaseController
     public function assignTask(Request $request){
         $order_id = $request->order_id;
         $staff_id = $request->staff_id;
-        $taskClass = Task::assignTask($order_id, $staff_id);
+        $result = Task::assignTask($order_id, $staff_id);
+        // dd($result, $order_id, $staff_id);
         return $this->sendResponse('success', 'successful update');
 	}
 }

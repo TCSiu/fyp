@@ -71,9 +71,9 @@ window.addEventListener('DOMContentLoaded', function(){
         let opt;
 		let alert_msg;
         let xhr 					= new XMLHttpRequest();
-		let order_id 				= item.getAttribute('data-bs-value');
 		let error_alert 			= document.getElementById('error_alert');
 		let template_error_alert 	= document.getElementById('template_error_alert');
+		order_id 					= item.getAttribute('data-bs-value');
 
         xhr.onreadystatechange = function(){
             if(this.readyState == 4 && this.status == 200){
@@ -106,11 +106,11 @@ window.addEventListener('DOMContentLoaded', function(){
         let xhr = new XMLHttpRequest();
         let staff_id = select_assign.value;
         let params = JSON.stringify({'staff_id' : staff_id, 'order_id' : order_id});
-        xhr.onreadstatechange = function(){
-            if(this.readState == 4 && this.status == 200){
+        xhr.onreadystatechange = function(){
+			if(this.readyState == 4 && this.status == 200){
 				location.reload();
-            }
-        }
+			}
+		}
         xhr.open("POST", "{{ route('route.assign') }}", true);
         xhr.setRequestHeader('content-type', 'application/json');
         xhr.send(params);

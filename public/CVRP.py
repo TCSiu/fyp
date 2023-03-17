@@ -450,8 +450,8 @@ for ind, fit in zip(population, fitness_set):
 
 best_fit = math.inf
 for gen in range(0, num_generations):
-	if(gen % 50 == 0):
-		print(f'Generation: {gen:4} | Fitness: {best_fit: .2f}')
+	# if(gen % 50 == 0):
+	# 	print(f'Generation: {gen:4} | Fitness: {best_fit: .2f}')
 	offspring = tb.select(population, len(population), tournsize = 3)
 	offspring = list(map(tb.clone, offspring))
 	for child1, child2 in zip(offspring[0::2], offspring[1::2]):

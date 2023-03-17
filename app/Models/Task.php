@@ -16,7 +16,7 @@ class Task extends Model
 	public const PAGE_TITLE 		= 'Task';
 	public const OPERATION			= ['route_planning'];
 	public const ALLOW_ACTIONS 		= ['view', 'assign'];	
-	public const TABLE_FIELDS 		= ['id' => 'id'];
+	public const TABLE_FIELDS 		= ['id' => 'id', 'status' => 'status'];
 
 	protected $fillable = [
 		 'company_id',
