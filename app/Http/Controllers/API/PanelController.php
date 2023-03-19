@@ -28,7 +28,11 @@ class PanelController extends BaseController {
                     $file = Excel::store(new $exportName($company_id), $filename, 'csv');
                     if($file){
                         $url = Storage::disk('csv')->url($filename);
+                        // $output = exec('python CVRP.py '. $url . ' ' . $available_vehicle . ' ' . $vehicle_capacity);
+                        // dd($output);
+                        // $python = 'C:\Users\Siu\AppData\Local\Programs\Python\Python311\python.exe';
                         $process = new Process(['python', 'CVRP.py', $url, $available_vehicle, $vehicle_capacity]);
+                        
                         $process->setTimeout(120);
                         $process->run();
                         // error handling

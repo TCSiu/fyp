@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import random as rand
 import sys
-import mlrose_hiive as mlrose
 # from sklearn import datasets
 from sklearn.cluster import KMeans
 # from sklearn.metrics import accuracy_score
@@ -18,6 +17,9 @@ from sklearn.metrics import silhouette_score
 from geopy import distance
 from typing import Union
 from deap import base, creator, tools
+
+from ortools.constraint_solver import routing_enums_pb2
+from ortools.constraint_solver import pywrapcp
 
 # In[2]:
 
@@ -52,7 +54,12 @@ class DepotInfo():
 		return [self.lat, self.lng]
 	def setLocation(self, lng, lat):
 		self.lng = lng
-		self.lat = lat	
+		self.lat = lat
+	def getInfo(self):
+		return {
+			"number"		: 0,
+			"depot"			:"depot"
+		}
 		
 class NodeInfo():
 	def __init__(self, number, uuid, sex, first_name, last_name, phone_number, delivery1, delivery2, lat, lng, demand):
@@ -115,7 +122,7 @@ def isInRange(ccBearing, cnBearing):
 	ccBearing = convertBearing(ccBearing)
 	cnBearing = convertBearing(cnBearing)
 	angleDiff = (cnBearing - ccBearing + 180) % 360 - 180
-	if angleDiff <= 90 and angleDiff >= -90:
+	if angleDiff <= 135 and angleDiff >= -135:
 		return True
 	return False
 
@@ -274,13 +281,11 @@ def feasibility(_chromo):
 	excess_payload = [vehicle_payload for i in range(num_vehicles)]
 	_vehicle_id = [i for i in range(num_vehicles)]
 	for i in range(num_vehicles):
-		payload = 0
-		nodes = [n for n in range(best_result) if _chromo[1][n] == i]
+		nodes = [_chromo[0][n] for n in range(best_result) if _chromo[1][n] == i]
 		for n in nodes:
-			payload += demand_list[n]
-		excess_payload[i] -= payload
+			excess_payload[i] -= demand_list[n]
 	while any(_p < 0 for _p in excess_payload):
-		v_id = next(i for i, _pl in enumerate(excess_payload) if _pl < 0)
+		v_id = next(i for i, _p in enumerate(excess_payload) if _p < 0)
 		available_vehicles = [i for i, e in enumerate(excess_payload) if e > 0]
 		if len(available_vehicles) == 0:
 			raise('Infeasible solution')
@@ -288,7 +293,7 @@ def feasibility(_chromo):
 		to_vehicle = rand.choice(available_vehicles)
 		idx_to_move = rand.choice(idx)
 		_chromo[1][idx_to_move] = to_vehicle
-		demand = all_cluster[idx_to_move].getDemand()
+		demand = all_cluster[_chromo[0][idx_to_move]].getDemand()
 		excess_payload[v_id] += demand
 		excess_payload[to_vehicle] -= demand
 
@@ -302,6 +307,42 @@ def calClusterDemand(vrp, labels, num_of_cluster, payload):
 				return False
 	return True
 
+def create_data_model(distance_matrix):
+	"""Stores the data for the problem."""
+	data = {}
+	data['distance_matrix'] = distance_matrix
+	data['num_vehicles'] = 1
+	data['depot'] = 0
+	return data
+
+def tsp(distance_matrix):
+	data = create_data_model(distance_matrix)
+	manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
+										   data['num_vehicles'], data['depot'])
+	routing = pywrapcp.RoutingModel(manager)
+	def distance_callback(from_index, to_index):
+		from_node = manager.IndexToNode(from_index)
+		to_node = manager.IndexToNode(to_index)
+		return data['distance_matrix'][from_node][to_node]
+
+	transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+	routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+	search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+	search_parameters.first_solution_strategy = (
+		routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+	solution = routing.SolveWithParameters(search_parameters)
+	if(solution):
+		return resolve_route(manager, routing, solution)
+	
+def resolve_route(manager, routing, solution):
+	actual_route = []
+	index = routing.Start(0)
+	while not routing.IsEnd(index):
+		actual_route.append(manager.IndexToNode(index))
+		index = solution.Value(routing.NextVar(index))
+	actual_route.append(manager.IndexToNode(index))
+	return actual_route
+
 
 # In[3]:
 vrp = {}
@@ -309,19 +350,19 @@ vrp = {}
 num_vehicles = int(sys.argv[2])
 vehicle_payload = int(sys.argv[3])
 
-# num_vehicles = 4
-# vehicle_payload = 80
+# num_vehicles = int(4)
+# vehicle_payload = int(80)
 
 best_sse = 0
 best_cluster = 0
 
-num_population = 200
-num_generations = 1000
+num_population = int(200)
+num_generations = int(1000)
 prob_crossover = 0.4
 prob_mutation = 0.6
 
 url = sys.argv[1]
-# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_12_23_35_17.csv"
+# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_18_20_43_17.csv"
 # url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_02_19_23_46_43.csv"
 
 input_data = pd.read_csv(url, sep = ";", header = 0)
@@ -376,7 +417,7 @@ kmax = int((len(temp) / 2)) if (len(temp) % 2 == 0) else int((len(temp) + 1) / 2
 
 # for i in range(2, kmax + 1): #need imporve
 for i in range(2, kmax + 1):
-	km = KMeans(n_clusters = i)
+	km = KMeans(n_clusters = i, n_init=5)
 	km_labels = km.fit_predict(temp)
 	km_sse = silhouette_score(temp, km_labels, metric = 'euclidean')
 	is_below_payload = calClusterDemand(vrp['nodes'], km_labels, i, vehicle_payload)
@@ -476,8 +517,6 @@ for gen in range(0, num_generations):
 	if curr_best_fit < best_fit:
 		best_sol = curr_best_sol
 		best_fit = curr_best_fit
-	best_fit_list.append(best_fit)
-	best_sol_list.append(best_sol)
 
 
 # In[18]:
@@ -487,9 +526,11 @@ best_route = get_route_set(best_sol)
 # In[]:
 
 count = 0
+all_distance_matrix = {}
 
 for i in range(0, len(best_route)):
 	coor_list = []
+	coor_list.append(depot)
 	tuple_coor_list = []
 	this_information = []
 	if(not best_route[i]):
@@ -497,19 +538,24 @@ for i in range(0, len(best_route)):
 	for j in best_route[i]:
 		coor_list = coor_list + all_cluster[j].getAllNodes()
 	for j in coor_list:
-		location = j.getLocation()
-		tuple_coor_list.append(tuple(location))
+		tuple_coor_list.append(j)
 		this_information.append(j.getInfo())
+	this_distance_matrix = [[] for _ in range(len(tuple_coor_list))]
+	for x in range(0, len(tuple_coor_list)):
+		row_distance = []
+		for y in range(0, len(tuple_coor_list)):
+			row_distance.append(int(calDistance(tuple_coor_list[x], tuple_coor_list[y]) * 1000000000000000))
+		this_distance_matrix[x] = row_distance
 	all_information[count] = this_information
-	count += 1
 	all_tuple_coor_list.append(tuple_coor_list)
-	mlrose_list.append(mlrose.TSPOpt(length = len(tuple_coor_list), coords = tuple_coor_list, maximize=False))
+	all_distance_matrix[count] = this_distance_matrix
+	count += 1
 
 # In[]:
 
-for i in mlrose_list:
-	temp_result = mlrose.genetic_alg(i, random_state = 2)
-	final_path.append(temp_result[0])
+for i in range(0, len(all_distance_matrix)):
+	solution = tsp(all_distance_matrix[i])
+	final_path.append(solution)
 
 # In[]:
 
@@ -522,3 +568,10 @@ for f in range(0, len(final_path)):
 	output[str(f)] = curr_path
 
 print(output)
+
+# In[]:
+
+# for i in range(len(output)):
+# 	path_info = output[str(i)]
+# 	path = [j['number'] for j in path_info]
+# 	print(path)
