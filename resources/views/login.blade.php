@@ -6,7 +6,7 @@ $title = 'Login Page';
 @section('content')
 <div class="container-fluid vh-100 bg-primary position-relative">
 	@isset($errors)
-	{{ View::make('panel/part/alert', ['errors' => $errors]) }}
+	{{ View::make('part/alert', ['errors' => $errors]) }}
 	@endif
 	<div class="card d-block w-25 position-absolute top-50 start-50 translate-middle">
 		<div class="card-header text-center">

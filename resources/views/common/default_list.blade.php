@@ -5,7 +5,7 @@
 				@foreach($target_fields as $field => $header)
 					<th>{{ __(ucwords(str_replace('_', ' ', $header))) }}</th>
 				@endforeach
-				<th>{{ __('actions') }}</th>
+				<th>{{ __('Actions') }}</th>
 			</thead>
 			<tbody>
 				@foreach($data as $item)

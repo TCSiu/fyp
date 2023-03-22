@@ -89,7 +89,7 @@ let dropzone = new Dropzone("#upload-dropzone", {
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="route_planning_requirement_dismiss" data-bs-dismiss="modal">{{ __('Close') }}</button>
-        <button class="btn btn-secondary white-space-nowrap" id="btn_route_planning" data-bs-dismiss="modal">
+        <button class="btn btn-success white-space-nowrap" id="btn_route_planning" data-bs-dismiss="modal">
           {{ __('Submit') }}
         </button>
       </div>

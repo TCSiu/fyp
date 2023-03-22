@@ -65,12 +65,15 @@ class Task extends Model
 				$value['status'] = $orderStatus[$target_uuid]['status'];
 				$route_order[$key] = $value;
 			}
-			$relative_staff = $account::findRecord($data->relative_staff);
-
-			$staff_info['first_name'] = $relative_staff->first_name;
-			$staff_info['last_name'] = $relative_staff->last_name;
-			$staff_info['email'] = $relative_staff->email;
-			$staff_info['phone'] = $relative_staff->phone;
+			if(isset($data->relative_staff)){
+				$relative_staff = $account::findRecord($data->relative_staff);
+				if(isset($relative_staff)){
+					$staff_info['first_name'] = $relative_staff->first_name;
+					$staff_info['last_name'] = $relative_staff->last_name;
+					$staff_info['email'] = $relative_staff->email;
+					$staff_info['phone'] = $relative_staff->phone;
+				}
+			}
 			
 			$data['route_order'] = $route_order;
 			$data['relative_staff'] = $staff_info;

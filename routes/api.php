@@ -32,7 +32,7 @@ Route::group(['prefix'  =>  '/', 'middleware'   =>  'auth:api'], function(){
     Route::get('/task/{uuid}',              [TaskController::class,     'getTask'])->whereUuid('uuid');
     Route::get('/task/{uuid}/status',       [TaskController::class,     'getTaskStatus'])->whereUuid('uuid');
     Route::post('/order/update',            [TaskController::class,     'updateOrderStatus']);
-    Route::get('/order/view/{uuid}',        [PanelController::class,     'viewOrder'])->whereUuid('uuid');
+    Route::get('/order/view/{uuid}',        [PanelController::class,    'viewOrder'])->whereUuid('uuid');
 });
 
 Route::get('/image/inventory/{company_id}',	[UploadController::class,   'getImageInventory'])	->name('getImageInventory')->whereNumber('company_id');

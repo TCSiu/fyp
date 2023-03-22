@@ -77,19 +77,28 @@ window.addEventListener('DOMContentLoaded', function(){
 
         xhr.onreadystatechange = function(){
             if(this.readyState == 4 && this.status == 200){
-                let json = JSON.parse(xhr.responseText);
+                let json 				= JSON.parse(xhr.responseText);
                 select_assign.innerHTML = '';
-                opt = document.createElement('option');
-                opt.innerHTML = "{{ __('--Select a Staff--') }}";
-				opt.selected = true;
-                opt.disabled = true;
-                select_assign.appendChild(opt);
-                for(let index in json){
-                    opt = document.createElement('option');
-                    opt.innerHTML = json[index].first_name + ' ' + json[index].last_name;
-                    opt.value = json[index].id;
-                    select_assign.appendChild(opt);
-                }
+				opt 					= document.createElement('option');
+				if(json.length > 0){
+					opt.innerHTML 			= "{{ __('--Select a Staff--') }}";
+					opt.value 				= 0;
+					opt.selected 			= true;
+					opt.disabled 			= true;
+					select_assign.appendChild(opt);
+					for(let index in json){
+						opt = document.createElement('option');
+						opt.innerHTML = json[index].first_name + ' ' + json[index].last_name;
+						opt.value = json[index].id;
+						select_assign.appendChild(opt);
+					}
+				}else{
+					opt.innerHTML 			= "{{ __('No staff account, please create at least one staff!') }}";
+					opt.value 				= 0;
+					opt.selected 			= true;
+					opt.disabled 			= true;
+					select_assign.appendChild(opt);
+				}
             }else if(this.readyState == 4 && this.status == 404 || this.readyState == 4 && this.status == 500){
 				let json = JSON.parse(xhr.responseText);
 				error_alert.innerHTML = template_error_alert.innerHTML;
@@ -103,8 +112,11 @@ window.addEventListener('DOMContentLoaded', function(){
     }
 
 	function assignStaff(){
-        let xhr = new XMLHttpRequest();
         let staff_id = select_assign.value;
+		if(staff_id == 0){
+			return;
+		}
+        let xhr = new XMLHttpRequest();
         let params = JSON.stringify({'staff_id' : staff_id, 'order_id' : order_id});
         xhr.onreadystatechange = function(){
 			if(this.readyState == 4 && this.status == 200){

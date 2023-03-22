@@ -34,9 +34,11 @@
                                 <span>{{ $row_number }}</span>
                             </td>
                             @foreach($header as $header_value)
+                            @if(array_key_exists($header_value, $table_data))
                             <td>
                                 <span>{{ $table_data[$header_value] }}</span>
                             </td>
+                            @endif
                             @endforeach
                         </tr>
                     </tbody>	
