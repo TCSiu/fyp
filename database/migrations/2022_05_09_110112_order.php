@@ -28,7 +28,6 @@ return new class extends Migration
 			$table->date('delivery_date')->nullable();
 			$table->string('product_name_and_number')->nullable();
 			$table->boolean('is_in_group')->nullable();
-			$table->boolean('is_complete')->nullable();
 			$table->boolean('is_delete')->nullable();
 			$table->timestamps();
 		});

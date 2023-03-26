@@ -5,11 +5,8 @@ import pandas as pd
 import random as rand
 import sys
 import json
-# from sklearn import datasets
 from sklearn.cluster import KMeans
-# from sklearn.metrics import accuracy_score
 from sklearn.metrics import silhouette_score
-# from sklearn.preprocessing import MinMaxScaler
 from geopy import distance
 from typing import Union
 from deap import base, creator, tools
@@ -352,7 +349,7 @@ def route_planning(url, num_vehicles, vehicle_payload):
 	center = input_data.iloc[0, 0:14]
 	depot = DepotInfo(center['#'], center['delivery1'], center['lat'], center['lng'])
 
-	if len(input_data) < 2 :
+	if len(input_data) < 5 :
 		return 'Too few data'
 
 	if int(center['demand']) > (num_vehicles * vehicle_payload):
@@ -360,7 +357,6 @@ def route_planning(url, num_vehicles, vehicle_payload):
 
 
 	data = input_data.iloc[1:,0:14]
-	location_data = data.iloc[0:,8:10]
 
 	vrp['nodes'] = []
 	temp = []

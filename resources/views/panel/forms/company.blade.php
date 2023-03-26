@@ -53,3 +53,7 @@
 		</div>
 	</form>
 </div>
+
+@push('scripts')
+{{ View::make('common/google_map', ['type' => 'autocomplete']) }}
+@endpush

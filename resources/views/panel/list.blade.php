@@ -106,7 +106,7 @@ window.addEventListener('DOMContentLoaded', function(){
 				alert_msg.innerHTML = json['data'];
 			}
         }
-        xhr.open("GET", "{{ route('route.staff', ['id' => $company_id]) }}", true);
+        xhr.open("GET", "{{ route('route.staff', ['company_id' => $company_id]) }}", true);
         xhr.setRequestHeader('content-type', 'application/json');
         xhr.send();
     }

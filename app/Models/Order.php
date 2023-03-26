@@ -37,7 +37,7 @@ class Order extends Model
 		'delivery_date' 			=> 	'normal',
 		'product_name_and_number' 	=> 	'table',
 		'is_in_group' 				=> 	'boolean',
-		'is_complete' 				=> 	'boolean',
+		'status'					=>	'normal',
 		'is_delete' 				=>	'none',
 	];
 
@@ -54,7 +54,6 @@ class Order extends Model
 		'delivery_date',
 		'product_name_and_number',
 		'is_in_group',
-		'is_complete',
 		'is_delete',
 	];
 
@@ -132,7 +131,6 @@ class Order extends Model
 		$temp['company_id']					= intval($user->company_id);
 		$temp['product_name_and_number'] 	= json_encode($product_name_and_number, JSON_FORCE_OBJECT);
 		$temp['is_in_group'] 				= 0;
-		$temp['is_complete'] 				= 0;
 		$temp['is_delete'] 					= 0;
 		return $temp;
 	}
@@ -166,7 +164,12 @@ class Order extends Model
 	}
 
 	public static function findRecord(int $id = -1){
-		return static::where('id', $id)->first();
+		if($orderStatusModel = Model::checkModel('OrderStatus')){
+			$data = static::where('id', $id)->first();
+			$orderStatus = $orderStatusModel::getLastestStatusByOrderUuid($data->uuid);
+			$data['status'] = (isset($orderStatus)) ? $orderStatus->status : 'Order Created';
+			return $data;
+		}
 		// return ($record->is_in_group > 0) ? false : $record;
 	}
 

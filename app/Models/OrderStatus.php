@@ -70,4 +70,8 @@ class OrderStatus extends Model
     public static function getOrderAllStatus(String $order_uuid = ''){
         return static::where('uuid', $order_uuid)->get();
     }
+
+    public static function getLastestStatusByOrderUuid(String $order_uuid = ''){
+        return static::where('uuid', $order_uuid)->orderBy('created_at', 'DESC')->first();
+    }
 }

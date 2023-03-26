@@ -57,13 +57,6 @@ class PanelController extends BaseController {
         throw new Exception();
     }
 
-    // public function routePrepare(Request $request, $company_id = -1){
-    //     if($className = Model::checkModel('order')) {
-    //         $output_data = $className::getUngroupOrder($company_id);
-    //         return $this->sendResponse($output_data, 'Route Prepare Success!');
-    //     }
-    // }
-
     public function getStaffList(int $company_id = 0){
         if(($accountClass = Model::checkModel('account'))){
             return $accountClass::getStaffList($company_id);
@@ -96,36 +89,12 @@ class PanelController extends BaseController {
         throw new \Exception();
     }
 
-    public function OrderSearch(Request $request, String $order_uuid = ''){
-        $timeline = ['created' => null, 'preparing' => null, 'delivering' => null, 'finished' => null];
-        if(($taskClass = Model::checkModel('task')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
-            // return $this->sendResponse($temp, 'success');
-            $order                      = $orderClass::findRecordByUuid($order_uuid);
-            if($order){
-                $timeline['created'] = $order->created_at->format('Y-m-d H:i:s');
-                if($order->is_in_group){
-                    $task_uuid          = $taskOrderClass::getTaskByOrderUuid($order_uuid);
-                    if($task_uuid){
-                        $order_status   = $orderStatusClass::getOrderAllStatus($order_uuid);
-                        foreach($order_status as $value){
-                            $timeline[$value['status']] = $value['created_at']->format('Y-m-d H:i:s');
-                        }
-                    }
-                }
-                return $this->sendResponse($timeline, 'success');
-            }
-            return $this->sendError('Fail', ['Order not found']);
-        }
-        throw new \Exception();
-    }
-
-    public function viewOrder(Request $request, String $order_uuid = ''){
-        $order_items = [];
-        if($orderClass = Model::checkModel('order')){
-            $order                      = $orderClass::findRecordByUuid($order_uuid);
-            $order_items                = json_decode($order['product_name_and_number'], true);
-            return $this->sendResponse($order_items, 'success');
-        }
-        return $this->sendError('Fail', ['Order not found']);
-    }
+    public function assignTask(Request $request){
+        $order_id = $request->order_id;
+        $staff_id = $request->staff_id;
+        $result = Task::assignTask($order_id, $staff_id);
+        // dd($result, $order_id, $staff_id);
+        return $this->sendResponse('success', 'successful update');
+	}
+   
 }
