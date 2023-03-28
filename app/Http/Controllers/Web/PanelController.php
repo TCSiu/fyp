@@ -5,175 +5,141 @@ namespace App\Http\Controllers\Web;
 use App\Models\Base\Model;
 use App\Models\ImageUsage;
 use App\Http\Requests\WebRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Http\Controllers\Controller;
 
 class PanelController extends Controller
 {
-	public function index(WebRequest $request){
-		$account			=	Auth::user();
-		$account_id			=	$account->id;
-		$sidebar_image		= 	ImageUsage::getImages('\App\Models\Account', $account_id);
-		// return dd($sidebar_image);
+    public function index(WebRequest $request)
+    {
+        return view('panel.dashboard')
+            ->with('title', 'Panel Page');
+    }
 
-		return view('panel/dashboard')
-			->with('title', 'Panel Page')
-			->with('sidebar_image', $sidebar_image);
-	}
+    public function list(WebRequest $request, string $model = '')
+    {
+        if ($className = Model::checkModel($model)) {
+            $page_title 		= $className::PAGE_TITLE;
+            $inpage_title 		= 'View ' . $page_title;
+            $target_fields 		= $className::TABLE_FIELDS;
+            $allow_actions 		= $className::ALLOW_ACTIONS;
+            $account			= Auth::user();
+            $account_id			= $account->id;
+            $company_id			= $account->company_id;
+            $operations 		= $className::OPERATION;
+            $data 				= $className::getData(20, $company_id);
+            $total_count 		= $className::getCount($company_id);
+            $images 			= ImageUsage::getImages($className, $account_id);
 
-	public function list(WebRequest $request, string $model = ''){
-		if($className = Model::checkModel($model)){
-			$page_title 		= 	$className::PAGE_TITLE;
-			$inpage_title 		= 	'View ' . $page_title;
-			$target_fields 		= 	$className::TABLE_FIELDS;
-			$allow_actions 		= 	$className::ALLOW_ACTIONS;
-			$account			=	Auth::user();
-			$account_id			=	$account->id;
-			$company_id			=	$account->company_id;	
-			$operations 		= 	$className::OPERATION;
-			$data 				= 	$className::getData(20, $company_id);
-			$total_count 		= 	$className::getCount();
-			$sidebar_image		=	ImageUsage::getImages('\App\Models\Account', $account_id);
-			$images 			= 	ImageUsage::getImages($className, $account_id);
+            return view('panel.list')
+                ->with('model', $model)
+                ->with('title', $page_title)
+                ->with('inpage_title', $inpage_title)
+                ->with('target_fields', $target_fields)
+                ->with('allow_actions', $allow_actions)
+                ->with('operations', $operations)
+                ->with('data', $data)
+                ->with('total_count', $total_count)
+                ->with('company_id', $company_id)
+                ->with('images', $images);
+        }
+        throw new \Exception();
+    }
 
-			return view('panel/list')
-				->with('model', $model)
-				->with('title', $page_title)
-				->with('inpage_title', $inpage_title)
-				->with('target_fields', $target_fields)
-				->with('allow_actions', $allow_actions)
-				->with('operations', $operations)
-				->with('data', $data)
-				->with('total_count', $total_count)
-				->with('sidebar_image', $sidebar_image)
-				->with('company_id', $company_id)
-				->with('images', $images);
-		}
-		throw new \Exception();
-	}
+    public function create(WebRequest $request, string $model = '')
+    {
+        if (!$className = Model::checkModel($model)) {
+            throw new \Exception('Requested model do not exist.');
+        }
+        $page_title = $className::PAGE_TITLE;
+        return view('panel.create')
+            ->with('model', $model)
+            ->with('title', $page_title)
+            ->with('inpage_title', sprintf('Create %s', $page_title))
+            ->with('msg', [])
+            ->with('isCreate', true);
+    }
 
-	public function create(WebRequest $request, string $model = ''){
-		if ($className = Model::checkModel($model)) {
-			$message 			= 	[];
-			$page_title 		= 	$className::PAGE_TITLE;
-			$inpage_title 		= 	'Create ' . $page_title;
-			$isCreate 			= 	true;
-			$account			=	Auth::user();
-			$account_id			=	$account->id;
-			$sidebar_image		=	ImageUsage::getImages('\App\Models\Account', $account_id);
+    public function view(WebRequest $request, string $model = '', int $id = -1)
+    {
+        if (!$className = Model::checkModel($model)) {
+            throw new \Exception('Requested model do not exist.');
+        }
+        $data = $className::findRecord($id);
+        return view('panel.view')
+            ->with('model', $model)
+            ->with('title', $className::PAGE_TITLE)
+            ->with('inpage_title', sprintf('View %s', $className::getInpageTitle($id)))
+            ->with('fields', $className::VIWES_FIELDS)
+            ->with('data', $data)
+            ->with('id', $data->id)
+            ->with('images', ImageUsage::getImages($className, $id));
+    }
 
-			return view('panel/create')
-				->with('model', $model)
-				->with('title', $page_title)
-				->with('inpage_title', $inpage_title)
-				->with('msg', $message)
-				->with('isCreate', $isCreate)
-				->with('sidebar_image', $sidebar_image);
-		}
-		throw new \Exception();
-	}
+    public function edit(WebRequest $request, string $model = '', int $id = 1)
+    {
+        if (!$className = Model::checkModel($model)) {
+            throw new \Exception('Requested model do not exist.');
+        }
 
-	public function view(WebRequest $request, string $model = '', int $id = -1){
-		if($className = Model::checkModel($model)){
-			$page_title 		= 	$className::PAGE_TITLE;
-			$inpage_title 		= 	'View ' . $className::getInpageTitle($id);
-			$fields 			= 	$className::VIWES_FIELDS;
-			$data 				= 	$className::findRecord($id);
-			$account			=	Auth::user();
-			$account_id			=	$account->id;
-			$sidebar_image		=	ImageUsage::getImages('\App\Models\Account', $account_id);
-			$images 			= 	ImageUsage::getImages($className, $id);
+        $record = $className::findEditableRecord($id);
+        if ($record === false) {
+            $message['type'] = 'errors';
+            $message['message'][] = 'This record cannot be edited.';
+            return redirect()->back()->with('msg', $message);
+        }
 
-			return view('panel/view')
-				->with('model', $model)
-				->with('title', $page_title)
-				->with('inpage_title', $inpage_title)
-				->with('fields', $fields)
-				->with('data', $data)
-				->with('id', $data->id)
-				->with('sidebar_image', $sidebar_image)
-				->with('images', $images);
-		}
-		throw new \Exception();
-	}
+        $page_title = $className::PAGE_TITLE;
+        return view('panel.create')
+            ->with('model', $model)
+            ->with('title', $page_title)
+            ->with('inpage_title', sprintf('Edit %s %d', $page_title, $id))
+            ->with('msg', [])
+            ->with('record', $record)
+            ->with('method', 'store')
+            ->with('id', $id)
+            ->with('images', ImageUsage::getImages($className, $id));
+    }
 
-	public function edit(WebRequest $request, string $model = '', int $id = 1){
-		if($className = Model::checkModel($model)){
-			$record = $className::findEditableRecord($id);
-			if(isset($record) && $record instanceOf Model){
-				$msg 			= 	[];
-				$page_title 	= 	$className::PAGE_TITLE;
-				$inpage_title 	= 	'Edit ' . $page_title . ' ' . $id;
-				$account		=	Auth::user();
-				$account_id		=	$account->id;
-				$sidebar_image	=	ImageUsage::getImages('\App\Models\Account', $account_id);
-				$images 		= 	ImageUsage::getImages($className, $id);
+    public function store(WebRequest $request, string $model = '', int $id = -1)
+    {
+        if (!$className = Model::checkModel($model)) {
+            throw new \Exception('Requested model do not exist.');
+        }
 
-				return view('panel/create')
-					->with('model', $model)
-					->with('title', $page_title)
-					->with('inpage_title', $inpage_title)
-					->with('msg', $msg)
-					->with('record', $record)
-					->with('method', 'store')
-					->with('id', $id)
-					->with('sidebar_image', $sidebar_image)
-					->with('images', $images);
-			}
-			$message['type'] = 'errors';
-			$message['message'][] = 'This record cannot be edited.';
-			return redirect()->back()->with('msg', $message);
-		}
-		throw new \Exception();
-	}
+        $user 				= Auth::user();
+        $temp 				= $request->all();
+        $temp 				= $className::modifyData($temp);
+        $validator 			= Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
 
-	public function store(WebRequest $request, string $model = '', int $id = -1){
-		if ($className = Model::checkModel($model)) {
-			$user 				= Auth::user();
-			$temp 				= $request->all();
-			$temp 				= $className::modifyData($temp);
-			$validator 			= Validator::make($temp, $className::getValidateRules($id), $className::VALIDATE_MESSAGE);
+        if ($validator->fails()) {
+            $errors = $validator->errors()->toArray();
+            $message['type'] = 'errors';
+            foreach ($errors as $row) {
+                foreach ($row as $rrow) {
+                    $message['message'][] = $rrow;
+                }
+            }
+            return redirect()->back()->with('msg', $message)->withInput();
+        }
 
-			if ($validator->fails()) {
-				$errors = $validator->errors()->toArray();
-				$message['type'] = 'errors';
-				foreach ($errors as $k => $row) {
-					foreach ($row as $kk => $rrow) {
-						$message['message'][] = $rrow;
-					}
-				}
-				return redirect()
-					->back()
-					->with('msg', $message)
-					->withInput();
-			}
-			$data 				= $className::matchField($user, $temp);
-			// return dd($data);
-			$record 			= $className::updateOrCreate(['id' => $id], $data);
-			$imageUsage 		= ImageUsage::fileUsageStore($className, $record->id, $temp);
-			return redirect(route('cms.view', ['model' => $model, 'id' => $record->id]));
-		}
-		throw new \Exception();
-	}
+        $data 				= $className::matchField($user, $temp);
+        $record 			= $className::updateOrCreate(['id' => $id], $data);
+        ImageUsage::fileUsageStore($className, $record->id, $temp);
+        return redirect(route('cms.view', ['model' => $model, 'id' => $record->id]));
+    }
 
-	public function delete(WebRequest $request, string $model = '', int $id = -1){
-		if($className = Model::checkModel($model)){
-			$record 			= $className::findRecord($id);
+    public function delete(WebRequest $request, string $model = '', int $id = -1)
+    {
+        if (!$className = Model::checkModel($model)) {
+            throw new \Exception('Requested model do not exist.');
+        }
 
-			if(isset($record) && $record instanceOf Model){
-				$record->deleteRecord();
-				return redirect(route('cms.list', ['model' => $model]));
-			}
-		}
-		throw new \Exception();
-	}
-
-	public function test(){
-        return view('panel/test')->with('title', 'Panel Page');
-	}
+        $record = $className::findRecord($id);
+        if (isset($record) && $record instanceof Model) {
+            $record->deleteRecord();
+        }
+        return redirect(route('cms.list', ['model' => $model]));
+    }
 }

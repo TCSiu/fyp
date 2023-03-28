@@ -39,7 +39,7 @@ $account = auth()->user();
 @push('scripts')
 <script>
 Dropzone.autoDiscover = false;
-window.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function(){
   const btn_select_image = document.getElementById('btn_select_image');
   const btn_save_image = document.getElementById('btn_save_image');
 

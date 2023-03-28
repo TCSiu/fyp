@@ -3,9 +3,6 @@ $account = auth()->user();
 if(Cookie::has('company')){
 	$company = json_decode(Cookie::get('company'), true);
 }
-if(isset($images) && !empty($images)){
-	$image = $images[0];
-}
 @endphp
 
 <nav id="sidebar" class="sidebar js-sidebar">
@@ -15,7 +12,7 @@ if(isset($images) && !empty($images)){
 		<div class="sidebar-user">
 			<div class="d-flex justify-content-center">
 				<div class="flex-shrink-0">
-					<img src="{{ (isset($sidebar_image) && !empty($sidebar_image)) ? secure_asset($sidebar_image) : secure_asset('img/default icon.jpg') }}" class="avatar img-fluid rounded me-1" alt="User icon" />
+					<img src="{{ Auth::user()->getUserProfilePicture() }}" class="avatar img-fluid rounded me-1" alt="User icon" />
 				</div>
 				<div class="flex-grow-1 ps-2">
 					<a class="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">

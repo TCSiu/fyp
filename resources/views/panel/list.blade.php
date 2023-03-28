@@ -1,11 +1,3 @@
-@php
-if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
-	$temp = session('msg');
-	if(isset($temp) && is_array($temp) && sizeOf($temp) > 0){
-		$msg = session('msg');
-	}
-}
-@endphp
 @extends('common/default')
 
 @section('content')
@@ -14,9 +6,7 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 		<h1 class="h3 mb-3">{{ __('Content Management System') }}</h1>
 		<div class="row justify-content-center">
 			<div id="error_alert">
-				@if(isset($msg) && is_array($msg) && sizeOf($msg) > 0)
-				{{ View::make('panel/part/alert', [$msg['type'] => $msg['message']]) }}
-				@endif	
+				@includeIf('panel/part/alert')
 			</div>
 			<div class="col-12">
 				<div class="card">
@@ -53,13 +43,13 @@ if(!(isset($msg) && is_array($msg) && sizeOf($msg) > 0)){
 @stop
 
 @hasSection('form-js')
-	@yield('form-js')
+@yield('form-js')
 @endif
 
 @if(in_array('assign', $allow_actions))
 @push('scripts')
 <script>
-window.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function(){
     let select_assign = document.getElementById('select_assign_task');
 
     let btn_assign_modal = document.querySelectorAll('[id^="btn_assign_modal_"]');
@@ -134,9 +124,11 @@ window.addEventListener('DOMContentLoaded', function(){
 		});
 	});
 
-	btn_route_assign.addEventListener('click', function(){
-		assignStaff();
-	});
+	if(btn_route_assign !== null){
+		btn_route_assign.addEventListener('click', function(){
+			assignStaff();
+		});
+	}
 });
 </script>
 @endpush

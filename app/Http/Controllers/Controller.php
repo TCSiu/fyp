@@ -9,15 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-	public function info(){
-		phpinfo();
-		exit();
-	}
-
-	// public function __construct(){
-	// 	// $this->middleware('auth:api', ['except' => ['login', 'register']]);
-	// 	$this->middleware('auth:api');
-	// }
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 }

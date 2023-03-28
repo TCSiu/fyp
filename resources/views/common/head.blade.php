@@ -5,5 +5,3 @@
 <link async defer rel="stylesheet" type="text/css" href="{{ secure_asset('https://unpkg.com/dropzone@5/dist/min/dropzone.min.css') }}" />
 <link async defer rel="stylesheet" type="text/css" href="{{ secure_asset('css/light.css') }}" />
 <link async defer rel="stylesheet" type="text/css" href="{{ secure_asset('css/custom.css') }}" />
-
-

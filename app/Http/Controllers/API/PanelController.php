@@ -3,98 +3,103 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Base\Model;
+use App\Models\Account;
 use App\Models\Company;
-use App\Exports\BaseExport;
+use App\Models\Order;
+use App\Models\OrderStatus;
+use App\Models\Task;
+use App\Models\TaskOrder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrderExport;
 
-class PanelController extends BaseController {
-    public function routePlanning(Request $request){
+class PanelController extends BaseController
+{
+    public function routePlanning(Request $request)
+    {
         // file upload and export csv
-        $company_id             =   intval($request->company_id);
-        $available_vehicle      =   intval($request->available_vehicle);
-        $vehicle_capacity       =   intval($request->vehicle_capacity);
-        if($className   =   Model::checkModel('company')){
-            $company    =   $className::findRecord($company_id);
-            if(isset($company)){
-                if($exportName = BaseExport::checkModel('order')){
-                    $filename = $company->company_name . '_' . date('Y_m_d_H_i_s') . '.csv';
-                    $file = Excel::store(new $exportName($company_id), $filename, 'csv');
-                    if($file){
-                        $url = Storage::disk('csv')->url($filename);
-                        $output = exec('python CVRP.py '. $url . ' ' . $available_vehicle . ' ' . $vehicle_capacity);
-                        if(!is_array(json_decode($output, true))){
-                            return $this->sendError('Route Planning Fail!', [json_decode($output, true)]);
-                        }
-                        return $this->sendResponse($output, 'Route Planning Success!');
-                        // $output = json_decode($output, true);
-                        // $process = new Process(['python', 'CVRP.py', $url, $available_vehicle, $vehicle_capacity], null, ['ENV_VAR_NAME' => 'Path']);
-                        // $process->setTimeout(120);
-                        // $process->run(null, ['ENV_VAR_NAME' => 'Path']);
-                        // // error handling
-                        // if (!$process->isSuccessful()) {
-                        //     // throw new ProcessFailedException($process);
-                        //     $errorMsgs = preg_split('/\r\n/',$process->getIncrementalErrorOutput());
-                        //     $errorMsg = $errorMsgs[sizeof($errorMsgs) - 2];
-                        //     return $this->sendError('Route Planning Fail!', [$errorMsg]);
-                        // }
-                        // // return dd($process->getOutput());
-                        // $output_data = $process->getOutput();
-                        // dd($output_data);
-                        // return $this->sendResponse($output_data, 'Route Planning Success!');
-                        // return $this->sendResponse($output, 'Route Planning Success!');
-                    }
-                    throw new Exception('Can\'t Export the CSV');
-                }
+        $company_id             = intval($request->company_id);
+        $available_vehicle      = intval($request->available_vehicle);
+        $vehicle_capacity       = intval($request->vehicle_capacity);
+
+        $company = Company::findRecord($company_id);
+        if (!($company instanceof Company)) {
+            throw new \Exception('Compnay not found.');
+        }
+
+        $filename = sprintf('%s_%s.csv', Str::slug($company->company_name), date('Y_m_d_H_i_s'));
+
+        if (!Excel::store(new OrderExport($company_id), $filename, 'csv')) {
+            throw new \Exception('Cannot export CSV.');
+        }
+
+        $export_csv_path = Storage::disk('csv')->path($filename);
+        $python_command = implode(' ', [
+            env('PYTHON_BIN', 'python3'),
+            sprintf('"%s"', storage_path('bin/CVRP.py')),
+            sprintf('"%s"', $export_csv_path),
+            $available_vehicle,
+            $vehicle_capacity,
+        ]);
+
+        $output = exec($python_command);
+        Log::debug($python_command);
+
+        if (is_array($output)) {
+            $output = implode($output);
+        }
+
+        try {
+            $output = json_decode($output, true);
+            if (is_array($output) && sizeof($output) > 0) {
+                return $this->sendResponse($output, 'Route Planning Success!');
             }
+            return $this->sendError('Route Planning Fail!', [$output]);
+        } catch(\Exception $e) {
+            return $this->sendError('Route Planning Fail!', [json_decode($output, true)]);
         }
-        throw new Exception();
     }
 
-    public function getStaffList(int $company_id = 0){
-        if(($accountClass = Model::checkModel('account'))){
-            return $accountClass::getStaffList($company_id);
-        }
-        throw new Exception();
+    public function getStaffList(int $company_id = 0)
+    {
+        return Account::getStaffList($company_id);
     }
 
-    public function routeStoring(Request $request){
-        $order_group_list = [];
-        // dd(Model::checkModel('task order'));
-        if(($taskClass = Model::checkModel('task')) && ($orderStatusClass = Model::checkModel('OrderStatus')) && ($orderClass = Model::checkModel('order')) && ($taskOrderClass = Model::checkModel('TaskOrder'))){
-            $company_id = $request->company_id;
-            $data = $request->data;
-            foreach($data as $key => $value){
-                $temp['company_id']     = $company_id;
-                $route_order            = $taskClass::initOrder($value);
-                if(!$route_order){
-                    continue;
-                }else{
-                    $temp['route_order']    = $route_order;
-                    $task                   = $taskClass::create($temp);
-                    $order_uuid_list        = $taskClass::getOrderUuid($value);
-                    $orderStatusClass::batchCreate($order_uuid_list);
-                    $orderClass::batchUpdate($order_uuid_list);
-                    $taskOrderClass::batchCreate($task->uuid, $order_uuid_list);
-                }
+    public function routeStoring(Request $request)
+    {
+        $company_id = $request->company_id;
+        $data = $request->data;
+        foreach ($data as $value) {
+            $temp['company_id'] = $company_id;
+            $route_order = Task::initOrder($value);
+            if (!$route_order) {
+                continue;
             }
-            return $this->sendResponse('Success', 'Create Success!');
+
+            $temp['route_order'] = $route_order;
+            $task = Task::create($temp);
+            $order_uuid_list = Task::getOrderUuid($value);
+            OrderStatus::batchCreate($order_uuid_list);
+            Order::batchUpdate($order_uuid_list);
+            TaskOrder::batchCreate($task->uuid, $order_uuid_list);
         }
-        throw new \Exception();
+        return $this->sendResponse('Success', 'Create Success!');
     }
 
-    public function assignTask(Request $request){
-        $order_id = $request->order_id;
-        $staff_id = $request->staff_id;
-        $result = Task::assignTask($order_id, $staff_id);
-        // dd($result, $order_id, $staff_id);
-        return $this->sendResponse('success', 'successful update');
-	}
-   
+    public function assignTask(Request $request)
+    {
+        $order_id = intval($request->order_id);
+        $staff_id = intval($request->staff_id);
+        try {
+            if (Task::assignTask($order_id, $staff_id)) {
+                return $this->sendResponse('success', sprintf('Successfully assigned order %d to staff %d.', $order_id, $staff_id));
+            }
+            return $this->sendResponse('failed', sprintf('Failed to assign order %d to staff %d.', $order_id, $staff_id));
+        } catch(\Exception $e) {
+            return $this->sendResponse('failed', $e->getMessage());
+        }
+    }
 }

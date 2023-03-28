@@ -516,13 +516,13 @@ def route_planning(url, num_vehicles, vehicle_payload):
 
 
 def main():
-	url = sys.argv[1]
-	num_vehicles = int(sys.argv[2])
-	vehicle_payload = int(sys.argv[3])
+	# url = sys.argv[1]
+	# num_vehicles = int(sys.argv[2])
+	# vehicle_payload = int(sys.argv[3])
 
-	# url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_18_20_43_17.csv"
-	# num_vehicles = int(4)
-	# vehicle_payload = int(80)
+	url = "C:\\xampp\\htdocs\\fyp\\public\\storage\\csv\\abc_2023_03_18_20_43_17.csv"
+	num_vehicles = int(4)
+	vehicle_payload = int(80)
 
 	output = route_planning(url, num_vehicles, vehicle_payload)
 	# print(output)

@@ -32,6 +32,7 @@ $account = auth()->user();
     </div>
   </div>
 </div>
+
 @push('scripts')
 <script>
 Dropzone.autoDiscover = false;
@@ -45,7 +46,6 @@ let dropzone = new Dropzone("#upload-dropzone", {
 	init: function(){
     this.on('error', function(file, response) {
       if (response['success'] == false) {
-        console.log(response['data']);
         var errorDisplay = document.querySelectorAll('[data-dz-errormessage]');
         errorDisplay[errorDisplay.length - 1].innerHTML = response['data'];
       }
@@ -86,6 +86,7 @@ let dropzone = new Dropzone("#upload-dropzone", {
           <label for="routePlanningCapacity" class="form-label form-required">{{ __('Vehicle Capacity:') }}{!! Utility::required() !!}</label>
           <input type="number" class="form-control" aria-describedby="routePlanningCapacity" name="vehicle_capacity" id="routePlanningCapacity" value="1" />
         </div>
+        <h4 class="text-danger mt-2">Make sure that there are a minimum of four orders available for the route planning!</h4>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="route_planning_requirement_dismiss" data-bs-dismiss="modal">{{ __('Close') }}</button>
@@ -156,7 +157,7 @@ let dropzone = new Dropzone("#upload-dropzone", {
 
 @push('scripts')
 <script>
-window.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function(){
   let data;
   let company_id            = '{{ $account->company_id }}';
   let loading               = document.getElementById('loading');
@@ -193,15 +194,15 @@ window.addEventListener('DOMContentLoaded', function(){
   }
 
   function routePreview(json = ''){
-    data = JSON.parse(json.replaceAll('\'', '\"'));
+    data = json;
     let count_accordion = 0;
     let preview_planning_accordion      = document.getElementById('preview_planning_accordion');
     let template_accordion              = document.getElementById('template_accordion');
     let template_row                    = document.getElementById('template_preview_row');
     preview_planning_accordion.innerHTML = '';
-    for(let key in data){
+    for(let key in json){
       let count_row = 0;
-      value = data[key];
+      value = json[key];
       let temp_accordion = document.createElement('div');
       temp_accordion.classList.add('accordion-item');
       temp_accordion.innerHTML = template_accordion.innerHTML.replaceAll(/\%id\%/gi, ++count_accordion);
@@ -222,20 +223,26 @@ window.addEventListener('DOMContentLoaded', function(){
     let xhr = new XMLHttpRequest();
     let params = JSON.stringify({'data' : data, 'company_id' : company_id});
     xhr.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-          location.reload();
-        }
+      if(this.readyState == 4 && this.status == 200){
+        loading.style.display = 'none';
+        location.reload();
+      }else if(this.readyState == 4 && this.status == 404 || this.readyState == 4 && this.status == 500){
+        loading.style.display = 'none';
+        let json = JSON.parse(xhr.responseText);
+        error_alert.innerHTML = template_error_alert.innerHTML;
+        alert_msg = document.getElementById('template_alert_msg');
+        alert_msg.innerHTML = json['data'];
+      }else if(this.readyState == 1){
+        loading.style.display = 'flex';
+      }
     }
     xhr.open("POST", "{{ route('route.storing') }}", true);
     xhr.setRequestHeader('content-type', 'application/json');
     xhr.send(params);
   }
 
-	let btn_route_planning = document.getElementById('btn_route_planning');
-	btn_route_planning.addEventListener('click', routePlanning);
-
-  let btn_route_storing = document.getElementById('btn_route_storing');
-	btn_route_storing.addEventListener('click', routeStoring);
+  document.getElementById('btn_route_planning').addEventListener('click', routePlanning);
+  document.getElementById('btn_route_storing').addEventListener('click', routeStoring);
 });
 
 </script>

@@ -3,15 +3,15 @@
 		<table class="table table-striped table-hover">
 			<thead>
 				@foreach($target_fields as $field => $header)
-					<th>{{ __(ucwords(str_replace('_', ' ', $header))) }}</th>
+					<th class="text-nowrap">{{ __(ucwords(str_replace('_', ' ', $header))) }}</th>
 				@endforeach
-				<th>{{ __('Actions') }}</th>
+				<th class="text-nowrap">{{ __('Actions') }}</th>
 			</thead>
 			<tbody>
 				@foreach($data as $item)
 					<tr>
 					@foreach($target_fields as $field => $header)
-						<td>{{ $item[$field] }}</td>
+						<td class="text-nowrap">{{ $item[$field] }}</td>
 					@endforeach
 					@includeIf('common/action_button')
 					</tr>

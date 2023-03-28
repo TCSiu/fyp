@@ -54,6 +54,7 @@ $title = 'Register Page';
 								<input type="number" step="0.00001" min="0" max="400" class="form-control text-center" placeholder="lat" readonly name="lat" value="{{ old('lat') ?? '' }}" style="max-width:160px;" />
 								<input type="number" step="0.00001" min="0" max="400" class="form-control text-center" placeholder="lng" readonly name="lng" value="{{ old('lng') ?? '' }}" style="max-width:160px;" />
 							</div>
+							<h6 class="text-secondary mt-1">Select the deliver address from the drop-down list</h6>
 						</div>
 						<div class="row mb-3">
 							<div class="col-12">
@@ -67,16 +68,16 @@ $title = 'Register Page';
 						<button class="btn btn-primary rounded-pill nextBtn float-end" type="button">{{ __('Next') }}</button>
 					</div>
 				</div>
-				<div class="row setup-content" id="step-admin">
+				<div class="row setup-content" id="step-admin" style="display:none;">
 					<div class="col-12">
 						<div class="row mb-3">
 							<div class="col-12 col-md-4">
 								<label for="r_a_first_name" class="form-label">{{ __('First Name:') }}{!! Utility::required() !!}</label>
-								<input type="text" class="form-control" name="first_name" id="r_a_first_name" autocomplete="new-password" value="{{ old('first_name') ?? '' }}" placeholder="Enter Your First Name" />
+								<input type="text" required class="form-control" name="first_name" id="r_a_first_name" autocomplete="new-password" value="{{ old('first_name') ?? '' }}" placeholder="Enter Your First Name" />
 							</div>
 							<div class="col-12 col-md-4">
 								<label for="r_a_last_name" class="form-label">{{ __('Last Name:') }}{!! Utility::required() !!}</label>
-								<input type="text" class="form-control" name="last_name" id="r_a_last_name" autocomplete="new-password" value="{{ old('last_name') ?? '' }}" placeholder="Enter Your Last Name" />
+								<input type="text" required class="form-control" name="last_name" id="r_a_last_name" autocomplete="new-password" value="{{ old('last_name') ?? '' }}" placeholder="Enter Your Last Name" />
 							</div>
 							<div class="col-12 col-md-4">
 								<label for="sex" class="form-label">{{ __('Gender:') }}{!! Utility::required() !!}</label>
@@ -91,27 +92,28 @@ $title = 'Register Page';
 						<div class="row mb-3">
 							<div class="col-12 col-md-4">
 								<label for="r_a_username" class="form-label">{{ __('Username:') }}{!! Utility::required() !!}</label>
-								<input type="text" class="form-control" name="username" id="r_a_username" autocomplete="new-password" value="{{ old('username') ?? '' }}" placeholder="Enter a Username" />
+								<input type="text" required class="form-control" name="username" id="r_a_username" autocomplete="new-password" value="{{ old('username') ?? '' }}" placeholder="Enter a Username" />
 							</div>
 							<div class="col-12 col-md-4">
 								<label for="r_a_email" class="form-label">{{ __('Email:') }}{!! Utility::required() !!}</label>
-								<input type="email" class="form-control" name="email" id="r_a_email" autocomplete="new-password" value="{{ old('email') ?? '' }}" placeholder="Enter a Email" />
+								<input type="email" required class="form-control" name="email" id="r_a_email" autocomplete="new-password" value="{{ old('email') ?? '' }}" placeholder="Enter a Email" />
 							</div>
 							<div class="col-12 col-md-4">
 								<label for="r_a_phone" class="form-label">{{ __('Phone:') }}{!! Utility::required() !!}</label>
-								<input type="text" class="form-control" name="phone" id="r_a_phone" autocomplete="new-password" value="{{ old('phone') ?? '' }}" placeholder="Enter a Phone" />
+								<input type="text" required class="form-control" name="phone" id="r_a_phone" autocomplete="new-password" value="{{ old('phone') ?? '' }}" placeholder="Enter a Phone" />
 							</div>
 						</div>
 						<div class="row mb-3">
 							<div class="col-12">
 								<label for="r_a_password" class="form-label">{{ __('Password:') }}{!! Utility::required() !!}</label>
-								<input type="password" class="form-control" name="password" id="r_a_password" placeholder="Enter a Password" />
+								<input type="password" required class="form-control" name="password" id="r_a_password" placeholder="Enter a Password" pattern="{{ \App\Commons\Constants::PASSWORD_REGEXP }}" />
 							</div>
+							<h5 class="text-danger mt-1">Password should be at least 8 characters in length and include at least one uppercase letter, one lowercase letter, and one number.</h5>
 						</div>
 						<div class="row mb-3">
 							<div class="col-12">
 								<label for="r_a_password_confirm" class="form-label">{{ __('Password Confirm:') }}{!! Utility::required() !!}</label>
-								<input type="password" class="form-control" name="password_confirmation" id="r_a_password_confirm" placeholder="Re-enter a Password" />
+								<input type="password" required class="form-control" name="password_confirmation" id="r_a_password_confirm" placeholder="Re-enter a Password" pattern="{{ \App\Commons\Constants::PASSWORD_REGEXP }}" />
 							</div>
 						</div>
 						<div class="row">
@@ -122,7 +124,7 @@ $title = 'Register Page';
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-12"><hr></hr></div>
+					<div class="col-12"><hr /></div>
 					<div class="col-12">
 						<a href="{{ route('login') }}" class="">{{ __('Login an Account') }}</a>
 					</div>

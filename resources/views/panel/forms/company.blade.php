@@ -30,6 +30,7 @@
 					<input type="number" step="0.00001" min="0" max="400" class="form-control text-center" placeholder="lat" readonly name="lat" value="{{ $record['lat'] ?? old('lat') ?? '' }}" style="max-width:160px;" />
 					<input type="number" step="0.00001" min="0" max="400" class="form-control text-center" placeholder="lng" readonly name="lng" value="{{ $record['lng'] ?? old('lng') ?? '' }}" style="max-width:160px;" />
 				</div>
+				<h6 class="text-secondary mt-1">Select the deliver address from the drop-down list</h6>
 			</div>
 			<div class="row mb-3">
 				<div class="col-12">
@@ -42,7 +43,7 @@
 			</div>
 			<div class="row mb-3">
 				<div class="col">
-					<button type="submit" class="btn btn-success me-2" id="orderFormSubmit">
+					<button type="submit" class="btn btn-success me-2">
 						<i class="align-middle" data-feather="save"></i> {{ __('Save') }}
 					</button>
 					<button type="reset" class="btn btn-secondary me-2">
